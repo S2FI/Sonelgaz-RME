@@ -1,7 +1,6 @@
 import { useState } from "react";
-import Layout from "../components/layout";
 import { connect, useDispatch } from "react-redux";
-import { login } from "../redux/actions/authAction";
+import { login } from "../../redux/actions/authAction";
 
 const Login = (props) => {
   const [values, setValues] = useState({
@@ -32,7 +31,7 @@ const Login = (props) => {
   };
 
   return (
-    <Layout>
+    <div>
       <form onSubmit={(e) => onSubmit(e)} className="container mt-3">
         <h1>Login</h1>
 
@@ -74,7 +73,7 @@ const Login = (props) => {
           Submit
         </button>
       </form>
-    </Layout>
+    </div>
   );
 };
 const mapStateToProps = (state) => ({

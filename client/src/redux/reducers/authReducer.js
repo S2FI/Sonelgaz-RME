@@ -17,6 +17,7 @@ const userAuthFromLocalStorage = () => {
 const initialState = {
   isAuth: userAuthFromLocalStorage(),
   errorMessage: "",
+  notif: "",
 };
 
 export default function (state = initialState, { payload, type }) {

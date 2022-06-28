@@ -6,33 +6,39 @@ import {
   Outlet,
 } from "react-router-dom";
 import Dashboard from "./pages/dashboard";
-import Home from "./pages/home";
-import Login from "./pages/login";
-import Register from "./pages/register";
+import Login from "./pages/Auth/login";
+import Register from "./pages/Auth/register";
 import { connect, useSelector } from "react-redux";
+import Container from "./Layout/container";
+import {
+  DASHBOARD_ROUTE,
+  DEFAULT_PATH,
+  LOGIN_ROUTE,
+  REGISTER_ROUTE,
+} from "./static/staticPath";
 
 const App = (props) => {
   const PrivateRoutes = () => {
     // const { isAuth } = props.isAuth;
-    return <>{props.isAuth ? <Outlet /> : <Navigate to="/login" />}</>;
+    return <>{props.isAuth ? <Outlet /> : <Navigate to={LOGIN_ROUTE} />}</>;
   };
 
   const RestrictedRoutes = () => {
     // const { isAuth } = useSelector((state) => state.auth);
-    return <>{!props.isAuth ? <Outlet /> : <Navigate to="/dashboard" />}</>;
+    return (
+      <>{!props.isAuth ? <Outlet /> : <Navigate to={DASHBOARD_ROUTE} />}</>
+    );
   };
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
-
         <Route element={<PrivateRoutes />}>
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path={DEFAULT_PATH} element={<Container />} />
         </Route>
 
         <Route element={<RestrictedRoutes />}>
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
+          {/* <Route path={REGISTER_ROUTE} element={<Register />} /> */}
+          <Route path={LOGIN_ROUTE} element={<Login />} />
         </Route>
       </Routes>
     </BrowserRouter>

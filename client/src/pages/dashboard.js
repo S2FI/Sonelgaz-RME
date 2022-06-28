@@ -1,5 +1,4 @@
 import { connect, useDispatch } from "react-redux";
-import Layout from "../components/layout";
 import { logout } from "../redux/actions/authAction";
 const Dashboard = (props) => {
   const dispatch = useDispatch();
@@ -10,12 +9,10 @@ const Dashboard = (props) => {
 
   return (
     <div>
-      <Layout>
-        <h1>Dashboard</h1>
-        <button onClick={() => logout()} className="btn btn-primary">
-          Logout
-        </button>
-      </Layout>
+      <h1>Dashboard</h1>
+      <button onClick={() => logout()} className="btn btn-primary">
+        Logout
+      </button>
     </div>
   );
 };
