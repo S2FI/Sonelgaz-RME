@@ -5,6 +5,8 @@ import store from "./redux";
 import App from "./App";
 import "antd/dist/antd.min.css";
 import "./styles/sideBar.css";
+import "./styles/main.css";
+import "./styles/PlanningFormsModal.css";
 
 const container = document.getElementById("root");
 const root = createRoot(container);

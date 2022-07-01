@@ -1,5 +1,7 @@
+import MainLayout from "../Layout/mainLayout";
+
 function Gis() {
-  return <h3>Localisation</h3>;
+  return <MainLayout renderElement="gis" header="GIS" />;
 }
 
 export default Gis;

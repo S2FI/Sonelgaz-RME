@@ -1,4 +1,6 @@
+import MainLayout from "../Layout/mainLayout";
+
 function Statistics() {
-  return <h3>Statistiques</h3>;
+  return <MainLayout renderElement="stats" header="Statistiques" />;
 }
 export default Statistics;

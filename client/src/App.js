@@ -10,7 +10,9 @@ import Login from "./pages/Auth/login";
 import Register from "./pages/Auth/register";
 import { connect, useSelector } from "react-redux";
 import Container from "./Layout/container";
+import UserList from "./admin/user";
 import {
+  ADMIN_PATH,
   DASHBOARD_ROUTE,
   DEFAULT_PATH,
   LOGIN_ROUTE,
@@ -23,6 +25,18 @@ const App = (props) => {
     return <>{props.isAuth ? <Outlet /> : <Navigate to={LOGIN_ROUTE} />}</>;
   };
 
+  const AdminRoutes = () => {
+    const role = "admin";
+    return (
+      <>
+        if (props.isAuth && role == "admin") {<Outlet />}
+        else if (props.isAuth && role == "user")
+        {<Navigate to={DASHBOARD_ROUTE} />}
+        else {<Navigate to={LOGIN_ROUTE} />}
+      </>
+    );
+  };
+
   const RestrictedRoutes = () => {
     // const { isAuth } = useSelector((state) => state.auth);
     return (
@@ -32,6 +46,10 @@ const App = (props) => {
   return (
     <BrowserRouter>
       <Routes>
+        <Route element={<AdminRoutes />}>
+          <Route path={ADMIN_PATH} element={<UserList />} />
+        </Route>
+
         <Route element={<PrivateRoutes />}>
           <Route path={DEFAULT_PATH} element={<Container />} />
         </Route>

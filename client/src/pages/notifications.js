@@ -1,5 +1,7 @@
+import MainLayout from "../Layout/mainLayout";
+
 function Notif() {
-  return <h3>Notifications</h3>;
+  return <MainLayout renderElement="notifications" header="Notifications" />;
 }
 
 export default Notif;

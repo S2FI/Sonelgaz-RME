@@ -1,60 +1,39 @@
-import { Space, Table, Tag } from "antd";
-
-// const data = [
-//   {
-//     key: "1",
-//     date: "25-05-2021",
-//     title: "prog annual de gue",
-//     type: ["Entretien"],
-//   },
-//   {
-//     key: "2",
-//     date: "25-05-2022",
-//     title: " prog annual de gue prog annual de gue",
-//     type: ["Maintenance"],
-//   },
-// ];
-// const MyColumns = [
-//   {
-//     title: "Date de creation",
-//     dataIndex: "date",
-//     key: "date",
-//     sorter: true,
-//   },
-//   {
-//     title: "Titre de planning",
-//     dataIndex: "title",
-//     key: "title",
-//     sorter: false,
-//   },
-
-//   {
-//     title: "Type",
-//     dataIndex: "type",
-//     key: "type",
-//     render: (tags) => (
-//       <>
-//         {tags.map((tag) => (
-//           <Tag color="blue" key={tag}>
-//             {tag}
-//           </Tag>
-//         ))}
-//       </>
-//     ),
-//   },
-//   {
-//     title: "Action",
-//     key: "action",
-//     render: (_, record) => (
-//       <Space size="middle">
-//         <a>modif</a>
-//         <a>Delete</a>
-//       </Space>
-//     ),
-//   },
-// ];
+import { Alert, Button, Form, Input, Popconfirm, Table } from "antd";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import ModalComponent from "./modal";
+const { Search } = Input;
+const onSearch = (value) => alert("Hello! I am an alert box!!");
 
 const TableComponent = (props) => {
-  return <Table dataSource={props.sharedData} columns={props.sharedColumns} />;
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      console.log(loading);
+      setLoading(false);
+    }, 500);
+  }, []);
+
+  return (
+    <Table
+      title={() => (
+        <div className="TableTitle">
+          <ModalComponent width="1000px" header={props.header} />
+
+          <Search
+            placeholder="input search text"
+            onSearch={onSearch}
+            enterButton
+          />
+        </div>
+      )}
+      dataSource={props.sharedData}
+      columns={props.sharedColumns}
+      loading={loading}
+      pagination={{ pageSize: 7 }}
+      scroll={{
+        y: `60vh`,
+      }}
+    />
+  );
 };
 export default TableComponent;

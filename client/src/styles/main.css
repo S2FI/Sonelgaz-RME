@@ -1,0 +1,9 @@
+.ant-table{
+margin-top: 16px!important;
+}
+.ant-layout-content{
+    height: 100%;
+}
+.ant-layout-footer {
+    padding: 10px 50px;
+}

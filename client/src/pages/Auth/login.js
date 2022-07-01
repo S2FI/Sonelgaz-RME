@@ -7,7 +7,6 @@ const Login = (props) => {
     username: "",
     password: "",
   });
-  const [error, setError] = useState(false);
 
   const onChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
@@ -18,16 +17,6 @@ const Login = (props) => {
   const onSubmit = async (e) => {
     e.preventDefault();
     props.login(values);
-
-    // try {
-    //   await onLogin(values)
-    //   dispatch(authenticateUser())
-
-    //   localStorage.setItem('isAuth', 'true')
-    // } catch (error) {
-    //   console.log(error.response.data.errors[0].msg)
-    //   setError(error.response.data.errors[0].msg)
-    // }
   };
 
   return (

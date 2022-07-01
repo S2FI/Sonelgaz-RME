@@ -1,5 +1,7 @@
 import MainLayout from "../../Layout/mainLayout";
+import { RiChatDeleteLine } from "react-icons/ri";
 import { Space, Table, Tag } from "antd";
+import { useState } from "react";
 
 const plannig_data = [
   {
@@ -11,6 +13,60 @@ const plannig_data = [
   },
   {
     key: "2",
+    date: "25-05-2022",
+    title: " prog annual de gue prog annual de gue",
+    type: ["Maintenance"],
+  },
+  {
+    key: "3",
+    date: "25-05-2022",
+    title: " prog annual de gue prog annual de gue",
+    type: ["Maintenance"],
+  },
+  {
+    key: "4",
+    date: "25-05-2022",
+    title: " prog annual de gue prog annual de gue",
+    type: ["Maintenance"],
+  },
+  {
+    key: "5",
+    date: "25-05-2022",
+    title: " prog annual de gue prog annual de gue",
+    type: ["Maintenance"],
+  },
+  {
+    key: "6",
+    date: "25-05-2022",
+    title: " prog annual de gue prog annual de gue",
+    type: ["Maintenance"],
+  },
+  {
+    key: "7",
+    date: "25-05-2022",
+    title: " prog annual de gue prog annual de gue",
+    type: ["Maintenance"],
+  },
+  {
+    key: "8",
+    date: "25-05-2022",
+    title: " prog annual de gue prog annual de gue",
+    type: ["Maintenance"],
+  },
+  {
+    key: "9",
+    date: "25-05-2022",
+    title: " prog annual de gue prog annual de gue",
+    type: ["Maintenance"],
+  },
+  {
+    key: "10",
+    date: "25-05-2022",
+    title: " prog annual de gue prog annual de gue",
+    type: ["Maintenance"],
+  },
+  {
+    key: "11",
     date: "25-05-2022",
     title: " prog annual de gue prog annual de gue",
     type: ["Maintenance"],
@@ -50,14 +106,23 @@ const planning_columns = [
     render: (_, record) => (
       <Space size="middle">
         <a>modif</a>
-        <a>Delete</a>
+        <a>
+          <RiChatDeleteLine />
+        </a>
       </Space>
     ),
   },
 ];
+const title = "Planning";
 const Planning = () => {
+  const [data, setData] = useState(false);
+
   return (
-    <MainLayout sharedData={plannig_data} sharedColumns={planning_columns} />
+    <MainLayout
+      sharedData={plannig_data}
+      sharedColumns={planning_columns}
+      header={"Planning"}
+    />
   );
 };
 

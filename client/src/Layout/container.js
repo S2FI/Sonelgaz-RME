@@ -1,7 +1,7 @@
 import Main from "./main";
 import SideBar from "./sideBar";
 import { Layout } from "antd";
-const Container = (props) => {
+const Container = () => {
   return (
     <Layout
       style={{

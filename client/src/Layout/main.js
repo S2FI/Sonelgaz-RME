@@ -16,7 +16,6 @@ import {
 import Container from "./container";
 
 const Main = () => {
-  console.log("first");
   return (
     <Routes>
       <Route path={DASHBOARD_ROUTE} element={<Dashboard />} />

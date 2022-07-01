@@ -55,6 +55,12 @@ const forms_columns = [
   },
 ];
 const Formulaires = () => {
-  return <MainLayout sharedData={forms_data} sharedColumns={forms_columns} />;
+  return (
+    <MainLayout
+      sharedData={forms_data}
+      sharedColumns={forms_columns}
+      header="Formulaire"
+    />
+  );
 };
 export default Formulaires;

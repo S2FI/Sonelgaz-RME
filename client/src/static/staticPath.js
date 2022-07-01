@@ -6,5 +6,5 @@ export const NOTIFICATIONS_ROUTE = "notifications";
 export const STATIC_ROUTE = "stats";
 export const LOGIN_ROUTE = "/";
 export const REGISTER_ROUTE = "/register";
-
+export const ADMIN_PATH = "/admin/*";
 export const DEFAULT_PATH = "/*";

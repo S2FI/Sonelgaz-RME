@@ -14,6 +14,16 @@ const userAuthFromLocalStorage = () => {
   return false;
 };
 
+const userRoleFromLocalStorage = () => {
+  const isRole = localStorage.getItem("isRole");
+
+  if (isRole && JSON.parse(isRole) === true) {
+    return true;
+  }
+
+  return false;
+};
+
 const initialState = {
   isAuth: userAuthFromLocalStorage(),
   errorMessage: "",

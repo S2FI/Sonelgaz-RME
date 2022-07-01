@@ -8,10 +8,13 @@ import {
 export const login = (values) => async (dispatch) => {
   try {
     await onLogin(values);
+    const { username, password } = values;
+    console.log(username);
     dispatch({
       type: AUTHENTICATE_USER,
     });
     localStorage.setItem("isAuth", "true");
+    localStorage.setItem("Username", username);
   } catch (error) {
     console.log(error);
     dispatch({

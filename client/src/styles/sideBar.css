@@ -2,11 +2,27 @@
 {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    
     height: 90%;
 }
 .ant-menu:after, .ant-menu:before {
     display:none;
     content: "";
 }
-.logo{height: 10%;}
+.logo{height: 10%;
+}
+.logout{   
+     margin-top: auto!important;
+   
+}
+li.ant-menu-item{
+    margin:0
+
+}
+.TableTitle {
+    display: flex;
+    justify-content: space-between;
+}
+.ant-input-group-wrapper {
+    width: 30%;
+}
