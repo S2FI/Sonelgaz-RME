@@ -1,4 +1,5 @@
 import { Layout } from "antd";
+import GisComponent from "../pages/gis/gisComponent";
 import TableComponent from "../components/Table";
 const { Content, Footer, Header } = Layout;
 
@@ -8,7 +9,7 @@ const MainLayout = (props) => {
       case "dashboard":
         return <div>Dashboard</div>;
       case "gis":
-        return <div>gis</div>;
+        return <GisComponent />;
       case "notifications":
         return <div>Notifications</div>;
       case "stats":
@@ -37,7 +38,6 @@ const MainLayout = (props) => {
             color: "white",
           }}
         >
-          {" "}
           {props.header}
         </h1>
       </Header>

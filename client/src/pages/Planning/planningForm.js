@@ -8,6 +8,7 @@ import {
   DatePicker,
 } from "antd";
 import React, { useContext, useEffect, useRef, useState } from "react";
+import { MdDeleteForever } from "react-icons/md";
 import InputSelector from "../../components/inputSelector";
 const EditableContext = React.createContext(null);
 const { RangePicker } = DatePicker;
@@ -129,6 +130,9 @@ const PlanningForms = () => {
           option2="poste 2"
         />
       ),
+      Criticite: (
+        <InputSelector defaultValue="Faible" option1="Moyen" option2="Eleve" />
+      ),
     },
   ]);
   const [count, setCount] = useState(2);
@@ -162,6 +166,10 @@ const PlanningForms = () => {
       dataIndex: "poste",
     },
     {
+      title: "Criticite",
+      dataIndex: "Criticite",
+    },
+    {
       title: "operation",
       dataIndex: "operation",
       render: (_, record) =>
@@ -170,7 +178,9 @@ const PlanningForms = () => {
             title="Sure to delete?"
             onConfirm={() => handleDelete(record.key)}
           >
-            <a>Delete</a>
+            <a>
+              <MdDeleteForever />
+            </a>
           </Popconfirm>
         ) : null,
     },
@@ -185,11 +195,16 @@ const PlanningForms = () => {
         </Space>
       ),
       district: (
-        <InputSelector
-          defaultValue="district"
-          option1="district 1"
-          option2="district 2"
-        />
+        <Form.Item
+          rules={[
+            {
+              required: true,
+              message: "district est obligatoire",
+            },
+          ]}
+        >
+          <InputSelector option1="district 1" option2="district 2" />
+        </Form.Item>
       ),
       depart: (
         <InputSelector
@@ -211,6 +226,9 @@ const PlanningForms = () => {
           option1="poste 1"
           option2="poste 2"
         />
+      ),
+      Criticite: (
+        <InputSelector defaultValue="Faible" option1="Moyen" option2="Elevé" />
       ),
     };
     setDataSource([...dataSource, newData]);

@@ -2,10 +2,12 @@ import { useState } from "react";
 import { onRegistration } from "../../api/auth";
 
 const Register = () => {
+  const said = "2";
   const [values, setValues] = useState({
     // init
     username: "",
     password: "",
+    role: "",
   });
   const [error, setError] = useState(false); //init error state
   const [success, setSuccess] = useState(false); // init success state
@@ -24,7 +26,7 @@ const Register = () => {
 
       setError("");
       setSuccess(data.message);
-      setValues({ username: "", password: "" }); // init values after success
+      setValues({ username: "", password: "", role: "" }); // init values after success
     } catch (error) {
       setError(error.response.data.errors[0].msg);
       setSuccess("");
@@ -64,6 +66,22 @@ const Register = () => {
             id="password"
             name="password"
             placeholder="password"
+            required
+          />
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="role" className="form-label">
+            Role
+          </label>
+          <input
+            onChange={(e) => onChange(e)}
+            type="text"
+            value={values.role}
+            className="form-control"
+            id="role"
+            name="role"
+            placeholder="role"
             required
           />
         </div>

@@ -1,9 +1,9 @@
 import { Layout, Menu } from "antd";
 import { useState } from "react";
-import { AiOutlineCarryOut } from "react-icons/ai";
+import { AiOutlineAudit, AiOutlineCarryOut } from "react-icons/ai";
 import { HiOutlineHome } from "react-icons/hi";
 import { FaWpforms } from "react-icons/fa";
-import { BiMap, BiBarChartAlt2, BiLogOut } from "react-icons/bi";
+import { BiMap, BiBarChartAlt2, BiLogOut, BiUserCircle } from "react-icons/bi";
 import { TbMessage } from "react-icons/tb";
 import { NavLink } from "react-router-dom";
 import { logout } from "../redux/actions/authAction";
@@ -14,6 +14,8 @@ import {
   PLANNING_ROUTE,
   STATIC_ROUTE,
   NOTIFICATIONS_ROUTE,
+  USERLIST_ROUTE,
+  TRACABILITE_ROUTE,
 } from "../static/staticPath";
 import { connect } from "react-redux";
 
@@ -21,9 +23,6 @@ const { Sider } = Layout;
 
 const sideBar = (props) => {
   const [collapsed, setCollapsed] = useState(false);
-  const stopload = () => {
-    return setLoading(false);
-  };
   return (
     <Sider
       collapsible
@@ -37,24 +36,39 @@ const sideBar = (props) => {
         defaultSelectedKeys={["1"]}
         mode="inline"
       >
-        <Menu.Item key="1" icon={<HiOutlineHome />}>
-          <NavLink to={DASHBOARD_ROUTE}>Tableau de bord</NavLink>
-        </Menu.Item>
-        <Menu.Item key="2" icon={<AiOutlineCarryOut />}>
-          <NavLink to={PLANNING_ROUTE}>Planning</NavLink>
-        </Menu.Item>
-        <Menu.Item key="3" icon={<FaWpforms />}>
-          <NavLink to={FORMULAIRE_ROUTE}>Formulaire</NavLink>
-        </Menu.Item>
-        <Menu.Item key="4" icon={<BiMap />}>
-          <NavLink to={LOCALISATION_ROUTE}>Localisation</NavLink>
-        </Menu.Item>
-        <Menu.Item key="5" icon={<TbMessage />}>
-          <NavLink to={NOTIFICATIONS_ROUTE}>Notifications</NavLink>
-        </Menu.Item>
-        <Menu.Item key="6" icon={<BiBarChartAlt2 />}>
-          <NavLink to={STATIC_ROUTE}>Statistiques</NavLink>
-        </Menu.Item>
+        {localStorage.getItem("UserRole") != "Admin" && (
+          <>
+            <Menu.Item key="1" icon={<HiOutlineHome />}>
+              <NavLink to={DASHBOARD_ROUTE}>Tableau de bord</NavLink>
+            </Menu.Item>
+            <Menu.Item key="2" icon={<AiOutlineCarryOut />}>
+              <NavLink to={PLANNING_ROUTE}>Planning</NavLink>
+            </Menu.Item>
+            <Menu.Item key="3" icon={<FaWpforms />}>
+              <NavLink to={FORMULAIRE_ROUTE}>Formulaire</NavLink>
+            </Menu.Item>
+            <Menu.Item key="4" icon={<BiMap />}>
+              <NavLink to={LOCALISATION_ROUTE}>Localisation</NavLink>
+            </Menu.Item>
+            <Menu.Item key="5" icon={<TbMessage />}>
+              <NavLink to={NOTIFICATIONS_ROUTE}>Notifications</NavLink>
+            </Menu.Item>
+            <Menu.Item key="6" icon={<BiBarChartAlt2 />}>
+              <NavLink to={STATIC_ROUTE}>Statistiques</NavLink>
+            </Menu.Item>
+          </>
+        )}
+        {localStorage.getItem("UserRole") == "Admin" && (
+          <>
+            <Menu.Item key="7" icon={<BiUserCircle />}>
+              <NavLink to={USERLIST_ROUTE}>Liste des Utilisateurs</NavLink>
+            </Menu.Item>
+            <Menu.Item key="8" icon={<AiOutlineAudit />}>
+              <NavLink to={TRACABILITE_ROUTE}>Tracabilite</NavLink>
+            </Menu.Item>
+          </>
+        )}
+
         <Menu.Item className="logout" key="0" icon={<BiLogOut />}>
           <button
             style={{
@@ -72,5 +86,6 @@ const sideBar = (props) => {
 
 const mapStateToProps = (state) => ({
   error: state.authReducer.errorMessage,
+  role: state.authReducer.userRole,
 });
 export default connect(mapStateToProps, { logout })(sideBar);

@@ -1,5 +1,7 @@
 import MainLayout from "../../Layout/mainLayout";
-import { RiChatDeleteLine } from "react-icons/ri";
+import { BsPencilFill } from "react-icons/bs";
+import { MdDeleteForever } from "react-icons/md";
+import { FaEye } from "react-icons/fa";
 import { Space, Table, Tag } from "antd";
 import { useState } from "react";
 
@@ -105,18 +107,24 @@ const planning_columns = [
     key: "action",
     render: (_, record) => (
       <Space size="middle">
-        <a>modif</a>
         <a>
-          <RiChatDeleteLine />
+          <FaEye />
         </a>
+        {localStorage.getItem("UserRole") === "Ing" && (
+          <>
+            <a>
+              <BsPencilFill />
+            </a>
+            <a>
+              <MdDeleteForever />
+            </a>
+          </>
+        )}
       </Space>
     ),
   },
 ];
-const title = "Planning";
 const Planning = () => {
-  const [data, setData] = useState(false);
-
   return (
     <MainLayout
       sharedData={plannig_data}

@@ -7,6 +7,8 @@ import "antd/dist/antd.min.css";
 import "./styles/sideBar.css";
 import "./styles/main.css";
 import "./styles/PlanningFormsModal.css";
+import "./styles/popupStyler.css";
+import "./styles/login.css";
 
 const container = document.getElementById("root");
 const root = createRoot(container);

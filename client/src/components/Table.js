@@ -2,13 +2,12 @@ import { Alert, Button, Form, Input, Popconfirm, Table } from "antd";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import ModalComponent from "./modal";
 const { Search } = Input;
-const onSearch = (value) => alert("Hello! I am an alert box!!");
+const onSearch = (value) => console.log(value);
 
 const TableComponent = (props) => {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     const timer = setTimeout(() => {
-      console.log(loading);
       setLoading(false);
     }, 500);
   }, []);
@@ -17,7 +16,7 @@ const TableComponent = (props) => {
     <Table
       title={() => (
         <div className="TableTitle">
-          <ModalComponent width="1000px" header={props.header} />
+          <ModalComponent width="100%" header={props.header} />
 
           <Search
             placeholder="input search text"
