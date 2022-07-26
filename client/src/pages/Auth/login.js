@@ -3,6 +3,7 @@ import { connect, useDispatch } from "react-redux";
 import { Navigate } from "react-router-dom";
 import { login } from "../../redux/actions/authAction";
 import avatar from "../../images/avatar.png";
+import { Button, Checkbox, Form, Input } from "antd";
 import {
   ADMIN_PATH,
   DASHBOARD_ROUTE,
@@ -16,17 +17,24 @@ const Login = (props) => {
     username: "",
     password: "",
   });
-
-  const onChange = (e) => {
-    setValues({ ...values, [e.target.name]: e.target.value });
-  };
-
-  const onSubmit = async (e) => {
-    e.preventDefault();
+  const onFinish = async (values) => {
+    console.log("Success:", values);
     props.login(values);
   };
+
+  const onFinishFailed = (errorInfo) => {
+    console.log("Failed:", errorInfo);
+  };
+
+  // const onChange = (e) => {
+  //   setValues({ ...values, [e.target.name]: e.target.value });
+  // };
+
+  // const onSubmit = async () => {
+  //   console.log(values);
+  //   // props.login(values);
+  // };
   useEffect(() => {
-    // console.log(localStorage.getItem("UserRole"));
     switch (localStorage.getItem("UserRole")) {
       case "User":
         setRoute(DASHBOARD_ROUTE);
@@ -49,7 +57,7 @@ const Login = (props) => {
   const redirectPage = <Navigate to={route} />;
   const loginPage = (
     <div>
-      <form onSubmit={(e) => onSubmit(e)} className="login-box">
+      {/* <form onSubmit={(e) => onSubmit(e)} className="login-box">
         <img src={avatar} className="avatar" />
         <p className="login-title">SONELGAZ-RME</p>
 
@@ -82,7 +90,81 @@ const Login = (props) => {
 
           <input type="submit" name="submit" value="Se connecter" />
         </div>
-      </form>
+      </form> */}
+      <Form
+        className="login-box"
+        name="basic"
+        labelCol={{
+          span: 8,
+        }}
+        wrapperCol={{
+          span: 16,
+        }}
+        initialValues={{
+          remember: true,
+        }}
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+        autoComplete="off"
+      >
+        <img src={avatar} className="avatar" />
+        <p className="login-title">SONELGAZ-RME</p>
+        <div className="fields-box">
+          <Form.Item
+            className="form-control"
+            label="Username"
+            name="username"
+            value={values.username}
+            placeholder="Nom d'utilisateur"
+            rules={[
+              {
+                required: true,
+                message: "Please input your username!",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            className="form-control"
+            label="Password"
+            name="password"
+            placeholder="Mot de passe"
+            value={values.password}
+            rules={[
+              {
+                required: true,
+                message: "Please input your password!",
+              },
+            ]}
+          >
+            <Input.Password />
+          </Form.Item>
+
+          <Form.Item
+            name="remember"
+            valuePropName="checked"
+            wrapperCol={{
+              offset: 8,
+              span: 16,
+            }}
+          >
+            <Checkbox>Remember me</Checkbox>
+          </Form.Item>
+
+          <Form.Item
+            wrapperCol={{
+              offset: 8,
+              span: 16,
+            }}
+          >
+            <Button type="primary" htmlType="submit">
+              Submit
+            </Button>
+          </Form.Item>
+        </div>
+      </Form>
     </div>
   );
   {

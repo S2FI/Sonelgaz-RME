@@ -1,6 +1,7 @@
 import { Layout } from "antd";
 import GisComponent from "../pages/gis/gisComponent";
 import TableComponent from "../components/Table";
+import { BsGoogle } from "react-icons/bs";
 const { Content, Footer, Header } = Layout;
 
 const MainLayout = (props) => {

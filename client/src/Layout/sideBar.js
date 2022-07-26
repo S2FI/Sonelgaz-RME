@@ -22,6 +22,9 @@ import { connect } from "react-redux";
 const { Sider } = Layout;
 
 const sideBar = (props) => {
+  let firstPage = "1";
+  localStorage.getItem("UserRole") == "Admin" ? (firstPage = "7") : firstPage;
+
   const [collapsed, setCollapsed] = useState(false);
   return (
     <Sider
@@ -33,7 +36,7 @@ const sideBar = (props) => {
       <Menu
         className="menus"
         theme="dark"
-        defaultSelectedKeys={["1"]}
+        defaultSelectedKeys={[firstPage]}
         mode="inline"
       >
         {localStorage.getItem("UserRole") != "Admin" && (
@@ -48,7 +51,7 @@ const sideBar = (props) => {
               <NavLink to={FORMULAIRE_ROUTE}>Formulaire</NavLink>
             </Menu.Item>
             <Menu.Item key="4" icon={<BiMap />}>
-              <NavLink to={LOCALISATION_ROUTE}>Localisation</NavLink>
+              <NavLink to={LOCALISATION_ROUTE}>Map</NavLink>
             </Menu.Item>
             <Menu.Item key="5" icon={<TbMessage />}>
               <NavLink to={NOTIFICATIONS_ROUTE}>Notifications</NavLink>

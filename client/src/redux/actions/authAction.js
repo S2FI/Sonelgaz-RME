@@ -1,4 +1,4 @@
-import { getIP, getRoles, onLogin, onLogout } from "../../api/auth";
+import { getIP, getUsers, onLogin, onLogout } from "../../api/auth";
 import {
   AUTHENTICATE_USER,
   ERROR_AUTH,
@@ -13,12 +13,11 @@ export const login = (values) => async (dispatch) => {
     const { username, password } = values;
     // const UserIp = await getIP();
     // console.log(UserIp);
-    const role = await getRoles();
+    const role = await getUsers();
     //get user role with the same username
-    const userRole = role.data.users.find((obj) => {
+    const userRole = role.data.find((obj) => {
       return obj.username == username;
     });
-    console.log(userRole);
     //const userIP = await getIP();
     dispatch({
       type: AUTHENTICATE_USER,
@@ -44,9 +43,9 @@ export const login = (values) => async (dispatch) => {
 
 export const getUserList = () => async (dispatch) => {
   try {
-    const userlist = await getRoles();
-    const users = userlist.data.users.map((user, index) => {
-      return (user = { ...user, key: index });
+    const userlist = await getUsers();
+    const users = userlist.data.map((user) => {
+      return (user = { ...user, key: user.id });
     });
     dispatch({
       type: USER_LIST,

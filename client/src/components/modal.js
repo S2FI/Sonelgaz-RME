@@ -1,11 +1,10 @@
 import { Alert, Button, Modal } from "antd";
 import { createContext, useState } from "react";
 import { connect } from "react-redux";
-import Register from "../pages/Auth/register";
+import Register from "../crud/register";
 import PlanningForms from "../pages/Planning/planningForm";
 import PlanningFormInfos from "../pages/Planning/planningFormInfos";
 const ModalComponent = (props) => {
-  const [modal, contextHolder] = Modal.useModal();
   const [visible, setVisible] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [modalAlert, setModalAlert] = useState(false);
