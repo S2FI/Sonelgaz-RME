@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { onRegistration } from "../api/auth";
 import { Button, Checkbox, Form, Input } from "antd";
-
-const Register = () => {
+import { getUserList } from "../redux/actions/authAction";
+import { connect } from "react-redux";
+const Register = (props) => {
   const [values, setValues] = useState({
     // init
     username: "",
@@ -24,7 +25,9 @@ const Register = () => {
       setError("");
       setSuccess(data.message);
       setValues({ username: "", password: "", role: "" }); // init values after success
+      props.getUserList();
     } catch (error) {
+      console.log(error);
       setError(error.response.data.error);
       setSuccess("");
     }
@@ -62,7 +65,7 @@ const Register = () => {
             },
           ]}
         >
-          <Input />
+          <Input placeholder="Entrer le nom d'utilisateur" />
         </Form.Item>
 
         <Form.Item
@@ -89,7 +92,7 @@ const Register = () => {
             },
           ]}
         >
-          <Input />
+          <Input placeholder="Designer le role" />
         </Form.Item>
 
         <Form.Item
@@ -110,5 +113,7 @@ const Register = () => {
     </div>
   );
 };
-
-export default Register;
+const mapStateToProps = (state) => ({
+  usersList: state.authReducer.users,
+});
+export default connect(mapStateToProps, { getUserList })(Register);

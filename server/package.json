@@ -26,7 +26,7 @@
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.0",
     "pg": "^8.7.3",
-    "typedi": "^0.10.0",
+    "typedi": "^0.10.0",  
     "typeorm": "^0.2.45"
   },
   "devDependencies": {

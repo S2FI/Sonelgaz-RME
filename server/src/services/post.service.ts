@@ -12,33 +12,23 @@ export class PostService {
   constructor() {}
 
   public login = async (req, res) => {
-    let user = req.body;
-  
-    let payload = {
-      id: user.id,
-      username: user.username,
-    };
-  
+    let userInfo = req.body;
+    let payload = userInfo.username
+         
     try {
-      const token = await sign(payload, SECRET);
-
-      const loginFieldsCheck = check('username').custom(async (value, { req }) => {
-        const customRepo: any = getCustomRepository(userRepository)  
-          const user = await customRepo.find({ username : value })
-      
-        if (!user.rows.length) {
+      const customRepo: any = getCustomRepository(userRepository)
+    const user = await customRepo.find({ username : userInfo.username })   
+        if (!Object.keys(user).length) {
           throw new Error('username does not exists.')
         }
       
-        const validPassword = await compare(req.body.password, user.rows[0].password)
+        const validPassword = await compare(userInfo.password, user[0].password)
       
         if (!validPassword) {
           throw new Error('Wrong password')
         }
-      
-        req.user = user.rows[0]
-      })
-      
+        
+      const token = await sign(payload, SECRET);
   
       return res.status(200).cookie("token", token, { httpOnly: true }).json({
         success: true,
@@ -77,9 +67,24 @@ export class PostService {
   public register = async (req, res) => { 
       const { username, password, role } = req.body;
       try {
-        
+
+        if (password.length < 5) {
+          throw new Error('password too short')
+        }
+
+        if (username.length < 3) {
+          throw new Error('username too short')
+        }
+
+      //check if username exists
+      const customRepo: any = getCustomRepository(userRepository)
+    const user = await customRepo.find({ username : username })   
+        if (Object.keys(user).length) {
+          throw new Error('username already exists')
+        }
+
+        //registration
         const hashedPassword = await hash(password, 10);
-        const customRepo: any = getCustomRepository(userRepository)  
            await customRepo.insert(
             { username: username,
                password: hashedPassword,
@@ -132,7 +137,7 @@ export class PostService {
     });
   } catch (error) {
     console.log(error.message);
-    return res.status(500).json({
+    return res.status(500).json({ 
       error: error.message,
     });
       

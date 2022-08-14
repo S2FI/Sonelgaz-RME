@@ -1,3 +1,4 @@
+import { programmeEntity } from './../planningEntities/program.entity';
 import {
     Entity,
     PrimaryGeneratedColumn,
@@ -6,7 +7,9 @@ import {
     CreateDateColumn,
     ManyToMany,
     JoinTable,
+    OneToMany,
   } from 'typeorm';
+import { userEntity } from './user.entity';
 //   import { Role } from '../role/role.entity';
   @Entity('equipe')
   export class equipeEntity {
@@ -25,6 +28,11 @@ import {
     @UpdateDateColumn({ name: 'updated_at' })
     updatedAt: Date;
   
+    @OneToMany(()=> programmeEntity, programme => programme.equip)
+    program : programmeEntity[]
+
+    @OneToMany(()=> userEntity, user => user.equip)
+    Employer : userEntity[]
 
     // //Many-to-many relation with role
     // @ManyToMany((type) => Role, {

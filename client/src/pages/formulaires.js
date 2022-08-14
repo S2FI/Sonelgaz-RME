@@ -1,5 +1,5 @@
 import MainLayout from "../Layout/mainLayout";
-import { Space, Table, Tag } from "antd";
+import { Button, Space, Table, Tag } from "antd";
 import { FaEye } from "react-icons/fa";
 const forms_data = [
   {
@@ -49,9 +49,9 @@ const forms_columns = [
     key: "action",
     render: (_, record) => (
       <Space size="middle">
-        <a>
+        <Button>
           <FaEye />
-        </a>
+        </Button>
       </Space>
     ),
   },

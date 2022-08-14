@@ -49,10 +49,7 @@ const ModalComponent = (props) => {
             onCancel={handleCancel}
             footer={[]}
           >
-            <PlanningFormInfos savePlanning={savePlanning} />
-            {modalAlert && (
-              <Alert message="Success Tips" type="success" showIcon />
-            )}
+            <PlanningFormInfos />
           </Modal>
         </>
       )}

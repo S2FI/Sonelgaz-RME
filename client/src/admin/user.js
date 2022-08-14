@@ -1,5 +1,5 @@
 import { Popconfirm, Space, Modal, Button } from "antd";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BsPencilFill } from "react-icons/bs";
 import { MdDeleteForever } from "react-icons/md";
 import { connect } from "react-redux";
@@ -7,12 +7,14 @@ import { onDelete } from "../api/auth";
 import UserUpdateForm from "../crud/userUpdateForm";
 import MainLayout from "../Layout/mainLayout";
 import { getUserList } from "../redux/actions/authAction";
+import UserOperations from "./userOperations";
 
 const UserList = (props) => {
   // modal setup
   const [modal, contextHolder] = Modal.useModal();
   const [visible, setVisible] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
+  const [userList, setUserList] = useState(props.usersList);
 
   const showModal = () => {
     setVisible(true);
@@ -21,13 +23,14 @@ const UserList = (props) => {
     console.log("Clicked cancel button");
     setVisible(false);
   };
-
   //get Userlist
   useEffect(() => {
     props.getUserList();
   }, []);
 
-  const [userList, setUserList] = useState(props.usersList);
+  useEffect(() => {
+    setUserList(props.usersList);
+  }, [props.usersList]);
 
   const handleDelete = async (key) => {
     const newData = Object.values(userList).filter((item) => item.key !== key);
@@ -53,35 +56,14 @@ const UserList = (props) => {
     {
       title: "operation",
       dataIndex: "operation",
-      render: (_, record) =>
+      key: "operation",
+      render: (_, record, index) =>
         UserList.length >= 1 ? (
-          <>
-            <Popconfirm
-              title="Sure to delete?"
-              onConfirm={() => handleDelete(record.key)}
-            >
-              <Button>
-                <MdDeleteForever />
-              </Button>
-            </Popconfirm>
-            <Space>
-              <>
-                <Button onClick={showModal}>
-                  <BsPencilFill />
-                </Button>
-
-                <Modal
-                  title="Update"
-                  visible={visible}
-                  confirmLoading={confirmLoading}
-                  onCancel={handleCancel}
-                  footer={[]}
-                >
-                  <UserUpdateForm id={record.key} />
-                </Modal>
-              </>
-            </Space>
-          </>
+          <UserOperations
+            recordKey={record.key}
+            record={record}
+            handleDelete={handleDelete}
+          />
         ) : null,
     },
   ];

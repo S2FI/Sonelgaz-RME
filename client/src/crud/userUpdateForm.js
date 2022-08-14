@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Button, Checkbox, Form, Input } from "antd";
+import { connect } from "react-redux";
 import { onUpdate } from "../api/auth";
+import { getUserList } from "../redux/actions/authAction";
 
 const UserUpdateForm = (props) => {
   const [updateValues, setUpdateValues] = useState({
@@ -23,6 +25,7 @@ const UserUpdateForm = (props) => {
       setError("");
       setSuccess(data.message);
       setUpdateValues({ username: "", password: "", role: "" });
+      props.getUserList();
     } catch (error) {
       console.log(error);
       setError(error.response.data.error);
@@ -38,6 +41,7 @@ const UserUpdateForm = (props) => {
     <div>
       <Form
         name="basic"
+        key={props.id}
         labelCol={{
           span: 8,
         }}
@@ -51,6 +55,7 @@ const UserUpdateForm = (props) => {
         <Form.Item
           label="Username"
           name="username"
+          initialValue={props.record.username}
           value={updateValues.username}
           rules={[
             {
@@ -108,4 +113,7 @@ const UserUpdateForm = (props) => {
   );
 };
 
-export default UserUpdateForm;
+const mapStateToProps = (state) => ({
+  usersList: state.authReducer.users,
+});
+export default connect(mapStateToProps, { getUserList })(UserUpdateForm);

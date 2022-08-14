@@ -6,7 +6,10 @@ import {
     CreateDateColumn,
     ManyToMany,
     JoinTable,
+    ManyToOne,
+    JoinColumn,
   } from 'typeorm';
+import { equipeEntity } from './equipe.entity';
 //   import { Role } from '../role/role.entity';
   @Entity('user')
   export class userEntity {
@@ -26,6 +29,9 @@ import {
     @UpdateDateColumn({ name: 'updated_at' })
     updatedAt: Date;
   
+    @ManyToOne(()=> equipeEntity, equipe => equipe.Employer)
+    @JoinColumn ({})
+    equip: equipeEntity
 
     // //Many-to-many relation with role
     // @ManyToMany((type) => Role, {

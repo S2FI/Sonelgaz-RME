@@ -1,3 +1,4 @@
+import { programmeEntity } from './program.entity';
 import {
     Entity,
     PrimaryGeneratedColumn,
@@ -6,15 +7,16 @@ import {
     CreateDateColumn,
     ManyToMany,
     JoinTable,
+    OneToMany,
   } from 'typeorm';
 //   import { Role } from '../role/role.entity';
   @Entity('planning')
   export class planningEntity {
     @PrimaryGeneratedColumn()
     id_planning: number;
-    @Column({ type: 'varchar', nullable: false })
+    @Column({ type: 'varchar', nullable: true })
     Titre_planning: string;
-    // we need to add a default password and get it form the .env file
+    
     @Column({ type: 'varchar', nullable: true })
     Type_planning: string;
     @Column({ type: 'varchar', nullable: true })
@@ -26,6 +28,8 @@ import {
     @UpdateDateColumn({ name: 'updated_at' })
     updatedAt: Date;
   
+    @OneToMany(()=> programmeEntity, programme => programme.plan )
+    program : programmeEntity[]
 
     // //Many-to-many relation with role
     // @ManyToMany((type) => Role, {

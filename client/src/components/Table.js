@@ -11,7 +11,7 @@ const TableComponent = (props) => {
       setLoading(false);
     }, 500);
   }, []);
-
+  console.log(props.sharedData);
   return (
     <Table
       title={() => (

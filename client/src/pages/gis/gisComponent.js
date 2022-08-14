@@ -36,7 +36,7 @@ const GisComponent = () => {
       duration: 250,
     },
   });
-  popup.setPosition(undefined);
+  // popup.setPosition(undefined);
 
   const marker = new Style({
     image: new Icon({

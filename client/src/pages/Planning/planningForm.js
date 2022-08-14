@@ -24,121 +24,98 @@ const EditableRow = ({ index, ...props }) => {
   );
 };
 
-const EditableCell = ({
-  title,
-  editable,
-  children,
-  dataIndex,
-  record,
-  handleSave,
-  ...restProps
-}) => {
-  const [editing, setEditing] = useState(false);
-  const inputRef = useRef(null);
-  const form = useContext(EditableContext);
-  useEffect(() => {
-    if (editing) {
-      inputRef.current.focus();
-    }
-  }, [editing]);
+const PlanningForms = (props) => {
+  const [count, setCount] = useState(1);
+  const [selectData, setSelectData] = useState({
+    [0]: {},
+  });
 
-  const toggleEdit = () => {
-    setEditing(!editing);
-    form.setFieldsValue({
-      [dataIndex]: record[dataIndex],
-    });
-  };
-
-  const save = async () => {
-    try {
-      const values = await form.validateFields();
-      toggleEdit();
-      handleSave({ ...record, ...values });
-    } catch (errInfo) {
-      console.log("Save failed:", errInfo);
-    }
-  };
-
-  let childNode = children;
-
-  if (editable) {
-    childNode = editing ? (
-      <Form.Item
-        style={{
-          margin: 0,
-        }}
-        name={dataIndex}
-        rules={[
-          {
-            required: true,
-            message: `${title} is required.`,
-          },
-        ]}
-      >
-        <Input ref={inputRef} onPressEnter={save} onBlur={save} />
-      </Form.Item>
-    ) : (
-      <div
-        className="editable-cell-value-wrap"
-        style={{
-          paddingRight: 24,
-        }}
-        onClick={toggleEdit}
-      >
-        {children}
-      </div>
-    );
-  }
-
-  return <td {...restProps}>{childNode}</td>;
-};
-
-const PlanningForms = () => {
+  // const getSelectorData = (selectedValues) => {
+  //   setSelectData(selectedValues);
+  // };
   const [dataSource, setDataSource] = useState([
     {
       key: "0",
+
       mois: (
-        <Space direction="vertical" size={12}>
-          <RangePicker />
-        </Space>
+        <RangePicker
+          onChange={(values, dateString) =>
+            setSelectData((prevdata) => {
+              return {
+                [0]: {
+                  ...prevdata[0],
+                  date_debut_programme: dateString[0],
+                  date_fin_programme: dateString[1],
+                },
+              };
+            })
+          }
+          format="YYYY/MM/DD"
+        />
       ),
+
       district: (
         <InputSelector
-          defaultValue="district"
           option1="district 1"
           option2="district 2"
+          name="district"
+          getSelectorData={(value) =>
+            setSelectData((prevdata) => {
+              return { [0]: { ...prevdata[0], district: value } };
+            })
+          }
         />
       ),
       depart: (
         <InputSelector
-          defaultValue="depart"
           option1="depart 1"
           option2="depart 2"
+          name="depart"
+          getSelectorData={(value) =>
+            setSelectData((prevdata) => {
+              return { [0]: { ...prevdata[0], depart: value } };
+            })
+          }
         />
       ),
       ligne: (
         <InputSelector
-          defaultValue="ligne"
           option1="ligne 1"
           option2="ligne 2"
+          name="code_ouvrage"
+          getSelectorData={(value) =>
+            setSelectData((prevdata) => {
+              return { [0]: { ...prevdata[0], code_ouvrage: value } };
+            })
+          }
         />
       ),
-      poste: (
+      equipe: (
         <InputSelector
-          defaultValue="poste"
-          option1="poste 1"
-          option2="poste 2"
+          option1="B"
+          option2="C"
+          name="nom_equipe_programme"
+          getSelectorData={(value) =>
+            setSelectData((prevdata) => {
+              return { [0]: { ...prevdata[0], nom_equipe_programme: value } };
+            })
+          }
         />
-      ),
-      Criticite: (
-        <InputSelector defaultValue="Faible" option1="Moyen" option2="Eleve" />
       ),
     },
   ]);
-  const [count, setCount] = useState(2);
 
   const handleDelete = (key) => {
     const newData = dataSource.filter((item) => item.key !== key);
+
+    setSelectData((current) => {
+      //  create copy of state object
+
+      // remove key from object
+      delete current[key];
+
+      return current;
+    });
     setDataSource(newData);
   };
 
@@ -162,12 +139,8 @@ const PlanningForms = () => {
       dataIndex: "ligne",
     },
     {
-      title: "poste",
-      dataIndex: "poste",
-    },
-    {
-      title: "Criticite",
-      dataIndex: "Criticite",
+      title: "equipe",
+      dataIndex: "equipe",
     },
     {
       title: "operation",
@@ -178,9 +151,9 @@ const PlanningForms = () => {
             title="Sure to delete?"
             onConfirm={() => handleDelete(record.key)}
           >
-            <a>
+            <Button>
               <MdDeleteForever />
-            </a>
+            </Button>
           </Popconfirm>
         ) : null,
     },
@@ -190,63 +163,94 @@ const PlanningForms = () => {
     const newData = {
       key: count,
       mois: (
-        <Space direction="vertical" size={12}>
-          <RangePicker />
-        </Space>
+        <RangePicker
+          onChange={(values, dateString) =>
+            setSelectData((prevdata) => {
+              return {
+                ...prevdata,
+                [count]: {
+                  ...prevdata[count],
+                  date_debut_programme: dateString[0],
+                  date_fin_programme: dateString[1],
+                },
+              };
+            })
+          }
+          format="YYYY/MM/DD"
+        />
       ),
       district: (
-        <Form.Item
-          rules={[
-            {
-              required: true,
-              message: "district est obligatoire",
-            },
-          ]}
-        >
-          <InputSelector option1="district 1" option2="district 2" />
-        </Form.Item>
+        <InputSelector
+          option1="district 1"
+          option2="district 2"
+          name="district"
+          getSelectorData={(value) =>
+            setSelectData((prevdata) => {
+              return {
+                ...prevdata,
+                [count]: { ...prevdata[count], district: value },
+              };
+            })
+          }
+        />
       ),
       depart: (
         <InputSelector
-          defaultValue="depart"
           option1="depart 1"
           option2="depart 2"
+          name="depart"
+          getSelectorData={(value) =>
+            setSelectData((prevdata) => {
+              return {
+                ...prevdata,
+                [count]: { ...prevdata[count], depart: value },
+              };
+            })
+          }
         />
       ),
       ligne: (
         <InputSelector
-          defaultValue="ligne"
           option1="ligne 1"
           option2="ligne 2"
+          name="code_ouvrage"
+          getSelectorData={(value) =>
+            setSelectData((prevdata) => {
+              return {
+                ...prevdata,
+                [count]: { ...prevdata[count], code_ouvrage: value },
+              };
+            })
+          }
         />
       ),
-      poste: (
+      equipe: (
         <InputSelector
-          defaultValue="poste"
-          option1="poste 1"
-          option2="poste 2"
+          option1="B"
+          option2="C"
+          name="nom_equipe_programme"
+          getSelectorData={(value) =>
+            setSelectData((prevdata) => {
+              return {
+                ...prevdata,
+                [count]: { ...prevdata[count], nom_equipe_programme: value },
+              };
+            })
+          }
         />
-      ),
-      Criticite: (
-        <InputSelector defaultValue="Faible" option1="Moyen" option2="Elevé" />
       ),
     };
     setDataSource([...dataSource, newData]);
     setCount(count + 1);
-  };
-
-  const handleSave = (row) => {
-    const newData = [...dataSource];
-    const index = newData.findIndex((item) => row.key === item.key);
-    const item = newData[index];
-    newData.splice(index, 1, { ...item, ...row });
-    setDataSource(newData);
+    console.log("handel add count = ", count);
+    setSelectData((prevdata) => {
+      return { ...prevdata, [count]: { ...prevdata[count] } };
+    });
   };
 
   const components = {
     body: {
       row: EditableRow,
-      cell: EditableCell,
     },
   };
   const columns = defaultColumns.map((col) => {
@@ -261,12 +265,32 @@ const PlanningForms = () => {
         editable: col.editable,
         dataIndex: col.dataIndex,
         title: col.title,
-        handleSave,
+        // handleSave,
       }),
     };
   });
+
+  // console.log(district + depart + ligne + equipe);
+  // console.log(date);
+  // setSelectData({
+  //   date_debut: date.date_debut,
+  //   date_fin: date.date_fin,
+  //   district: district,
+  //   depart: depart,
+  //   ligne: ligne,
+  //   equipe: equipe,
+  // });
+  console.log(selectData);
+  useEffect(() => {
+    props.form.setFieldsValue({
+      program: selectData,
+    });
+  }, [selectData]);
+  //  console.log(count);
+
+  // console.log(programData);
   return (
-    <div>
+    <React.Fragment>
       <Button
         onClick={handleAdd}
         type="primary"
@@ -276,15 +300,26 @@ const PlanningForms = () => {
       >
         Add a row
       </Button>
-      <Table
-        components={components}
-        rowClassName={() => "editable-row"}
-        bordered
-        dataSource={dataSource}
-        columns={columns}
-        tableLayout="fixed"
-      />
-    </div>
+      <Form.Item
+        name="program"
+        rules={[
+          {
+            required: true,
+            message: "obligatoire",
+          },
+        ]}
+      >
+        <Table
+          components={components}
+          rowClassName={() => "editable-row"}
+          bordered
+          dataSource={dataSource}
+          columns={columns}
+          tableLayout="fixed"
+        />
+      </Form.Item>
+      {/* <Form.Item name="date" /> */}
+    </React.Fragment>
   );
 };
 

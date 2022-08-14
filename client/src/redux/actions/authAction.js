@@ -36,7 +36,7 @@ export const login = (values) => async (dispatch) => {
     console.log(error);
     dispatch({
       type: ERROR_AUTH,
-      payload: error.response.data.errors[0].msg,
+      payload: error.response.data.error,
     });
   }
 };
@@ -71,7 +71,7 @@ export const logout = () => async (dispatch) => {
     console.log(error);
     dispatch({
       type: ERROR_AUTH,
-      payload: error.response.data.errors[0].msg,
+      payload: error.response.data.error,
     });
   }
 };
