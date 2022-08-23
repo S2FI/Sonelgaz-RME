@@ -6,6 +6,8 @@ import {
 
 const initialState = {
   plan: "",
+  program: [],
+  data: [],
 };
 
 export default function (state = initialState, { payload, type }) {

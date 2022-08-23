@@ -14,7 +14,7 @@ function AffichageModal(props) {
   // console.log("first: => ", props.recordKey);
 
   useEffect(() => {
-    props.dataProgram.map((data, index) => {
+    props.dataProgram?.map((data, index) => {
       if (props.recordKey == data.id_planning) {
         setDataSource(data);
       }

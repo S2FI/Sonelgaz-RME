@@ -34,7 +34,7 @@ const PlanningUpdateForms = (props) => {
   const [rowAdd, setRowAdd] = useState(true);
 
   let indexSelect = {};
-  props.program_data.map((data, index) => {
+  props.program_data?.map((data, index) => {
     indexSelect[index] = {
       date_debut_programme: data.date_debut_programme,
       date_fin_programme: data.date_fin_programme,
@@ -52,7 +52,7 @@ const PlanningUpdateForms = (props) => {
     district: "",
   });
 
-  let tableRowData = props.program_data.map((data, index) => {
+  let tableRowData = props.program_data?.map((data, index) => {
     return (data = {
       key: index,
       mois: (

@@ -36,7 +36,8 @@ const PlanningUpdateForm = (props) => {
 
   useEffect(() => {
     setallData(props.programs);
-  }, [props.programs]);
+    console.log("datasourse li tba3tet =>", props.programs);
+  }, [JSON.stringify(props.programs)]);
 
   // console.log("============================********", props.programs);
   // console.log("=========================================", allData.program);

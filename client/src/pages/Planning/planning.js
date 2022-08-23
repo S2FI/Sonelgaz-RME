@@ -24,10 +24,14 @@ const Planning = (props) => {
   //     setLoading(false);
   //   }, 500);
   // }, []);
+  const loadAllData = async () => {
+    await props.getPlanningList();
+    await props.getProgramme();
+    await props.getOuvrageData();
+  };
+
   useEffect(() => {
-    props.getPlanningList();
-    props.getProgramme();
-    props.getOuvrageData();
+    loadAllData();
   }, []);
 
   useEffect(() => {

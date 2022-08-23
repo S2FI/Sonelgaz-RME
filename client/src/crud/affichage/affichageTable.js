@@ -16,9 +16,9 @@ const AffichageTable = (props) => {
   //   let ouvrage = props.program_data.code_ouvrage.map((data, index) => {
   //     return <p> data</p>;
   //   });
-  console.log(props.program_data[0].code_ouvrage);
+  // console.log(props.program_data[0].code_ouvrage);
 
-  let tableRowData = props.program_data.map((data, index) => {
+  let tableRowData = props.program_data?.map((data, index) => {
     // console.log("first => ", data.code_ouvrage);
     const ouvrage =
       data.code_ouvrage != null

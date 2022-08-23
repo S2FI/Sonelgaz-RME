@@ -96,9 +96,14 @@ const PlanningForms = (props) => {
         </Select>
       ),
       depart: (
+        // <DepartSelector/>
         <Select
           onChange={(value) => {
             setdepartState(props.ouvrage_list[value]);
+            console.log(
+              "value on change depart =>>>>",
+              props.ouvrage_list[value]
+            );
             setcodeState(props.ouvrage_list[value][0]);
             setSelectData((prevdata) => {
               return { ...prevdata, [0]: { ...prevdata[0], depart: value } };

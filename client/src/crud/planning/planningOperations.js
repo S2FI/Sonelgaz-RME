@@ -17,7 +17,8 @@ function PlanningOperations(props) {
   // console.log(allData);
 
   useEffect(() => {
-    props.dataProgram.map((data, index) => {
+    console.log(props.recordKey);
+    props.dataProgram?.map((data, index) => {
       if (props.recordKey == data.id_planning) {
         setDataSource(data);
       }
