@@ -18,10 +18,10 @@ import { planningEntity } from './planning.entity';
     @PrimaryGeneratedColumn()
     id_programme: number;
 
-    @Column({ type: 'date' , nullable: false })
+    @Column({ type: 'date' , nullable: true })
     date_debut_programme: Date;
 
-    @Column({ type: 'date' , nullable: false })
+    @Column({ type: 'date' , nullable: true })
     date_fin_programme: Date;
     
     @Column({ type: 'varchar', nullable: true })
@@ -30,14 +30,11 @@ import { planningEntity } from './planning.entity';
     @Column({ type: 'varchar', nullable: true })
     depart: string;
 
-    @Column({ type: 'varchar', nullable: true })
-    code_ouvrage: string;
+    @Column({ type: 'varchar', array: true , nullable: true })
+    code_ouvrage: string[];
 
     @Column({ type: 'integer', nullable: true })
     code_programme: number;
-
-    @Column({ type: 'integer', nullable: true })
-    code_visite: number;
  
     @Column({ type: 'varchar', nullable: true })
     nom_equipe_programme: string;

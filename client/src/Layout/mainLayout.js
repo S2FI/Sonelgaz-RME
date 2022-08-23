@@ -21,6 +21,7 @@ const MainLayout = (props) => {
             sharedData={props.sharedData}
             sharedColumns={props.sharedColumns}
             header={props.header}
+            loading={props.loading}
           />
         );
     }

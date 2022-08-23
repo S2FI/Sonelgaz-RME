@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { onRegistration } from "../api/auth";
-import { Button, Checkbox, Form, Input } from "antd";
+import { Button, Checkbox, Form, Input, Select } from "antd";
 import { getUserList } from "../redux/actions/authAction";
 import { connect } from "react-redux";
 const Register = (props) => {
@@ -92,7 +92,12 @@ const Register = (props) => {
             },
           ]}
         >
-          <Input placeholder="Designer le role" />
+          <Select placeholder="Designer le role">
+            <Select.Option value="User">User</Select.Option>
+            <Select.Option value="Chef">Chef</Select.Option>
+            <Select.Option value="Ing">Ing</Select.Option>
+            <Select.Option value="Admin">Admin</Select.Option>
+          </Select>
         </Form.Item>
 
         <Form.Item

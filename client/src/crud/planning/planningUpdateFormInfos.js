@@ -1,22 +1,27 @@
 import { Button, Form, Input, Select, Space, Tooltip, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { createPlanning } from "../../api/planning";
-import PlanningForms from "./planningForm";
 import {
-  getPlanningList,
   getProgramme,
-  getOuvrageData,
+  getPlanningList,
 } from "../../redux/actions/planningAction";
-import DepartSelector from "../../components/selectors/departSelector";
+import PlanningFormInfos from "../../pages/Planning/planningFormInfos";
+import PlanningUpdateForms from "./planningUpdateForms";
+import { getFullPlanning, updatePlanning } from "../../api/planning";
+
 const { Option } = Select;
 
-const PlanningFormInfos = (props) => {
+const PlanningUpdateForm = (props) => {
   const [form] = Form.useForm();
   const [error, setError] = useState(false); //init error state
   const [success, setSuccess] = useState(false);
   const [finish, setFinish] = useState(false);
-  const [dataOuvrage, setDataOuvrage] = useState(props.ouvrage_list);
+  const [allData, setallData] = useState(props.programs);
+
+  const [defaultData, setdefaultData] = useState({
+    Titre_planning: "",
+    Type_planning: "",
+  });
 
   const [values, setValues] = useState({
     Titre_planning: "",
@@ -25,46 +30,39 @@ const PlanningFormInfos = (props) => {
     user_created: localStorage.getItem("Username"),
     program: {},
   });
-  // console.log("la79et pien louvrage =>", dataOuvrage);
+  // useEffect(() => {
+  //   props.getProgramme(props.id);
+  // }, []);
+
+  useEffect(() => {
+    setallData(props.programs);
+  }, [props.programs]);
+
+  // console.log("============================********", props.programs);
+  // console.log("=========================================", allData.program);
   // const insertProgram = (selectData) => {
   //   setProgramData(selectData);
-  // }=;
-  const onClick = async (values) => {
+  // };
+  const onClick = async () => {
     setFinish(true);
-    // setDate(true);
   };
-  const onFinish = async (values) => {
-    // Object.keys(values.program).forEach(async (key, index) => {
-    //   console.log("first keys =>", key);
-    //   console.log(
-    //     "first keys =>",
-    //     values.program[key].hasOwnProperty("date_debut_programme")
-    //   );
 
-    //   if (values.program[key].hasOwnProperty("date_debut_programme") == false) {
-    //     setDate(false);
-    //     return true;.
-    //   }
-    // });
-    // console.log("first keys =>", date);
-    // if (date == false) {
-    //   console.log("est que rah yedkhol hna wla non?");
-    //   setError("Veuillez indiquer la date");
-    // } else {
+  const onFinish = async (values) => {
     setFinish(true);
     console.log("Success:", values);
-    console.log(
-      "possible probleme ykon hna ===================================================================",
-      values.program
-    );
+    // console.log(values.Titre);
+    // console.log(values.type);
+    // console.log(values.program);
+    // console.log(values.program);
+    console.log("my update id =>", props.id);
     try {
-      const { data } = await createPlanning(values);
+      const { data } = await updatePlanning(props.id, values);
+      setFinish(false);
       setError("");
       setSuccess(data.message);
       console.log(data);
       props.getPlanningList();
       props.getProgramme();
-      setFinish(false);
     } catch (error) {
       console.log(error);
       setError(error.response.data.error);
@@ -84,6 +82,7 @@ const PlanningFormInfos = (props) => {
       <Form.Item
         label="Titre"
         name="Titre_planning"
+        initialValue={allData.Titre_planning}
         value={values.Titre_planning}
         rules={[
           {
@@ -92,12 +91,13 @@ const PlanningFormInfos = (props) => {
           },
         ]}
       >
-        <Input placeholder="Entrez le titre du planning" />
+        <Input />
       </Form.Item>
       <Form.Item
         label="Type"
         name="Type_planning"
         value={values.Type_planning}
+        initialValue={allData.Type_planning}
         rules={[
           {
             required: true,
@@ -123,13 +123,16 @@ const PlanningFormInfos = (props) => {
           <Option value=" ">None</Option>
         </Select>
       </Form.Item>
-      {/* <DepartSelector /> */}
 
-      <PlanningForms form={form} finish={finish} />
+      <PlanningUpdateForms
+        form={form}
+        finish={finish}
+        program_data={allData.program}
+      />
 
       <Form.Item name="submit">
         <Button key="submit" type="primary" htmlType="submit" onClick={onClick}>
-          Enregistrer planning
+          Modifier planning
         </Button>
       </Form.Item>
       <Form.Item>
@@ -141,11 +144,8 @@ const PlanningFormInfos = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-  planning_list: state.planningReducer.plan,
-  ouvrage_list: state.planningReducer.data,
+  program_list: state.planningReducer.program,
 });
-export default connect(mapStateToProps, {
-  getPlanningList,
-  getProgramme,
-  getOuvrageData,
-})(PlanningFormInfos);
+export default connect(mapStateToProps, { getProgramme, getPlanningList })(
+  PlanningUpdateForm
+);

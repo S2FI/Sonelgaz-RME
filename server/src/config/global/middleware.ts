@@ -1,5 +1,6 @@
 
 import cors from "cors";
+import { CLIENT_URL, MOBILE_URL } from "../../constants";
 
 const whitelist = ["http://localhost:3000"];
 const corsOptions = {
@@ -10,14 +11,15 @@ const corsOptions = {
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept",
   ],
-  origin: ["http://localhost:3000"],
-  // (origin: any, callback: any) => {
-  //   if (whitelist.includes(origin)) return callback(null, true);
+ origin: [CLIENT_URL, MOBILE_URL , "http://localhost:19006"]
+}
+// (origin: any, callback: any) => {
+//     if (whitelist.includes(origin)) return callback(null, true);
 
-  //   callback(new Error("Not allowed by CORS !"));
-  // },
-  optionSuccessStatus: 200,
-};
+//     callback(new Error("Not allowed by CORS !"));
+//   },
+//   optionSuccessStatus: 200,
+// };
 
 export const middlewares = (app: any) => {
   app.use(cors(corsOptions));

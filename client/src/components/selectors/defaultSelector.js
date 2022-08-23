@@ -1,8 +1,7 @@
 import { Cascader, Form, Input, Select, Space } from "antd";
 import { useState } from "react";
 const { Option } = Select;
-
-const InputSelector = (props) => {
+const DefaultSelector = (props) => {
   const [values, setValues] = useState("");
 
   const handelChange = (values) => {
@@ -11,6 +10,7 @@ const InputSelector = (props) => {
   return (
     <Form.Item
       name={props.name}
+      initialValue={props.initValue}
       rules={[
         {
           required: true,
@@ -31,4 +31,4 @@ const InputSelector = (props) => {
   );
 };
 
-export default InputSelector;
+export default DefaultSelector;

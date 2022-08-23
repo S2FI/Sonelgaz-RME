@@ -8,7 +8,7 @@ process.env.NODE_CONFIG_DIR = path.join(__dirname, "./config/env");
 import config from "config";
 import cors from "cors";
 import bodyParser from "body-parser";
-import { CLIENT_URL } from "./constants";
+import { CLIENT_URL, MOBILE_URL } from "./constants";
 import cookieParser from "cookie-parser";
 
 const PORT1 = config;
@@ -17,7 +17,7 @@ const PORT = 7000;
 
 let app = express();
 app.use(cookieParser());
-app.use(cors({ origin: CLIENT_URL, credentials: true }));
+app.use(cors( { origin: [CLIENT_URL, MOBILE_URL, "http://localhost:19006"], credentials: true })); //{ origin: '*', credentials: true } [CLIENT_URL, MOBILE_URL]
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 middlewares(app);
@@ -27,7 +27,7 @@ getOrmconfigConnection(process.env.NODE_ENV).then((ormConfig_: any) => {
     console.log(
       `Server is running at http://localhost:${ormConfig_.PORT_SERVER}`
     );
-    console.log("fff ", PORT1);
+    // console.log("fff ", PORT1);
   });
 });
 

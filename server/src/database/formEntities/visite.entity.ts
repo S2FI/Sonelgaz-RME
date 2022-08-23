@@ -16,9 +16,9 @@ import { formEntity } from './allForms.entity';
     id_form_visite: number;
 
     @Column({ type: 'varchar', nullable: true})
-    poste_visite: string;
+    code_ouvrage: string;
 
     @Column({ type: 'varchar', nullable: true })
-    anomalie: string;
+    description: string;
   
   }

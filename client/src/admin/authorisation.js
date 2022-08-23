@@ -9,7 +9,7 @@ import {
 
 const PrivateRoutes = (props) => {
   const [checker, setchecker] = useState(localStorage.getItem("UserRole"));
-  console.log(checker);
+  // console.log(checker);
   useEffect(() => {
     switch (localStorage.getItem("UserRole")) {
       case "Chef":

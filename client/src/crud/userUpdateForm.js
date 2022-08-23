@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Checkbox, Form, Input } from "antd";
+import { Button, Checkbox, Form, Input, Select } from "antd";
 import { connect } from "react-redux";
 import { onUpdate } from "../api/auth";
 import { getUserList } from "../redux/actions/authAction";
@@ -83,6 +83,7 @@ const UserUpdateForm = (props) => {
         <Form.Item
           label="Role"
           name="role"
+          initialValue={props.record.role}
           value={updateValues.role}
           rules={[
             {
@@ -91,7 +92,12 @@ const UserUpdateForm = (props) => {
             },
           ]}
         >
-          <Input />
+          <Select placeholder="Designer le role">
+            <Select.Option value="User">User</Select.Option>
+            <Select.Option value="Chef">Chef</Select.Option>
+            <Select.Option value="Ing">Ing</Select.Option>
+            <Select.Option value="Admin">Admin</Select.Option>
+          </Select>
         </Form.Item>
 
         <Form.Item

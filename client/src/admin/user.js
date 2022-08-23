@@ -13,7 +13,7 @@ const UserList = (props) => {
   // modal setup
   const [modal, contextHolder] = Modal.useModal();
   const [visible, setVisible] = useState(false);
-  const [confirmLoading, setConfirmLoading] = useState(false);
+  const [loading, setloading] = useState(true);
   const [userList, setUserList] = useState(props.usersList);
 
   const showModal = () => {
@@ -30,6 +30,7 @@ const UserList = (props) => {
 
   useEffect(() => {
     setUserList(props.usersList);
+    setloading(false);
   }, [props.usersList]);
 
   const handleDelete = async (key) => {
@@ -73,6 +74,7 @@ const UserList = (props) => {
       sharedData={userList}
       sharedColumns={user_columns}
       header={"UserList"}
+      loading={loading}
     />
   );
 };

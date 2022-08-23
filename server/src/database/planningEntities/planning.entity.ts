@@ -21,6 +21,9 @@ import {
     Type_planning: string;
     @Column({ type: 'varchar', nullable: true })
     user_created: string;
+  
+    @Column({ type: 'varchar', nullable: true })
+    code_visite: string;
 
     @CreateDateColumn({ name: 'date_planning' })
     date_planning: Date;

@@ -1,3 +1,4 @@
+import { FormService } from './../services/form.service';
 import { PPService } from './../services/pp.service';
 import { Router, Response, Request } from "express";
 import { getCustomRepository } from "typeorm";
@@ -13,11 +14,13 @@ export class PostController {
   public router: Router;
   private postService: PostService;
   private ppService : PPService;
+  private formService : FormService;
 
   constructor() {
     this.router = Router();
     this.postService = new PostService();
     this.ppService = new PPService();
+    this.formService = new FormService();
     this.routes();
   }
   public login = async (req: Request, res: Response) => {
@@ -43,7 +46,8 @@ export class PostController {
   };
   public planningdata = async (req: Request, res: Response) => {
     const customRepo: any = getCustomRepository(planRepository)
-    const mydata = await customRepo.find({select: ["id_planning" ,"Titre_planning","Type_planning", "date_planning"] }) 
+    const mydata = await customRepo.find({select: ["id_planning" ,"Titre_planning","Type_planning", "date_planning"],
+  order: {date_planning : "ASC"} }) 
     console.log(mydata)
     res.send(mydata)
   };
@@ -54,22 +58,38 @@ export class PostController {
   public delete_planning = async (req: Request, res: Response) => {
     this.ppService.deletePlanning(req, res);
   };
-  // public createProgram = async (req: Request, res: Response) => { 
-  //   this.ppService.createProgram(req,res)
-  // }
+
+  public update_planning = async (req: Request, res: Response) => {
+    this.ppService.updatePlanning(req, res); 
+  };
+  public createFormVisite = async (req: Request, res: Response) => { 
+    this.formService.createFormVisite(req,res)
+  }
+  public getOuvrage = async (req: Request, res: Response) => { 
+    const ouvrage = await this.ppService.getOuvrage(req,res)
+    res.send(ouvrage)
+  }
+  public fullPlanning = async (req: Request, res: Response) => { 
+    const plan = await this.ppService.getFullPlanning(req,res)
+    res.send(plan)
+  }
  
 
   public async routes() {
     this.router.get("/logout", this.logout);
     this.router.get("/users-get", this.userlist);
     this.router.get("/data", this.planningdata );
+    this.router.get("/full-planning", this.fullPlanning)
+    this.router.get("/liaison", this.getOuvrage );
 
     this.router.post("/login", this.login );
     this.router.post("/register", this.register );
     this.router.post("/plan", this.createPlanning );
+    this.router.post("/form-visite", this.createFormVisite );
   
 
     this.router.put("/update/:id", this.update);
+    this.router.put("/update_planning/:id", this.update_planning);
 
     this.router.delete("/delete/:id", this.delete);
     this.router.delete("/delete_planning/:id", this.delete_planning);

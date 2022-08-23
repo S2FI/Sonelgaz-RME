@@ -6,18 +6,37 @@ import { Button, Popconfirm, Space, Table, Tag } from "antd";
 import React, { useEffect, useState } from "react";
 import { deletePlanning, getPlanning } from "../../api/planning";
 import { connect } from "react-redux";
-import { getPlanningList } from "../../redux/actions/planningAction";
+import {
+  getPlanningList,
+  getProgramme,
+  getOuvrageData,
+} from "../../redux/actions/planningAction";
+import PlanningOperations from "../../crud/planning/planningOperations";
+import AffichageModal from "../../crud/affichage/affichageModal";
 
 const Planning = (props) => {
+  const [loading, setloading] = useState(true);
   const [dataPlanning, setDataPlanning] = useState(props.planning_list);
+  // const [dataProgram, setDataProgram] = useState(props.program_list);
 
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     setLoading(false);
+  //   }, 500);
+  // }, []);
   useEffect(() => {
     props.getPlanningList();
+    props.getProgramme();
+    props.getOuvrageData();
   }, []);
 
   useEffect(() => {
+    console.log(loading);
     setDataPlanning(props.planning_list);
+    setloading(false);
   }, [props.planning_list]);
+
+  console.log("ouvrage props =>", props.ouvrage_list);
 
   const handleDelete = async (key) => {
     const newData = Object.values(dataPlanning).filter(
@@ -59,15 +78,18 @@ const Planning = (props) => {
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          <Button>
-            <FaEye />
-          </Button>
+          <AffichageModal
+            recordKey={record.key}
+            record={record}
+            dataProgram={props.program_list}
+          />
           {localStorage.getItem("UserRole") === "Ing" && (
             <React.Fragment>
-              <Button>
-                <BsPencilFill />
-              </Button>
-
+              <PlanningOperations
+                recordKey={record.key}
+                record={record}
+                dataProgram={props.program_list}
+              />
               <Popconfirm
                 title="Sure to delete?"
                 onConfirm={() => handleDelete(record.key)}
@@ -88,11 +110,18 @@ const Planning = (props) => {
       sharedData={dataPlanning}
       sharedColumns={planning_columns}
       header={"Planning"}
+      loading={loading}
     />
   );
 };
 
 const mapStateToProps = (state) => ({
   planning_list: state.planningReducer.plan,
+  program_list: state.planningReducer.program,
+  ouvrage_list: state.planningReducer.data,
 });
-export default connect(mapStateToProps, { getPlanningList })(Planning);
+export default connect(mapStateToProps, {
+  getPlanningList,
+  getProgramme,
+  getOuvrageData,
+})(Planning);

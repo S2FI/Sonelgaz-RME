@@ -13,14 +13,14 @@ import Feature from "ol/Feature";
 import Icon from "ol/style/Icon";
 import { toStringHDMS } from "ol/coordinate";
 import Target from "ol/events/Target";
-import GisScale from "./gisScale";
 import { ScaleLine } from "ol/control";
 import TileWMS from "ol/source/TileWMS";
+import Popup from "ol-popup";
 
 const GisComponent = () => {
-  const container = document.getElementById("popup");
-  const content = document.getElementById("popup-content");
-  let close = document.getElementById("popup-closer");
+  // const container = document.getElementById("popup");
+  // const content = document.getElementById("popup-content");
+  // let close = document.getElementById("popup-closer");
   let control;
 
   control = new ScaleLine({
@@ -28,114 +28,129 @@ const GisComponent = () => {
     steps: 2,
     minWidth: 140,
   });
-
-  var popup = new Overlay({
-    element: container,
-    autoPan: true,
-    autoPanAnimation: {
-      duration: 250,
-    },
-  });
+  let popup = new Popup();
+  // let popup = new Overlay({
+  //   element: container,
+  //   autoPan: true,
+  //   autoPanAnimation: {
+  //     duration: 250,
+  //   },
+  // });
   // popup.setPosition(undefined);
 
-  const marker = new Style({
-    image: new Icon({
-      anchor: [0.5, 46],
-      anchorXUnits: "fraction",
-      anchorYUnits: "pixels",
-      // imgSize: [20, 20],
-      src: "https://openlayers.org/en/latest/examples/data/icon.png",
-    }),
-  });
-
+  // const marker = new Style({
+  //   image: new Icon({
+  //     anchor: [0.5, 46],
+  //     anchorXUnits: "fraction",
+  //     anchorYUnits: "pixels",
+  //     // imgSize: [20, 20],
+  //     src: "https://openlayers.org/en/latest/examples/data/icon.png",
+  //   }),
+  // });
+  const setSymbologyStyleFunction = (feature, resolution) => {
+    let featureType = feature.getGeometry().getType();
+  };
   const initMap = () => {
+    let tileLayers = [];
     // const raster = new TileLayer({
-    //   source: new OSM(),
+    //   source: new OSM(), "roads_free_1_clip",
+    //"places_free_1_poly_clip",
     // });
-    const wmsSource = new TileWMS({
-      url: "http://localhost:8080/geoserver/wms",
-      params: {
-        LAYERS: "Sonelgaz-RME:alger_project",
-        TILED: true,
-      },
-      serverType: "geoserver",
-      crossOrigin: "anonymous",
-    });
-    const wmsLayer = new TileLayer({
-      source: wmsSource,
+
+    ["commune_sda", "gis_osm_buildings_a_free_1_c"].map((layer) => {
+      const wmsSource = new TileWMS({
+        url: "http://localhost:8080/geoserver/wms",
+        params: {
+          LAYERS: layer,
+          TILED: true,
+        },
+        serverType: "geoserver",
+        crossOrigin: "anonymous",
+      });
+      const wmsLayer = new TileLayer({
+        source: wmsSource,
+      });
+
+      tileLayers.push(wmsLayer);
+      console.log("a tile layer was added");
     });
 
     const map = new Map({
       target: "map",
-      layers: [wmsLayer],
+      layers: tileLayers,
       view: new View({
         center: fromLonLat([3.035556, 36.756111]),
         zoom: 15,
       }),
     });
-    [
-      "accesssoire",
-      "appareilc",
-      "jeubarres",
-      "liaison",
-      "postehtabt",
-      "postesource",
-    ].map((layer) => {
-      const vectorSource = new VectorSource({
-        format: new GeoJSON(),
-        wrapX: false,
-        url: function (extent) {
-          return (
-            "http://localhost:8080/geoserver/wms?service=WFS&" +
-            "version=1.1.0&request=GetFeature&typename=Sonelgaz-RME:" +
-            layer +
-            "&" +
-            "outputFormat=application/json&srsname=EPSG:3857&" +
-            "bbox=" +
-            // [extent[1], extent[0], extent[3], extent[2]].join
-            extent.join(",") +
-            ",EPSG:3857"
-          );
-        },
-        strategy: bboxStrategy,
-      });
 
-      const vector = new VectorLayer({
-        source: vectorSource,
-        style: GisStyles(),
-      });
+    ["postesource", "postehtabt", "appareilc", "jeubarres", "liaison"].map(
+      (layer) => {
+        const vectorSource = new VectorSource({
+          format: new GeoJSON(),
+          wrapX: false,
+          url: function (extent) {
+            return (
+              "http://localhost:8080/geoserver/wms?service=WFS&" +
+              "version=1.1.0&request=GetFeature&typename=Sonelgaz-RME:" +
+              layer +
+              "&" +
+              "outputFormat=application/json&srsname=EPSG:3857&" +
+              "bbox=" +
+              // [extent[1], extent[0], extent[3], extent[2]].join
+              extent.join(",") +
+              ",EPSG:3857"
+            );
+          },
+          strategy: bboxStrategy,
+        });
 
-      map.addLayer(vector);
-      console.log("a layer was added");
-    });
+        const vector = new VectorLayer({
+          source: vectorSource,
+          style: GisStyles(),
+        });
+
+        map.addLayer(vector);
+        console.log("a layer was added");
+      }
+    );
 
     map.addOverlay(popup);
 
-    close.onclick = function () {
-      popup.setPosition(undefined);
-      close.blur();
-      return false;
-    };
+    // try {
+    //   close.onclick = function () {
+    //     popup.setPosition(undefined);
+    //     close.blur();
+    //     return false;
+    //   };
+    // } catch (error) {
+    //   console.log("Close function", error);
+    // }
+    let feature = {};
     map.on("singleclick", function (evt) {
       // Show popup on marker click
-      var feature = map.forEachFeatureAtPixel(
-        evt.pixel,
-        function (feature, layer) {
-          console.log(feature);
-          return feature;
-        }
-      );
-
+      feature = map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
+        let featureType = feature.getGeometry().getType();
+        console.log(featureType);
+        return feature.values_;
+      });
+      console.log(feature);
       // Show popup on marker click
       if (map.hasFeatureAtPixel(evt.pixel) === true) {
-        var coordinate = evt.coordinate;
-        popup.setPosition(coordinate);
-        // Get marker description
+        let coordinate = evt.coordinate;
         const hdms = toStringHDMS(toLonLat(coordinate));
-        content.innerHTML = "<p>You clicked here:</p><code>" + hdms + "</code>";
+        popup.show(
+          coordinate,
+          `code d'ouvrage: <b>${feature.code}</b><br/> etat: <b>${feature.etat_s}</b> <br/> code de depart: <b>${feature.numdepart}</b>`
+        );
+        // popup.setPosition(coordinate);
+        // Get marker description
+
+        // content.innerHTML = "<p>You clicked here:</p><code>" + hdms + "</code>";
       } else {
-        popup.setPosition(undefined);
-        close.blur();
+        // popup.setPosition(undefined);
+        // close.blur();
+        popup.hide();
       }
       console.log("Marker clicked/hovered !!!");
     });
@@ -151,16 +166,15 @@ const GisComponent = () => {
   }, []);
 
   return (
-    <div>
-      <div
-        id="map"
-        style={{
-          width: "1000px",
-          height: "600px",
-          border: "3 px solid black",
-        }}
-      ></div>
-    </div>
+    <div
+      id="map"
+      style={{
+        width: "100%",
+        height: "600px",
+        border: "3 px solid black",
+        margin: "0px",
+      }}
+    ></div>
   );
 };
 

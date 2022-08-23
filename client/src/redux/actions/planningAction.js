@@ -1,5 +1,9 @@
-import { getPlanning } from "../../api/planning";
-import { PLANNING_LIST } from "../../static/staticVar";
+import { getFullPlanning, getOuvrage, getPlanning } from "../../api/planning";
+import {
+  OUVRAGE_LIST,
+  PLANNING_LIST,
+  PROGRAM_LIST,
+} from "../../static/staticVar";
 
 export const getPlanningList = () => async (dispatch) => {
   try {
@@ -12,6 +16,36 @@ export const getPlanningList = () => async (dispatch) => {
     dispatch({
       type: PLANNING_LIST,
       payload: plan,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getProgramme = () => async (dispatch) => {
+  try {
+    const updatePlan = await getFullPlanning();
+    const program = updatePlan.data.map((data, index) => {
+      return (data = { ...data, key: data.id_planning });
+    });
+    // console.log("first ============> ", program);
+    dispatch({
+      type: PROGRAM_LIST,
+      payload: program,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getOuvrageData = () => async (dispatch) => {
+  try {
+    const { data } = await getOuvrage();
+
+    console.log("first ============> ", data);
+    dispatch({
+      type: OUVRAGE_LIST,
+      payload: data,
     });
   } catch (error) {
     console.log(error);
