@@ -1,23 +1,38 @@
-import * as React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-
+import React, { useState, useContext, useEffect } from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import Ionicons from "react-native-vector-icons/Ionicons";
 // Screens
-import HomeScreen from './screens/HomeScreen';
-import DetailsScreen from './screens/DetailsScreen';
-import SettingsScreen from './screens/SettingsScreen';
-import ProfileScreen from './screens/ProfileScreen';
+import HomeScreen from "./screens/HomeScreen";
+import DetailsScreen from "./screens/DetailsScreen";
 
+import ProfileScreen from "./screens/ProfileScreen";
+import { Colors } from "../components/styles";
+import { Text } from "react-native";
 //Screen names
 const homeName = "Plannings";
 const detailsName = "Formulaires";
-const settingsName = "Aide";
 const profileName = "Profile";
 
 const Tab = createBottomTabNavigator();
 
-function MainContainer() {
+function MainContainer({ route, navigation }) {
+  function bottomBarStyle(focused, color, name) {
+    return (
+      <Text
+        style={{
+          color: focused ? Colors.brand : Colors.grey,
+          fontFamily: "sans-serif",
+          fontSize: 10,
+        }}
+      >
+        {name}
+      </Text>
+    );
+  }
+  const { equipeData, user } = route.params;
+  const [dataProgram, setDataProgram] = useState(equipeData);
+
   return (
     <NavigationContainer independent={true}>
       <Tab.Navigator
@@ -28,34 +43,70 @@ function MainContainer() {
             let rn = route.name;
 
             if (rn === homeName) {
-              iconName = focused ? 'home' : 'home-outline';
-
+              iconName = focused ? "home" : "home-outline";
             } else if (rn === detailsName) {
-              iconName = focused ? 'list' : 'list-outline';
-
+              iconName = focused ? "list" : "list-outline";
             } else if (rn === profileName) {
-              iconName = focused ? 'person' : 'person-outline';
-
-            } else if (rn === settingsName) {
-              iconName = focused ? 'settings' : 'settings-outline';
+              iconName = focused ? "person" : "person-outline";
             }
 
             // You can return any component that you like here!
-            return <Ionicons name={iconName} size={size} color={color} />;
+            return (
+              <Ionicons
+                name={iconName}
+                size={size}
+                color={focused ? Colors.brand : Colors.grey}
+              />
+            );
           },
+          tabBarLabel: ({ focused, color }) =>
+            bottomBarStyle(focused, color, route.name),
+          tabBaractiveTintColor: "tomato",
+          tabBarinactiveTintColor: "grey",
+          tabBarlabelStyle: { paddingBottom: 10, fontSize: 20 },
+          tabBarstyle: { padding: 10, height: 70 },
+          tabBarIndicatorStyle: { backgroundColor: Colors.brand },
         })}
-        tabBarOptions={{
-          activeTintColor: 'tomato',
-          inactiveTintColor: 'grey',
-          labelStyle: { paddingBottom: 10, fontSize: 10 },
-          style: { padding: 10, height: 70}
-        }}>
+      >
+        <Tab.Screen
+          name={homeName}
+          component={HomeScreen}
+          initialParams={{ equipeData: dataProgram }}
+          // children={() => <HomeScreen equipeData={equipeData} />}
+          options={{
+            headerStyle: {
+              backgroundColor: Colors.primary,
+            },
+            headerTintColor: Colors.black,
+            headerTitleStyle: {
+              fontFamily: "sans-serif-medium",
+            },
+            headerTitleAlign: "center",
+          }}
+        />
+        <Tab.Screen
+          name={detailsName}
+          component={DetailsScreen}
+          initialParams={{ username: user }}
+          options={{
+            headerShown: false,
+          }}
+        />
 
-        <Tab.Screen name={homeName} component={HomeScreen}/>
-        <Tab.Screen name={detailsName} component={DetailsScreen} options={{headerShown: false}}/>
-        <Tab.Screen name={settingsName} component={SettingsScreen}/>
-        <Tab.Screen name={profileName} component={ProfileScreen}/>
-
+        <Tab.Screen
+          name={profileName}
+          component={ProfileScreen}
+          options={{
+            headerStyle: {
+              backgroundColor: Colors.primary,
+            },
+            headerTintColor: Colors.black,
+            headerTitleStyle: {
+              fontFamily: "sans-serif-medium",
+            },
+            headerTitleAlign: "center",
+          }}
+        />
       </Tab.Navigator>
     </NavigationContainer>
   );

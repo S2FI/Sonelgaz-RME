@@ -17,30 +17,34 @@ import AffichageModal from "../../crud/affichage/affichageModal";
 const Planning = (props) => {
   const [loading, setloading] = useState(true);
   const [dataPlanning, setDataPlanning] = useState(props.planning_list);
-  // const [dataProgram, setDataProgram] = useState(props.program_list);
+  const [dataProgram, setDataProgram] = useState(props.program_list);
 
   // useEffect(() => {
   //   const timer = setTimeout(() => {
   //     setLoading(false);
   //   }, 500);
   // }, []);
-  const loadAllData = async () => {
-    await props.getPlanningList();
-    await props.getProgramme();
-    await props.getOuvrageData();
-  };
+  // const loadAllData = async () => {
+  //   await props.getPlanningList();
+  //   await props.getProgramme();
+  //   await props.getOuvrageData();
+  // };
 
   useEffect(() => {
-    loadAllData();
+    props.getPlanningList();
+    props.getProgramme();
+    props.getOuvrageData();
   }, []);
 
   useEffect(() => {
-    console.log(loading);
     setDataPlanning(props.planning_list);
     setloading(false);
   }, [props.planning_list]);
 
-  console.log("ouvrage props =>", props.ouvrage_list);
+  useEffect(() => {
+    setDataProgram(props.program_list);
+    console.log("New props program list =>", props.program_list);
+  }, [props.program_list]);
 
   const handleDelete = async (key) => {
     const newData = Object.values(dataPlanning).filter(
@@ -85,14 +89,15 @@ const Planning = (props) => {
           <AffichageModal
             recordKey={record.key}
             record={record}
-            dataProgram={props.program_list}
+            dataProgram={dataProgram}
           />
+
           {localStorage.getItem("UserRole") === "Ing" && (
             <React.Fragment>
               <PlanningOperations
                 recordKey={record.key}
                 record={record}
-                dataProgram={props.program_list}
+                dataProgram={dataProgram}
               />
               <Popconfirm
                 title="Sure to delete?"

@@ -6,6 +6,7 @@ import { createConnection, getCustomRepository } from "typeorm";
 import { SECRET } from "../constants";
 import { userRepository } from '../repository/user.repository';
 import { check } from 'express-validator';
+import { equipeRepository } from '../repository/planning.repository';
 
 @Service()
 export class PostService {
@@ -14,9 +15,11 @@ export class PostService {
   public login = async (req, res) => {
     let userInfo = req.body;
     let payload = userInfo.username
+    let chef_equipe =""
          
     try {
       const customRepo: any = getCustomRepository(userRepository)
+      const equipeRepo: any = getCustomRepository(equipeRepository)
     const user = await customRepo.find({ username : userInfo.username })   
         if (!Object.keys(user).length) {
           throw new Error('username does not exists.')
@@ -29,10 +32,16 @@ export class PostService {
         }
         
       const token = await sign(payload, SECRET);
-  
+      const chef = await equipeRepo.find({select:["nom_equipe"], where: { chef_equipe : userInfo.username }}) 
+      if (chef.length !=0) {
+        chef_equipe=chef[0].nom_equipe
+      }
+      console.log(chef)
       return res.status(200).cookie("token", token, { httpOnly: true }).json({
         success: true,
         message: "Logged in succefully",
+        user: userInfo.username,
+        equipe: chef_equipe
       });
     } catch (error) {
       console.log(error.message);
@@ -120,9 +129,7 @@ export class PostService {
     return res.status(500).json({
       error: error.message,
     });
-      
-    }
-    
+    }  
   };
 
   public delete = async (req, res) => {

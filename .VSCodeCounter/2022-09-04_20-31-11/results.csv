@@ -1,0 +1,33 @@
+"filename", "language", "JavaScript", "TypeScript", "JSON", "comment", "blank", "total"
+"c:\Users\pc hp\Desktop\coding\Authentification\server\src\config\env\developmentLocal.json", "JSON", 0, 0, 22, 0, 4, 26
+"c:\Users\pc hp\Desktop\coding\Authentification\server\src\config\global\middleware.ts", "TypeScript", 0, 15, 0, 11, 5, 31
+"c:\Users\pc hp\Desktop\coding\Authentification\server\src\constants\index.js", "JavaScript", 9, 0, 0, 0, 2, 11
+"c:\Users\pc hp\Desktop\coding\Authentification\server\src\controllers\post.controller.ts", "TypeScript", 0, 145, 0, 0, 33, 178
+"c:\Users\pc hp\Desktop\coding\Authentification\server\src\database\entities\equipe.entity.ts", "TypeScript", 0, 31, 0, 11, 6, 48
+"c:\Users\pc hp\Desktop\coding\Authentification\server\src\database\entities\stats.entity.ts", "TypeScript", 0, 0, 0, 0, 1, 1
+"c:\Users\pc hp\Desktop\coding\Authentification\server\src\database\entities\user.entity.ts", "TypeScript", 0, 30, 0, 12, 5, 47
+"c:\Users\pc hp\Desktop\coding\Authentification\server\src\database\formEntities\allForms.entity.ts", "TypeScript", 0, 29, 0, 1, 12, 42
+"c:\Users\pc hp\Desktop\coding\Authentification\server\src\database\formEntities\entretien.entity.ts", "TypeScript", 0, 45, 0, 0, 19, 64
+"c:\Users\pc hp\Desktop\coding\Authentification\server\src\database\formEntities\maintenance.entity.ts", "TypeScript", 0, 21, 0, 0, 3, 24
+"c:\Users\pc hp\Desktop\coding\Authentification\server\src\database\formEntities\visite.entity.ts", "TypeScript", 0, 21, 0, 0, 3, 24
+"c:\Users\pc hp\Desktop\coding\Authentification\server\src\database\ouvrageEntities\accesssoire.entity.ts", "TypeScript", 0, 52, 0, 12, 21, 85
+"c:\Users\pc hp\Desktop\coding\Authentification\server\src\database\ouvrageEntities\appareilc.entity.ts", "TypeScript", 0, 80, 0, 11, 35, 126
+"c:\Users\pc hp\Desktop\coding\Authentification\server\src\database\ouvrageEntities\jeubarres.entity.ts", "TypeScript", 0, 60, 0, 12, 24, 96
+"c:\Users\pc hp\Desktop\coding\Authentification\server\src\database\ouvrageEntities\liaison.entity.ts", "TypeScript", 0, 77, 0, 11, 34, 122
+"c:\Users\pc hp\Desktop\coding\Authentification\server\src\database\ouvrageEntities\postehtabt.entity.ts", "TypeScript", 0, 70, 0, 11, 30, 111
+"c:\Users\pc hp\Desktop\coding\Authentification\server\src\database\ouvrageEntities\postesource.entity.ts", "TypeScript", 0, 74, 0, 11, 32, 117
+"c:\Users\pc hp\Desktop\coding\Authentification\server\src\database\planningEntities\planning.entity.ts", "TypeScript", 0, 30, 0, 11, 7, 48
+"c:\Users\pc hp\Desktop\coding\Authentification\server\src\database\planningEntities\program.entity.ts", "TypeScript", 0, 47, 0, 5, 14, 66
+"c:\Users\pc hp\Desktop\coding\Authentification\server\src\middlewares\validation-middleware.ts", "TypeScript", 0, 10, 0, 0, 4, 14
+"c:\Users\pc hp\Desktop\coding\Authentification\server\src\repository\forms.reposoitry.ts", "TypeScript", 0, 14, 0, 0, 9, 23
+"c:\Users\pc hp\Desktop\coding\Authentification\server\src\repository\ouvrage.repository.ts", "TypeScript", 0, 25, 0, 0, 13, 38
+"c:\Users\pc hp\Desktop\coding\Authentification\server\src\repository\planning.repository.ts", "TypeScript", 0, 13, 0, 0, 7, 20
+"c:\Users\pc hp\Desktop\coding\Authentification\server\src\repository\user.repository.ts", "TypeScript", 0, 5, 0, 0, 3, 8
+"c:\Users\pc hp\Desktop\coding\Authentification\server\src\server.ts", "TypeScript", 0, 35, 0, 2, 8, 45
+"c:\Users\pc hp\Desktop\coding\Authentification\server\src\services\form.service.ts", "TypeScript", 0, 249, 0, 10, 25, 284
+"c:\Users\pc hp\Desktop\coding\Authentification\server\src\services\post.service.ts", "TypeScript", 0, 133, 0, 2, 20, 155
+"c:\Users\pc hp\Desktop\coding\Authentification\server\src\services\pp.service.ts", "TypeScript", 0, 190, 0, 83, 40, 313
+"c:\Users\pc hp\Desktop\coding\Authentification\server\src\utils\ormconfig\ormconfig.ts", "TypeScript", 0, 4, 0, 0, 0, 4
+"c:\Users\pc hp\Desktop\coding\Authentification\server\src\validators\auth.js", "JavaScript", 34, 0, 0, 4, 10, 48
+"c:\Users\pc hp\Desktop\coding\Authentification\server\src\validators\post.validation.ts", "TypeScript", 0, 20, 0, 20, 13, 53
+"Total", "-", 43, 1525, 22, 240, 442, 2272

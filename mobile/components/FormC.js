@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import { Picker } from "@react-native-picker/picker";
 // formik
 import { Formik } from "formik";
 import {
@@ -7,70 +8,130 @@ import {
   StyledFormArea,
   StyledButton,
   ButtonText,
-  MsgBox,
   Line,
   Colors,
 } from "./styles";
-import { View, ActivityIndicator, StyleSheet } from "react-native";
+import { View, ActivityIndicator, StyleSheet, Text } from "react-native";
 //colors
 const { darkLight, brand, primary } = Colors;
-import DateTP from "./DateTP";
 import ImagePickerExample from "./ImageTP";
+import axios from "axios";
+import Environments from "../constants/Env";
+import { showMessage, hideMessage } from "react-native-flash-message";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+export default function FormC(props) {
+  const [code_ouvrage, setcode_ouvrage] = useState(props.listOuvrage[0]);
+  const storeData = async (item, value) => {
+    try {
+      await AsyncStorage.setItem(item, value);
+    } catch (e) {
+      console.log(e);
+      console.log("data not saved in formC");
+    }
+  };
 
-export default function FormC({ navigation }) {
-  const [message, setMessage] = useState();
-  const [messageType, setMessageType] = useState();
+  const handleSubmit = (values, setSubmitting) => {
+    const id_form_maintenance = props.id;
+    const user_created_form = props.username;
+    const signature = user_created_form.substring(0, 2).toUpperCase();
 
-  const handleMessage = (message, type = "") => {
-    setMessage(message);
-    setMessageType(type);
+    const valuesToSend = {
+      ...values,
+      id_form_maintenance,
+      user_created_form,
+      signature,
+      code_ouvrage,
+    };
+    if (
+      values.titre_formulaire == "" ||
+      values.raison_panne == "" ||
+      values.description == ""
+    ) {
+      setSubmitting(false);
+    } else {
+      setSubmitting(true);
+      const url =
+        "http://" +
+        Environments.MOBILE_URL +
+        ":7000/api/posts/form-maintenance";
+      axios
+        .post(url, valuesToSend)
+        .then((response) => {
+          const data = response.data;
+
+          showMessage({
+            message: "Insertion",
+            description: data.message,
+            type: "success",
+          });
+          storeData(
+            id_form_maintenance + "Maintenance",
+            JSON.stringify(props.listOuvrage)
+          );
+          console.log(
+            "on maintenance insertion",
+            id_form_maintenance + "Maintenance" + " =>",
+            props.listOuvrage
+          );
+        })
+        .catch((error) => {
+          console.log(error);
+          console.log(error.toJSON());
+        });
+      props.statechange(false);
+    }
   };
 
   return (
     <View>
       <Formik
         initialValues={{
-          code_ouvrage: "",
-          emplacement: "",
+          titre_formulaire: "",
           raison_panne: "",
           description: "",
         }}
-        onSubmit={(values, { setSubmitting }) => {
-          if (
-            values.code_ouvrage == "" ||
-            values.emplacement == "" ||
-            values.raison_panne == "" ||
-            values.description == ""
-          ) {
-            handleMessage("Veuillez remplir les champs");
-            setSubmitting(false);
-          } else {
-            setSubmitting(true);
-            console.log(code_ouvrage, emplacement, raison_panne, description);
-          }
-        }}
+        onSubmit={(values, { setSubmitting }) =>
+          handleSubmit(values, setSubmitting)
+        }
       >
         {({ handleChange, handleBlur, handleSubmit, values, isSubmitting }) => (
           <StyledFormArea>
-            <DateTP />
-
             <MyTextInput
-              label="Code de l'ouvrage"
-              placeholder="Ecrir ici..."
+              label="Titre formulaire"
+              placeholder="Titre..."
               placeholderTextColor={darkLight}
-              onChangeText={handleChange("code_ouvrage")}
-              onBlur={handleBlur("code_ouvrage")}
-              value={values.code_ouvrage}
-              keyboardType="code_ouvrage-address"
+              onChangeText={handleChange("titre_formulaire")}
+              onBlur={handleBlur("titre_formulaire")}
+              value={values.titre_formulaire}
             />
-            <MyTextInput
-              label="Emplacement"
-              placeholder="Ecrir ici..."
-              placeholderTextColor={darkLight}
-              onChangeText={handleChange("emplacement")}
-              onBlur={handleBlur("emplacement")}
-              value={values.emplacement}
-            />
+            <Text style={{ fontSize: 12 }}>Code de l'ouvrage</Text>
+            <View
+              style={{
+                borderWidth: 1,
+                borderRadius: 5,
+                height: 40,
+                backgroundColor: "#e1e2e6",
+                borderColor: "#e1e2e6",
+                marginBottom: 10,
+              }}
+            >
+              <Picker
+                style={{ bottom: 8 }}
+                selectedValue={code_ouvrage}
+                onValueChange={(itemValue, itemIndex) =>
+                  setcode_ouvrage(itemValue)
+                }
+              >
+                {props.listOuvrage?.map((ouvrage) => (
+                  <Picker.Item
+                    label={ouvrage}
+                    value={ouvrage}
+                    key={ouvrage}
+                    style={{ fontSize: 13 }}
+                  />
+                ))}
+              </Picker>
+            </View>
             <MyTextInput
               label="Raison de la panne"
               placeholder="Ecrir ici..."

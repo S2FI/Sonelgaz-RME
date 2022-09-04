@@ -26,6 +26,7 @@ const Register = (props) => {
       setSuccess(data.message);
       setValues({ username: "", password: "", role: "" }); // init values after success
       props.getUserList();
+      props.handleOk();
     } catch (error) {
       console.log(error);
       setError(error.response.data.error);

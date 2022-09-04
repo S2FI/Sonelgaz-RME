@@ -2,17 +2,16 @@ import { Layout } from "antd";
 import GisComponent from "../pages/gis/gisComponent";
 import TableComponent from "../components/Table";
 import { BsGoogle } from "react-icons/bs";
+import PageDaccueil from "../components/pageDaccueil";
 const { Content, Footer, Header } = Layout;
 
 const MainLayout = (props) => {
   const renderChildElement = () => {
     switch (props.renderElement) {
       case "dashboard":
-        return <div>Dashboard</div>;
+        return <PageDaccueil />;
       case "gis":
         return <GisComponent />;
-      case "notifications":
-        return <div>Notifications</div>;
       case "stats":
         return <div>Statistiques</div>;
       default:

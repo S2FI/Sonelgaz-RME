@@ -31,3 +31,47 @@ const InputSelector = (props) => {
 };
 
 export default InputSelector;
+// <Select
+//   onChange={(value) => {
+//     setdepartState(props.ouvrage_list[value]);
+//     console.log(
+//       "value on change depart =>>>>",
+//       props.ouvrage_list[value]
+//     );
+//     setselectedDepart(value);
+//     setcodeState(props.ouvrage_list[value][0]);
+//     setSelectData((prevdata) => {
+//       return { ...prevdata, [0]: { ...prevdata[0], depart: value } };
+//     });
+//   }}
+// >
+//   {depart_options.map((depart) => (
+//     <Select.Option value={depart} key={depart}>
+//       {depart}
+//     </Select.Option>
+//   ))}
+// </Select>
+
+// ligne: (
+//   <Select
+//     mode="multiple"
+//     maxTagCount="responsive"
+//     style={{
+//       width: "100%",
+//     }}
+//     onChange={(value) => {
+//       setcodeState(value);
+//       setSelectData((prevdata) => {
+//         return {
+//           ...prevdata,
+//           [0]: { ...prevdata[0], code_ouvrage: value },
+//         };
+//       });
+//     }}
+//   >
+//     {
+//       // console.log("sssssssssssssssss", listCodeSelectedDepart)
+//       renderList()
+//     }
+//   </Select>
+// ),

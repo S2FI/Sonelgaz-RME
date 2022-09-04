@@ -15,15 +15,21 @@ function PlanningOperations(props) {
   // console.log("first: => ", props.recordKey);
 
   // console.log(allData);
-
+  const handleOk = () => {
+    setVisible(false);
+    console.log("la79et i guess");
+  };
   useEffect(() => {
     console.log(props.recordKey);
-    props.dataProgram?.map((data, index) => {
+    allData?.map((data, index) => {
       if (props.recordKey == data.id_planning) {
         setDataSource(data);
       }
     });
-  }, [props.recordKey]);
+  }, []);
+  useEffect(() => {
+    setallData(props.dataProgram);
+  }, [props.dataProgram]);
 
   const showModal = () => {
     setVisible(true);
@@ -41,6 +47,7 @@ function PlanningOperations(props) {
       <Modal
         title="Update Planning"
         visible={visible}
+        destroyOnClose="true"
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
         footer={[]}
@@ -49,6 +56,7 @@ function PlanningOperations(props) {
           programs={dataSource}
           id={props.recordKey}
           record={props.record}
+          handleOk={handleOk}
         />
       </Modal>
     </React.Fragment>

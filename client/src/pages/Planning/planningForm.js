@@ -10,7 +10,7 @@ import {
 } from "antd";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { MdDeleteForever } from "react-icons/md";
-import { AiOutlinePlusSquare } from "react-icons/ai";
+import { BsPlusLg } from "react-icons/bs";
 import InputSelector from "../../components/selectors/inputSelector";
 import moment from "moment";
 import OuvrageSelector from "../../components/selectors/ouvrageSelector";
@@ -34,28 +34,15 @@ const EditableRow = ({ index, ...props }) => {
 
 const PlanningForms = (props) => {
   const [count, setCount] = useState(1);
-  const [rowAdd, setRowAdd] = useState(true);
+  const [selectedDepart, setselectedDepart] = useState("");
 
   const [selectData, setSelectData] = useState({
     [0]: {
-      date_debut_programme: "2012/12/12",
-      date_fin_programme: "2012/12/12",
+      date_debut_programme: moment().format("YYYY-MM-DD"),
+      date_fin_programme: moment().format("YYYY-MM-DD"),
+      depart: "70H1C10",
     },
   });
-  console.log("rahi tel7a9 alaise =>", props.ouvrage_list);
-  let depart_options = [];
-  Object.keys(props.ouvrage_list).forEach(async (key, index) => {
-    depart_options.push(key);
-  });
-
-  console.log("ou hadou les departs =>", depart_options);
-
-  const [departState, setdepartState] = useState(
-    props.ouvrage_list[depart_options[0]]
-  );
-  const [codeState, setcodeState] = useState(
-    props.ouvrage_list[depart_options[0]][0]
-  );
 
   // const getSelectorData = (sele ctedValues) => {
   //   setSelectData(selectedValues);
@@ -66,7 +53,7 @@ const PlanningForms = (props) => {
 
       mois: (
         <RangePicker
-          defaultValue={[moment("2012-12-12"), moment("2012-12-12")]}
+          defaultValue={[moment(), moment()]}
           onChange={(values, dateString) => {
             setSelectData((prevdata) => {
               return {
@@ -78,7 +65,6 @@ const PlanningForms = (props) => {
                 },
               };
             });
-            setRowAdd(false);
           }}
           format="YYYY/MM/DD"
         />
@@ -96,50 +82,30 @@ const PlanningForms = (props) => {
         </Select>
       ),
       depart: (
-        // <DepartSelector/>
-        <Select
-          onChange={(value) => {
-            setdepartState(props.ouvrage_list[value]);
-            console.log(
-              "value on change depart =>>>>",
-              props.ouvrage_list[value]
-            );
-            setcodeState(props.ouvrage_list[value][0]);
-            setSelectData((prevdata) => {
-              return { ...prevdata, [0]: { ...prevdata[0], depart: value } };
-            });
-          }}
-        >
-          {depart_options.map((depart) => (
-            <Select.Option value={depart} key={depart}>
-              {depart}
-            </Select.Option>
-          ))}
-        </Select>
-      ),
-      ligne: (
-        <Select
-          mode="multiple"
-          maxTagCount="responsive"
-          style={{
-            width: "100%",
-          }}
-          onChange={(value) => {
-            setcodeState(value);
+        <DepartSelector
+          getSelectorData={(value) =>
             setSelectData((prevdata) => {
               return {
                 ...prevdata,
-                [0]: { ...prevdata[0], code_ouvrage: value },
+                [0]: {
+                  ...prevdata[0],
+                  depart: value,
+                },
               };
-            });
-          }}
-        >
-          {departState.map((code) => (
-            <Select.Option value={code} key={code}>
-              {code}
-            </Select.Option>
-          ))}
-        </Select>
+            })
+          }
+          getSelectorData2={(value) =>
+            setSelectData((prevdata) => {
+              return {
+                ...prevdata,
+                [0]: {
+                  ...prevdata[0],
+                  code_ouvrage: value,
+                },
+              };
+            })
+          }
+        />
       ),
       equipe: (
         <Select
@@ -176,36 +142,40 @@ const PlanningForms = (props) => {
 
   const defaultColumns = [
     {
-      title: "mois",
+      title: "Date de planning",
       dataIndex: "mois",
       width: "25%",
+      sorter: (a, b) => a.mois.length - b.mois.length,
+      sortDirections: ["descend", "ascend"],
+
       // editable: true,
     },
     {
-      title: "district",
+      title: "District",
       dataIndex: "district",
-      rowSpan: 4,
+      align: "center",
     },
     {
-      title: "depart",
+      title: "Depart                                 Code_ouvrage",
       dataIndex: "depart",
+      width: "35%",
+      align: "center",
     },
+
     {
-      title: "ligne",
-      dataIndex: "ligne",
-      width: "20%",
-    },
-    {
-      title: "equipe",
+      title: "Equipe",
       dataIndex: "equipe",
       width: "9%",
+      align: "center",
     },
     {
-      title: "operation",
+      title: "Operation",
       dataIndex: "operation",
+      align: "center",
+      width: "15%",
       render: (_, record) =>
         dataSource.length >= 1 ? (
-          <React.Fragment>
+          <Space>
             <Popconfirm
               title="Sure to delete?"
               onConfirm={() => handleDelete(record.key)}
@@ -214,117 +184,22 @@ const PlanningForms = (props) => {
                 <MdDeleteForever />
               </Button>
             </Popconfirm>
-            <Button>
-              <AiOutlinePlusSquare />
+            <Button onClick={() => handleRowAdd(record.key)}>
+              <BsPlusLg />
             </Button>
-          </React.Fragment>
+          </Space>
         ) : null,
     },
   ];
-  //onClick={handleRowAdd} disabled={rowAdd}
-  // const handleRowAdd = () => {
-  //   const newData = {
-  //     key: count,
-  //     mois: (
-  //       <RangePicker
-  //         defaultValue={[
-  //           moment(selectData[count - 1].date_debut_programme),
-  //           moment(selectData[count - 1].date_fin_programme),
-  //         ]}
-  //         //[
-  //         //   // moment(selectData[count - 1].date_debut_programme),
-  //         //   // moment(selectData[count - 1].date_fin_programme),
-  //         // ]}
-  //         onChange={(values, dateString) =>
-  //           setSelectData((prevdata) => {
-  //             return {
-  //               ...prevdata,
-  //               [count]: {
-  //                 ...prevdata[count],
-  //                 date_debut_programme: dateString[0],
-  //                 date_fin_programme: dateString[1],
-  //               },
-  //             };
-  //           })
-  //         }
-  //         format="YYYY/MM/DD"
-  //       />
-  //     ),
-  //     district: (
-  //       <InputSelector
-  //         option1="district 1"
-  //         option2="district 2"
-  //         name="district"
-  //         getSelectorData={(value) =>
-  //           setSelectData((prevdata) => {
-  //             return {
-  //               ...prevdata,
-  //               [count]: { ...prevdata[count], district: value },
-  //             };
-  //           })
-  //         }
-  //       />
-  //     ),
-  //     depart: (
-  //       <InputSelector
-  //         option1="depart 1"
-  //         option2="depart 2"
-  //         name="depart"
-  //         getSelectorData={(value) =>
-  //           setSelectData((prevdata) => {
-  //             return {
-  //               ...prevdata,
-  //               [count]: { ...prevdata[count], depart: value },
-  //             };
-  //           })
-  //         }
-  //       />
-  //     ),
-  //     ligne: (
-  //       <InputSelector
-  //         option1="ligne 1"
-  //         option2="ligne 2"
-  //         name="code_ouvrage"
-  //         getSelectorData={(value) =>
-  //           setSelectData((prevdata) => {
-  //             return {
-  //               ...prevdata,
-  //               [count]: { ...prevdata[count], code_ouvrage: value },
-  //             };
-  //           })
-  //         }
-  //       />
-  //     ),
-  //     equipe: (
-  //       <InputSelector
-  //         option1="B"
-  //         option2="C"
-  //         name="nom_equipe_programme"
-  //         getSelectorData={(value) =>
-  //           setSelectData((prevdata) => {
-  //             return {
-  //               ...prevdata,
-  //               [count]: { ...prevdata[count], nom_equipe_programme: value },
-  //             };
-  //           })
-  //         }
-  //       />
-  //     ),
-  //   };
-  //   setDataSource([...dataSource, newData]);
-  //   setCount(count + 1);
-  //   console.log("handel add count = ", count);
-  //   setSelectData((prevdata) => {
-  //     return { ...prevdata, [count]: { ...prevdata[count] } };
-  //   });
-  // };
-
-  const handleAdd = () => {
+  const handleRowAdd = (prevkey) => {
     const newData = {
       key: count,
       mois: (
         <RangePicker
-          defaultValue={[moment("2012-12-12"), moment("2012-12-12")]}
+          defaultValue={[
+            moment(selectData[prevkey].date_debut_programme),
+            moment(selectData[prevkey].date_fin_programme),
+          ]}
           onChange={(values, dateString) => {
             setSelectData((prevdata) => {
               return {
@@ -336,7 +211,106 @@ const PlanningForms = (props) => {
                 },
               };
             });
-            setRowAdd(false);
+          }}
+          format="YYYY/MM/DD"
+        />
+      ),
+      district: (
+        <Select
+          value={selectData[prevkey].district}
+          onChange={(value) =>
+            setSelectData((prevdata) => {
+              return {
+                ...prevdata,
+                [count]: { ...prevdata[count], district: value },
+              };
+            })
+          }
+        >
+          <Select.Option value="Belouizdad">Belouizdad</Select.Option>
+        </Select>
+      ),
+      depart: (
+        <DepartSelector
+          getSelectorData={(value) =>
+            setSelectData((prevdata) => {
+              return {
+                ...prevdata,
+                [count]: {
+                  ...prevdata[count],
+                  depart: value,
+                },
+              };
+            })
+          }
+          getSelectorData2={(value) =>
+            setSelectData((prevdata) => {
+              return {
+                ...prevdata,
+                [count]: {
+                  ...prevdata[count],
+                  code_ouvrage: value,
+                },
+              };
+            })
+          }
+        />
+      ),
+      equipe: (
+        <Select
+          style={{
+            width: "100%",
+          }}
+          onChange={(value) =>
+            setSelectData((prevdata) => {
+              return {
+                ...prevdata,
+                [count]: { ...prevdata[count], nom_equipe_programme: value },
+              };
+            })
+          }
+        >
+          <Select.Option value="A">A</Select.Option>
+          <Select.Option value="B">B</Select.Option>
+          <Select.Option value="C">C</Select.Option>
+        </Select>
+      ),
+    };
+    setDataSource([...dataSource, newData]);
+    setCount(count + 1);
+    console.log("handel add count = ", count);
+    console.log("row add count data", selectData[count - 1]);
+    setSelectData((prevdata) => {
+      return {
+        ...prevdata,
+        [count]: {
+          ...prevdata[count],
+          date_debut_programme: prevdata[prevkey].date_debut_programme,
+          date_fin_programme: prevdata[prevkey].date_fin_programme,
+          district: prevdata[prevkey].district,
+          depart: "70H1C10",
+        },
+      };
+    });
+  };
+
+  const handleAdd = () => {
+    const newData = {
+      key: count,
+      mois: (
+        <RangePicker
+          defaultValue={[moment(), moment()]}
+          onChange={(values, dateString) => {
+            setSelectData((prevdata) => {
+              return {
+                ...prevdata,
+                [count]: {
+                  ...prevdata[count],
+                  date_debut_programme: dateString[0],
+                  date_fin_programme: dateString[1],
+                },
+              };
+            });
           }}
           format="YYYY/MM/DD"
         />
@@ -356,45 +330,30 @@ const PlanningForms = (props) => {
         </Select>
       ),
       depart: (
-        <Select
-          style={{
-            width: "100%",
-          }}
-          onChange={(value) =>
+        <DepartSelector
+          getSelectorData={(value) =>
             setSelectData((prevdata) => {
               return {
                 ...prevdata,
-                [count]: { ...prevdata[count], depart: value },
+                [count]: {
+                  ...prevdata[count],
+                  depart: value,
+                },
               };
             })
           }
-        >
-          {depart_options.map((depart) => (
-            <Select.Option key={depart}>{depart}</Select.Option>
-          ))}
-        </Select>
-      ),
-      ligne: (
-        <Select
-          mode="multiple"
-          maxTagCount="responsive"
-          style={{
-            width: "100%",
-          }}
-          onChange={(value) =>
+          getSelectorData2={(value) =>
             setSelectData((prevdata) => {
               return {
                 ...prevdata,
-                [count]: { ...prevdata[count], code_ouvrage: value },
+                [count]: {
+                  ...prevdata[count],
+                  code_ouvrage: value,
+                },
               };
             })
           }
-        >
-          {" "}
-          {departState.map((code) => (
-            <Select.Option key={code}>{code}</Select.Option>
-          ))}
-        </Select>
+        />
       ),
       equipe: (
         <Select
@@ -424,8 +383,9 @@ const PlanningForms = (props) => {
         ...prevdata,
         [count]: {
           ...prevdata[count],
-          date_debut_programme: "2012/12/12",
-          date_fin_programme: "2012/12/12",
+          date_debut_programme: moment().format("YYYY-MM-DD"),
+          date_fin_programme: moment().format("YYYY-MM-DD"),
+          depart: "70H1C10",
         },
       };
     });
@@ -452,8 +412,6 @@ const PlanningForms = (props) => {
       }),
     };
   });
-  console.log("depart data", departState);
-  console.log("code data ", codeState);
 
   console.log("insertion select Data", selectData);
   useEffect(() => {
@@ -488,7 +446,6 @@ const PlanningForms = (props) => {
         <Table
           components={components}
           rowClassName={() => "editable-row"}
-          bordered
           dataSource={dataSource}
           columns={columns}
           tableLayout="fixed"

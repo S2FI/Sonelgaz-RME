@@ -30,17 +30,13 @@ const PlanningUpdateForm = (props) => {
     user_created: localStorage.getItem("Username"),
     program: {},
   });
-  // useEffect(() => {
-  //   props.getProgramme(props.id);
-  // }, []);
-
   useEffect(() => {
     setallData(props.programs);
-    console.log("datasourse li tba3tet =>", props.programs);
+    // console.log("datasourse li tba3tet =>", props.programs);
   }, [JSON.stringify(props.programs)]);
 
   // console.log("============================********", props.programs);
-  // console.log("=========================================", allData.program);
+  console.log("=========================================", allData.program);
   // const insertProgram = (selectData) => {
   //   setProgramData(selectData);
   // };
@@ -64,6 +60,7 @@ const PlanningUpdateForm = (props) => {
       console.log(data);
       props.getPlanningList();
       props.getProgramme();
+      props.handleOk();
     } catch (error) {
       console.log(error);
       setError(error.response.data.error);

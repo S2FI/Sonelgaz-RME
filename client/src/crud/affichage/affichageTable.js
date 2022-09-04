@@ -11,8 +11,9 @@ import {
 } from "antd";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import moment from "moment";
+import ReactToPrint from "react-to-print";
 
-const AffichageTable = (props) => {
+const AffichageTable = React.forwardRef((props, ref) => {
   //   let ouvrage = props.program_data.code_ouvrage.map((data, index) => {
   //     return <p> data</p>;
   //   });
@@ -22,7 +23,9 @@ const AffichageTable = (props) => {
     // console.log("first => ", data.code_ouvrage);
     const ouvrage =
       data.code_ouvrage != null
-        ? data.code_ouvrage.map((data) => <b> {data} </b>)
+        ? data.code_ouvrage.map((data, index) => (
+            <b key={index + 50}> {data} </b>
+          ))
         : [""];
 
     return (data = {
@@ -43,38 +46,41 @@ const AffichageTable = (props) => {
 
   const [dataSource, setDataSource] = useState(tableRowData);
 
-  // useEffect(() => {}, []);
-  console.log("hacha el ni3ma ", tableRowData);
-  console.log("hailik el hadra", dataSource);
-
   const defaultColumns = [
     {
-      title: "mois",
+      title: "Date de Planning",
       dataIndex: "mois",
-      width: "30%",
+      width: "25%",
+      align: "center",
       // editable: true,
     },
     {
-      title: "district",
+      title: "District",
       dataIndex: "district",
-      rowSpan: 4,
+
+      align: "center",
     },
     {
-      title: "depart",
+      title: "Depart",
       dataIndex: "depart",
+      align: "center",
     },
     {
-      title: "code_ouvrage",
+      title: "Code ouvrage",
       dataIndex: "code_ouvrage",
+      width: "30%",
+      align: "center",
     },
     {
-      title: "equipe",
+      title: "Equipe",
       dataIndex: "equipe",
+      width: "10%",
+      align: "center",
     },
   ];
 
   return (
-    <React.Fragment>
+    <div ref={ref}>
       <p>
         <b>Titre planning :</b> {props.Titre_planning}
       </p>
@@ -87,8 +93,8 @@ const AffichageTable = (props) => {
         columns={defaultColumns}
         tableLayout="fixed"
       />
-    </React.Fragment>
+    </div>
   );
-};
+});
 
 export default AffichageTable;

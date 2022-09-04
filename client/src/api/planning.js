@@ -9,6 +9,12 @@ export async function deletePlanning(id_planning) {
     `http://localhost:7000/api/posts/delete_planning/${id_planning}`
   );
 }
+export async function deleteProgram(id_program) {
+  return await axios.delete(
+    `http://localhost:7000/api/posts/delete_program/${id_program}`
+  );
+}
+
 export async function updatePlanning(id_planning, updateData) {
   return await axios.put(
     `http://localhost:7000/api/posts/update_planning/${id_planning}`,

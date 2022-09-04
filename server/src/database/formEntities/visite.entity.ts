@@ -15,10 +15,10 @@ import { formEntity } from './allForms.entity';
     @Column( {type: 'integer' , nullable : true})
     id_form_visite: number;
 
-    @Column({ type: 'varchar', nullable: true})
-    code_ouvrage: string;
-
     @Column({ type: 'varchar', nullable: true })
     description: string;
+    
+    @Column({ type: 'varchar', nullable: true })
+    action: string;
   
   }

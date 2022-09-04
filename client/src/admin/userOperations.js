@@ -32,6 +32,7 @@ function UserOperations(props) {
         <Modal
           title="Update"
           visible={visible}
+          destroyOnClose="true"
           confirmLoading={confirmLoading}
           onCancel={handleCancel}
           footer={[]}

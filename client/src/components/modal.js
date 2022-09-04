@@ -13,14 +13,10 @@ const ModalComponent = (props) => {
     setVisible(true);
   };
 
-  // const handleOk = () => {
-  //   setModalText("");
-  //   setConfirmLoading(true);
-  //   setTimeout(() => {
-  //     setVisible(false);
-  //     setConfirmLoading(false);
-  //   }, 1000);
-  // };
+  const handleOk = () => {
+    setVisible(false);
+    console.log("la79et i guess");
+  };
 
   const handleCancel = () => {
     console.log("Clicked cancel button");
@@ -39,27 +35,31 @@ const ModalComponent = (props) => {
         <>
           {props.header === "Planning" && (
             <Button type="primary" onClick={showModal}>
-              Ajouter Planning
+              Ajouter un planning
             </Button>
           )}
           <Modal
             title="Formulaire de planning"
             visible={visible}
+            destroyOnClose="true"
             confirmLoading={confirmLoading}
             onCancel={handleCancel}
             footer={[]}
           >
-            <PlanningFormInfos />
+            <PlanningFormInfos handleOk={handleOk} />
           </Modal>
         </>
       )}
       {localStorage.getItem("UserRole") === "Admin" && (
         <>
-          <Button type="primary" onClick={showModal}>
-            Ajouter un utilisateurs
-          </Button>
+          {props.header === "UserList" && (
+            <Button type="primary" onClick={showModal}>
+              Ajouter un utilisateur
+            </Button>
+          )}
           <Modal
             title="Inscription"
+            destroyOnClose="true"
             visible={visible}
             confirmLoading={confirmLoading}
             onCancel={handleCancel}

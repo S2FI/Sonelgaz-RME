@@ -1,4 +1,4 @@
-import { Select } from "antd";
+import { Divider, Select, Space } from "antd";
 import React, { useState } from "react";
 import { connect } from "react-redux";
 const { Option } = Select;
@@ -11,26 +11,23 @@ const DepartSelector = (props) => {
 
   // console.log("ou hadou les departs =>", depart_options);
 
-  const [departState, setdepartState] = useState(
-    props.ouvrage_list[depart_options[0]]
-  );
-  const [codeState, setcodeState] = useState(
-    props.ouvrage_list[depart_options[0]][0]
-  );
+  const [departState, setdepartState] = useState([]);
+  const [codeState, setcodeState] = useState([]);
 
   const handleProvinceChange = (value) => {
+    props.getSelectorData(value);
     setdepartState(props.ouvrage_list[value]);
-    setcodeState(props.ouvrage_list[value][0]);
+    setcodeState([]);
   };
 
   const onSecondCityChange = (value) => {
+    props.getSelectorData2(value);
     setcodeState(value);
   };
 
   return (
-    <>
+    <Space>
       <Select
-        defaultValue={depart_options[0]}
         style={{
           width: 120,
         }}
@@ -42,11 +39,13 @@ const DepartSelector = (props) => {
           </Select.Option>
         ))}
       </Select>
+      <Divider type="vertical" />
       <Select
         style={{
-          width: 120,
+          width: 180,
         }}
         mode="multiple"
+        maxTagCount="responsive"
         value={codeState}
         onChange={onSecondCityChange}
       >
@@ -56,7 +55,7 @@ const DepartSelector = (props) => {
           </Select.Option>
         ))}
       </Select>
-    </>
+    </Space>
   );
 };
 

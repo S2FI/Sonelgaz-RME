@@ -5,21 +5,38 @@ import { BsPencilFill } from "react-icons/bs";
 import { connect } from "react-redux";
 import { FaEye } from "react-icons/fa";
 import AffichageTable from "./affichageTable";
+import ReactToPrint from "react-to-print";
+import { useReactToPrint } from "react-to-print";
+import { useRef } from "react";
 
 function AffichageModal(props) {
   const [visible, setVisible] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
+  const [allData, setallData] = useState(props.dataProgram);
   const [dataSource, setDataSource] = useState({});
+  const componentRef = useRef();
 
   // console.log("first: => ", props.recordKey);
+  // console.log(
+  //   "data that im sending to affichage modal =>>>>>>",
+  //   props.dataProgram
+  // );
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
 
   useEffect(() => {
-    props.dataProgram?.map((data, index) => {
+    allData?.map((data, index) => {
+      // console.log("ou hadi rahi tet3awed za3ma mor l'insertion?", data);
       if (props.recordKey == data.id_planning) {
         setDataSource(data);
       }
     });
-  }, [props.recordKey]);
+  }, []);
+  useEffect(() => {
+    setallData(props.dataProgram);
+    // console.log("data programmme ya da daaaaa =>", props.dataProgram);
+  }, [props.dataProgram]);
 
   const showModal = () => {
     setVisible(true);
@@ -28,8 +45,13 @@ function AffichageModal(props) {
     console.log("Clicked cancel button");
     setVisible(false);
   };
+  // console.log("data that im putting in affichageTable => ", dataSource);
   return (
     <React.Fragment>
+      {/* <ReactToPrint
+        trigger={() => <button>Print this out!</button>}
+        content={() => componentRef.current}
+      /> */}
       <Button onClick={showModal}>
         <FaEye />
       </Button>
@@ -41,12 +63,14 @@ function AffichageModal(props) {
         onCancel={handleCancel}
         footer={[]}
       >
-        {/* program_data={allData.program} */}
         <AffichageTable
+          ref={componentRef}
           program_data={dataSource.program}
           Titre_planning={dataSource.Titre_planning}
           Type_planning={dataSource.Type_planning}
+          recordKey={props.recordKeys}
         />
+        <Button onClick={handlePrint}>Print this out!</Button>
       </Modal>
     </React.Fragment>
   );

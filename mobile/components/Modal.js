@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Alert,
   Modal,
@@ -9,9 +9,8 @@ import {
   SafeAreaView,
   ScrollView,
   StatusBar,
+  TouchableOpacity,
 } from "react-native";
-// formik
-import { Formik } from "formik";
 
 //colors
 const { darkLight, brand, primary } = Colors;
@@ -26,25 +25,39 @@ import FormV from "./FormV";
 
 export default function ModalComponent(props) {
   const [modalVisible, setModalVisible] = useState(false);
-  const [modal, setModal] = useState("");
-  // switch (props.etatForm)
-  //         {
-  //             case "m":  setModal("maintenance")
-  //             break;
-  //             case "e":  setModal("entretien")
-  //             break;
-  //             case "v":  setModal("visite")
-  //             break;
-  //             default: <></>
 
-  //         }
+  const actions = (value) => {
+    setModalVisible(value);
+    props.statechange(false);
+  };
+  useEffect(() => {
+    if (props.visibilite == true) {
+      setModalVisible(true);
+    }
+  }, [props.visibilite]);
   const affiche =
-    props.etatForm === "Maintenannce" ? (
-      <FormC />
+    props.etatForm === "Maintenance" ? (
+      <FormC
+        statechange={actions}
+        id={props.id}
+        username={props.username}
+        listOuvrage={props.listOuvrage}
+      />
     ) : props.etatForm === "Entretien" ? (
-      <FormE />
+      <FormE
+        statechange={actions}
+        id={props.id}
+        username={props.username}
+        listOuvrage={props.listOuvrage}
+        depart={props.depart}
+      />
     ) : (
-      <FormV />
+      <FormV
+        statechange={actions}
+        id={props.id}
+        username={props.username}
+        listOuvrage={props.listOuvrage}
+      />
     );
   return (
     <View>
@@ -53,32 +66,34 @@ export default function ModalComponent(props) {
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-          setModalVisible(!modalVisible);
+          setModalVisible(false), props.statechange(false);
         }}
       >
         <SafeAreaView style={styles.container}>
           <ScrollView style={styles.scrollView}>
             <View style={styles.modalView}>
-              <Text style={styles.modalText}>Formulaire de maintenance</Text>
+              <Text style={styles.modalText}>Formulaire {props.etatForm}</Text>
               {affiche}
 
-              <Pressable
+              <TouchableOpacity
                 style={[styles.button, styles.buttonClose]}
-                onPress={() => setModalVisible(!modalVisible)}
+                onPress={() => {
+                  setModalVisible(false), props.statechange(false);
+                }}
               >
-                <Text style={styles.textStyle}>Hide Modal</Text>
-              </Pressable>
+                <Text style={styles.textStyle}>Cancel</Text>
+              </TouchableOpacity>
             </View>
           </ScrollView>
         </SafeAreaView>
       </Modal>
-
+      {/* 
       <Pressable
         style={[styles.button, styles.buttonOpen]}
         onPress={() => setModalVisible(true)}
       >
         <Text style={styles.textStyle}>{props.textbut}</Text>
-      </Pressable>
+      </Pressable> */}
     </View>
   );
 }
@@ -124,7 +139,7 @@ const styles = StyleSheet.create({
   },
   buttonOpen: {
     backgroundColor: "#E78616",
-    width: 20,
+    width: 40,
   },
   buttonClose: {
     backgroundColor: "#2196F3",
@@ -163,18 +178,3 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
-
-const MyTextInput = ({
-  label,
-  isPassword,
-  hidePassword,
-  setHidePassword,
-  ...props
-}) => {
-  return (
-    <View>
-      <StyledInputLabel>{label}</StyledInputLabel>
-      <StyledTextInput {...props} />
-    </View>
-  );
-};

@@ -6,6 +6,7 @@ import {
   Space,
   Table,
   DatePicker,
+  Select,
 } from "antd";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { MdDeleteForever } from "react-icons/md";
@@ -14,6 +15,9 @@ import InputSelector from "../../components/selectors/inputSelector";
 import moment from "moment";
 import DefaultSelector from "../../components/selectors/defaultSelector";
 import OuvrageSelector from "../../components/selectors/ouvrageSelector";
+import { deleteProgram } from "../../api/planning";
+import DepartSelector from "../../components/selectors/departSelector";
+import { BsPlusLg } from "react-icons/bs";
 
 const EditableContext = React.createContext(null);
 const { RangePicker } = DatePicker;
@@ -30,12 +34,12 @@ const EditableRow = ({ index, ...props }) => {
 };
 
 const PlanningUpdateForms = (props) => {
-  const [count, setCount] = useState(1);
+  const [count, setCount] = useState(100000);
   const [rowAdd, setRowAdd] = useState(true);
 
   let indexSelect = {};
   props.program_data?.map((data, index) => {
-    indexSelect[index] = {
+    indexSelect[data.id_programme] = {
       date_debut_programme: data.date_debut_programme,
       date_fin_programme: data.date_fin_programme,
       district: data.district,
@@ -46,15 +50,17 @@ const PlanningUpdateForms = (props) => {
   });
   // console.log("lindex", indexSelect);
   const [selectData, setSelectData] = useState(indexSelect);
-  const [defaultData, setdefaultData] = useState({
-    date_debut_programme: "",
-    date_fin_programme: "",
-    district: "",
+  const [insertOnUpdate, setinsertOnUpdate] = useState({
+    [count]: {
+      date_debut_programme: moment().format("YYYY-MM-DD"),
+      date_fin_programme: moment().format("YYYY-MM-DD"),
+    },
   });
 
   let tableRowData = props.program_data?.map((data, index) => {
+    let id = data.id_programme;
     return (data = {
-      key: index,
+      key: id,
       mois: (
         <RangePicker
           defaultValue={[
@@ -65,8 +71,8 @@ const PlanningUpdateForms = (props) => {
             setSelectData((prevdata) => {
               return {
                 ...prevdata,
-                [index]: {
-                  ...prevdata[index],
+                [id]: {
+                  ...prevdata[id],
                   date_debut_programme: dateString[0],
                   date_fin_programme: dateString[1],
                 },
@@ -77,66 +83,67 @@ const PlanningUpdateForms = (props) => {
         />
       ),
       district: (
-        <DefaultSelector
-          initValue={data.district}
-          option1="district 1"
-          option2="district 2"
-          name="district"
-          getSelectorData={(value) =>
+        <Select
+          value={data.district}
+          onChange={(value) =>
             setSelectData((prevdata) => {
               return {
                 ...prevdata,
-                [index]: { ...prevdata[index], district: value },
+                [id]: { ...prevdata[id], district: value },
               };
             })
           }
-        />
+        >
+          <Select.Option value="Belouizdad">Belouizdad</Select.Option>
+        </Select>
       ),
       depart: (
         <DefaultSelector
-          initValue={data.depart}
-          option1="depart 1"
-          option2="depart 2"
-          name="depart"
+          initdepart={data.depart}
+          initcode={data.code_ouvrage}
           getSelectorData={(value) =>
             setSelectData((prevdata) => {
               return {
                 ...prevdata,
-                [index]: { ...prevdata[index], depart: value },
+                [id]: {
+                  ...prevdata[id],
+                  depart: value,
+                },
               };
             })
           }
-        />
-      ),
-      ligne: (
-        <OuvrageSelector
-          initValue={data.code_ouvrage}
-          name="code_ouvrage"
-          getSelectorData={(value) =>
+          getSelectorData2={(value) =>
             setSelectData((prevdata) => {
               return {
                 ...prevdata,
-                [index]: { ...prevdata[index], code_ouvrage: value },
+                [id]: {
+                  ...prevdata[id],
+                  code_ouvrage: value,
+                },
               };
             })
           }
         />
       ),
       equipe: (
-        <DefaultSelector
-          initValue={data.nom_equipe_programme}
-          option1="B"
-          option2="C"
-          name="nom_equipe_programme"
-          getSelectorData={(value) =>
+        <Select
+          value={data.nom_equipe_programme}
+          style={{
+            width: "100%",
+          }}
+          onChange={(value) =>
             setSelectData((prevdata) => {
               return {
                 ...prevdata,
-                [index]: { ...prevdata[index], nom_equipe_programme: value },
+                [id]: { ...prevdata[id], nom_equipe_programme: value },
               };
             })
           }
-        />
+        >
+          <Select.Option value="A">A</Select.Option>
+          <Select.Option value="B">B</Select.Option>
+          <Select.Option value="C">C</Select.Option>
+        </Select>
       ),
     });
   });
@@ -146,10 +153,12 @@ const PlanningUpdateForms = (props) => {
   // useEffect(() => {}, []);
   // console.log("hacha el ni3ma ", tableRowData);
   // console.log("hailik el hadra", dataSource);
-  const handleDelete = (key) => {
+  const handleDelete = async (key) => {
     const newData = dataSource.filter((item) => item.key !== key);
     setDataSource(newData);
     // const newselectData = selectData.filter((item) => item.key !== key);
+    await deleteProgram(key);
+
     setSelectData((current) => {
       delete current[key];
       console.log(
@@ -164,34 +173,36 @@ const PlanningUpdateForms = (props) => {
 
   const defaultColumns = [
     {
-      title: "mois",
+      title: "Date de planning",
       dataIndex: "mois",
-      width: "30%",
+      width: "25%",
+
       // editable: true,
     },
     {
-      title: "district",
+      title: "District",
       dataIndex: "district",
-      rowSpan: 4,
+      align: "center",
     },
     {
-      title: "depart",
+      title: "Depart                                 Code ouvrage",
       dataIndex: "depart",
+      width: "35%",
+      align: "center",
     },
+
     {
-      title: "ligne",
-      dataIndex: "ligne",
-    },
-    {
-      title: "equipe",
+      title: "Equipe",
       dataIndex: "equipe",
+      width: "9%",
+      align: "center",
     },
     {
       title: "operation",
       dataIndex: "operation",
       render: (_, record) =>
         dataSource.length >= 1 ? (
-          <React.Fragment>
+          <Space>
             <Popconfirm
               title="Sure to delete?"
               onConfirm={() => handleDelete(record.key)}
@@ -200,13 +211,217 @@ const PlanningUpdateForms = (props) => {
                 <MdDeleteForever />
               </Button>
             </Popconfirm>
-            <Button disabled={rowAdd}>
-              <AiOutlinePlusSquare />
+            <Button
+              onClick={() => handleRowAdd(record.key)}
+              disabled={record.key >= 10000 ? false : true}
+            >
+              <BsPlusLg />
             </Button>
-          </React.Fragment>
+          </Space>
         ) : null,
     },
   ];
+  const handleRowAdd = (prevkey) => {
+    console.log(prevkey);
+    const newData = {
+      key: count,
+      mois: (
+        <RangePicker
+          defaultValue={[
+            moment(insertOnUpdate[prevkey].date_debut_programme),
+            moment(insertOnUpdate[prevkey].date_fin_programme),
+          ]}
+          onChange={(values, dateString) => {
+            setinsertOnUpdate((prevdata) => {
+              return {
+                ...prevdata,
+                [count]: {
+                  ...prevdata[count],
+                  date_debut_programme: dateString[0],
+                  date_fin_programme: dateString[1],
+                },
+              };
+            });
+          }}
+          format="YYYY/MM/DD"
+        />
+      ),
+      district: (
+        <Select
+          value={insertOnUpdate[prevkey].district}
+          onChange={(value) =>
+            setinsertOnUpdate((prevdata) => {
+              return {
+                ...prevdata,
+                [count]: { ...prevdata[count], district: value },
+              };
+            })
+          }
+        >
+          <Select.Option value="Belouizdad">Belouizdad</Select.Option>
+        </Select>
+      ),
+      depart: (
+        <DepartSelector
+          getSelectorData={(value) =>
+            setinsertOnUpdate((prevdata) => {
+              return {
+                ...prevdata,
+                [count]: {
+                  ...prevdata[count],
+                  depart: value,
+                },
+              };
+            })
+          }
+          getSelectorData2={(value) =>
+            setinsertOnUpdate((prevdata) => {
+              return {
+                ...prevdata,
+                [count]: {
+                  ...prevdata[count],
+                  code_ouvrage: value,
+                },
+              };
+            })
+          }
+        />
+      ),
+      equipe: (
+        <Select
+          style={{
+            width: "100%",
+          }}
+          onChange={(value) =>
+            setinsertOnUpdate((prevdata) => {
+              return {
+                ...prevdata,
+                [count]: { ...prevdata[count], nom_equipe_programme: value },
+              };
+            })
+          }
+        >
+          <Select.Option value="A">A</Select.Option>
+          <Select.Option value="B">B</Select.Option>
+          <Select.Option value="C">C</Select.Option>
+        </Select>
+      ),
+    };
+    setDataSource([...dataSource, newData]);
+    setCount(count + 1);
+    console.log("handel add count = ", count);
+    console.log("row add count data", selectData[count - 1]);
+    setinsertOnUpdate((prevdata) => {
+      return {
+        ...prevdata,
+        [count]: {
+          ...prevdata[count],
+          date_debut_programme: prevdata[prevkey].date_debut_programme,
+          date_fin_programme: prevdata[prevkey].date_fin_programme,
+          district: prevdata[prevkey].district,
+          depart: "70H1C10",
+        },
+      };
+    });
+  };
+  const handleAdd = () => {
+    const newData = {
+      key: count,
+      mois: (
+        <RangePicker
+          defaultValue={[moment(), moment()]}
+          onChange={(values, dateString) => {
+            setinsertOnUpdate((prevdata) => {
+              return {
+                ...prevdata,
+                [count]: {
+                  ...prevdata[count],
+                  date_debut_programme: dateString[0],
+                  date_fin_programme: dateString[1],
+                },
+              };
+            });
+            setRowAdd(false);
+          }}
+          format="YYYY/MM/DD"
+        />
+      ),
+      district: (
+        <Select
+          onChange={(value) =>
+            setinsertOnUpdate((prevdata) => {
+              return {
+                ...prevdata,
+                [count]: { ...prevdata[count], district: value },
+              };
+            })
+          }
+        >
+          <Select.Option value="Belouizdad">Belouizdad</Select.Option>
+        </Select>
+      ),
+      depart: (
+        <DepartSelector
+          getSelectorData={(value) =>
+            setinsertOnUpdate((prevdata) => {
+              return {
+                ...prevdata,
+                [count]: {
+                  ...prevdata[count],
+                  depart: value,
+                },
+              };
+            })
+          }
+          getSelectorData2={(value) =>
+            setinsertOnUpdate((prevdata) => {
+              return {
+                ...prevdata,
+                [count]: {
+                  ...prevdata[count],
+                  code_ouvrage: value,
+                },
+              };
+            })
+          }
+        />
+      ),
+      equipe: (
+        <Select
+          style={{
+            width: "100%",
+          }}
+          onChange={(value) =>
+            setinsertOnUpdate((prevdata) => {
+              return {
+                ...prevdata,
+                [count]: { ...prevdata[count], nom_equipe_programme: value },
+              };
+            })
+          }
+        >
+          <Select.Option value="A">A</Select.Option>
+          <Select.Option value="B">B</Select.Option>
+          <Select.Option value="C">C</Select.Option>
+        </Select>
+      ),
+    };
+    setDataSource([...dataSource, newData]);
+    setCount(count + 1);
+    setRowAdd(false);
+    console.log("handel add count = ", count);
+    setinsertOnUpdate((prevdata) => {
+      return {
+        ...prevdata,
+        [count]: {
+          ...prevdata[count],
+          date_debut_programme: moment().format("YYYY-MM-DD"),
+          date_fin_programme: moment().format("YYYY-MM-DD"),
+          depart: "70H1C10",
+        },
+      };
+    });
+  };
 
   const components = {
     body: {
@@ -231,17 +446,27 @@ const PlanningUpdateForms = (props) => {
   });
 
   console.log("update select DATA => ", selectData);
+  console.log("update insert DATA => ", insertOnUpdate);
   useEffect(() => {
     props.form.setFieldsValue({
-      program: selectData,
+      program: { update: selectData, insert: insertOnUpdate },
     });
-    // console.log("==============================", props.form.getFieldsValue());
+    console.log("==============================", props.form.getFieldsValue());
   }, [props.finish]);
   //  console.log(count);
 
   // console.log(programData);
   return (
     <React.Fragment>
+      <Button
+        onClick={handleAdd}
+        type="primary"
+        style={{
+          marginBottom: 16,
+        }}
+      >
+        Add a row
+      </Button>
       <Form.Item
         name="program"
         rules={[

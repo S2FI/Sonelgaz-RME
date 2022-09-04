@@ -1,8 +1,10 @@
-import React, { useContext } from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
+import React, { useContext } from "react";
+import { StatusBar } from "expo-status-bar";
+import {
+  NavigationContainer,
+  useNavigationContainerRef,
+} from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import {
   Avatar,
@@ -15,25 +17,25 @@ import {
   WelcomeContainer,
   ButtonText,
   Line,
-} from '../../components/styles';
+} from "../../components/styles";
 
-const Welcome = ({navigation}) => {
+const Welcome = ({ navigation: { navigate } }) => {
   return (
     <>
       <StatusBar style="light" />
       <InnerContainer>
-        <WelcomeImage resizeMode="cover" source={require('./../../assets/img/image.jpg')} />
+        <WelcomeImage
+          resizeMode="cover"
+          source={require("./../../assets/img/image.jpg")}
+        />
 
         <WelcomeContainer>
-        <PageTitle>Sonelgaz-RME</PageTitle><PageTitle>Bienvenue</PageTitle>
+          <PageTitle>Sonelgaz-RME</PageTitle>
+          <PageTitle>Bienvenue</PageTitle>
           <StyledFormArea>
             <Line />
-            <StyledButton>
-              <ButtonText
-               onPress={() =>
-                navigation.navigate('Login2')
-              }
-              >Se connecter</ButtonText>
+            <StyledButton onPress={() => navigate("Login")}>
+              <ButtonText>Se connecter</ButtonText>
             </StyledButton>
           </StyledFormArea>
         </WelcomeContainer>

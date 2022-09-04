@@ -9,13 +9,14 @@ export class PPService {
   constructor() {}
 
   public createPlanning = async (req, res) =>  {
-    const {Titre_planning , Type_planning,  user_created, program} = req.body
+    const {Titre_planning , Type_planning,  user_created,code_visite, program} = req.body
     try {
     const planRepo: any = getCustomRepository(planRepository)
     const plan =await planRepo.insert(
       { Titre_planning: Titre_planning,
         Type_planning: Type_planning,
         user_created: user_created,
+        code_visite:code_visite,
            }
     )
     const id = plan.identifiers[0].id_planning
@@ -29,6 +30,17 @@ export class PPService {
     let fullPlanning =[]
     Object.keys(program).forEach(async (key, index) => {
       program[key].id_planning = id;
+      if(program[key].nom_equipe_programme == "A")
+      {
+        program[key].id_equipe =1
+      }else if (program[key].nom_equipe_programme == "B")
+      {
+        program[key].id_equipe =2
+      }
+      else if (program[key].nom_equipe_programme == "C")
+      {
+        program[key].id_equipe =3
+      }
       
       fullPlanning.push(program[key]);
     });
@@ -67,20 +79,41 @@ export class PPService {
   }
   
 };
+public  deleteProgram = async (req, res) =>  { 
+  console.log("my delete id:",req.params.id)
+const urlId = req.params.id
+try {
+  const customRepo: any = getCustomRepository(programRepository)  
+await customRepo.delete({id_programme: urlId})
+return res.status(202).json({
+  success: true,
+  message: "succefully deleted programme with id : " + urlId,
+});
+} catch (error) {
+console.log(error.message);
+return res.status(500).json({
+  error: error.message,
+});
+  
+}
+
+};
+
 
 
 public  updatePlanning = async (req, res) =>  { 
 
     // console.log("my update id:",req.params.id)
     const urlId = req.params.id
-    const {Titre_planning , Type_planning,  user_created, program} = req.body
-    const program_keys = {}
+    const {Titre_planning , Type_planning,  user_created,code_visite, program} = req.body
+    let equipe_id;
     try {
       const planRepo: any = getCustomRepository(planRepository)  
     await planRepo.update(urlId, { 
       Titre_planning: Titre_planning,
       Type_planning: Type_planning,
       user_created: user_created,
+      code_visite:code_visite,
          })
 
          const programRepo: any = getCustomRepository(programRepository)
@@ -94,22 +127,54 @@ public  updatePlanning = async (req, res) =>  {
       
       //  console.log("my programs ids : ",listIdProgram[0].id_programme)
       Object.keys(listIdProgram).forEach(async (key, index) => {
-        
-       if( Object.keys(program[index]).length != 0) {
-        // console.log(program[index])
+        // console.log(program[listIdProgram[key].id_programme])
         //  console.log(key)
         //  console.log(listIdProgram[key])
-      await programRepo.update(listIdProgram[key].id_programme, {
-      date_debut_programme :program[index].date_debut_programme ,
-      date_fin_programme : program[index].date_fin_programme,
-      district: program[index].district ,
-      depart:program[index].depart ,
-      code_ouvrage: program[index].code_ouvrage,
-      nom_equipe_programme:program[index].nom_equipe_programme ,
+         let id = listIdProgram[key].id_programme
+       if( Object.keys(program.update[id]).length != 0) {
+        if(program.update[id].nom_equipe_programme == "A")
+        {
+          equipe_id=1
+        }else if (program.update[id].nom_equipe_programme == "B")
+        {
+          equipe_id=2
+        }
+        else if (program.update[id].nom_equipe_programme == "C")
+        {
+          equipe_id =3
+        }
+        
+      await programRepo.update(id, {
+      date_debut_programme :program.update[id].date_debut_programme ,
+      date_fin_programme : program.update[id].date_fin_programme,
+      district: program.update[id].district ,
+      depart:program.update[id].depart ,
+      code_ouvrage: program.update[id].code_ouvrage,
+      nom_equipe_programme:program.update[id].nom_equipe_programme ,
+      id_equipe:equipe_id
     })
   }  
     })
 
+    let insertProgram =[]
+    Object.keys(program.insert).forEach(async (key, index) => {
+      program.insert[key].id_planning = urlId;
+      if(program.insert[key].nom_equipe_programme == "A")
+      {
+        program.insert[key].id_equipe =1
+      }else if (program.insert[key].nom_equipe_programme == "B")
+      {
+        program.insert[key].id_equipe =2
+      }
+      else if (program.insert[key].nom_equipe_programme == "C")
+      {
+        program.insert[key].id_equipe =3
+      }
+      
+      insertProgram.push(program.insert[key]);
+    });
+    await programRepo.insert( insertProgram)
+    
     return res.status(203).json({
       success: true,
       message: "succefully updated planning"

@@ -16,12 +16,22 @@ import { formEntity } from './allForms.entity';
   export class entretienEntity extends formEntity{
     @Column( {type: 'integer' , nullable : true})
     id_form_entretien: number;
-    
-    @Column({ type: 'numeric', nullable: true})
-    nbr_support_portee: number;
 
     @Column({ type: 'numeric', nullable: true})
     nbr_isolateur_casse: number;
+
+    @Column({ type: 'double precision', nullable: true })
+    longueur_visiter: number;
+
+    @Column({ type: 'varchar', nullable: true })
+    ligne_depart: string;
+
+    @Column({ type: 'time without time zone', nullable: true })
+    heures_debut: Date;
+
+    @Column({ type: 'time without time zone', nullable: true })
+    heures_fin: Date;
+
 
     @Column({ type: 'varchar', nullable: true })
     fil_fer_degager: string;
@@ -39,7 +49,7 @@ import { formEntity } from './allForms.entity';
     support_incline: string;
 
     @Column({ type: 'varchar', nullable: true })
-    elegage: string;
+    elagage: string;
 
     @Column({ type: 'varchar', nullable: true })
     armements: string;
@@ -49,5 +59,6 @@ import { formEntity } from './allForms.entity';
 
     @Column({ type: 'varchar', nullable: true })
     observation: string;
+
   
   }

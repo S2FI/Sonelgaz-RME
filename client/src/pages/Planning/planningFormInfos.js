@@ -53,10 +53,6 @@ const PlanningFormInfos = (props) => {
     // } else {
     setFinish(true);
     console.log("Success:", values);
-    console.log(
-      "possible probleme ykon hna ===================================================================",
-      values.program
-    );
     try {
       const { data } = await createPlanning(values);
       setError("");
@@ -65,6 +61,7 @@ const PlanningFormInfos = (props) => {
       props.getPlanningList();
       props.getProgramme();
       setFinish(false);
+      props.handleOk();
     } catch (error) {
       console.log(error);
       setError(error.response.data.error);

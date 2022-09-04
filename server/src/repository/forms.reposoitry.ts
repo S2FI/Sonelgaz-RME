@@ -1,7 +1,7 @@
 import {EntityRepository, Repository} from "typeorm";
 import { userEntity } from "../database/entities/user.entity";
 import { entretienEntity } from "../database/formEntities/entretien.entity";
-import { maintenanceEntity } from "../database/formEntities/maintenance.entitiy";
+import { maintenanceEntity } from "../database/formEntities/maintenance.entity";
 import { visiteEntity } from "../database/formEntities/visite.entity";
 
 

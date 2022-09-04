@@ -53,9 +53,6 @@ const sideBar = (props) => {
             <Menu.Item key="4" icon={<BiMap />}>
               <NavLink to={LOCALISATION_ROUTE}>Map</NavLink>
             </Menu.Item>
-            <Menu.Item key="5" icon={<TbMessage />}>
-              <NavLink to={NOTIFICATIONS_ROUTE}>Notifications</NavLink>
-            </Menu.Item>
             <Menu.Item key="6" icon={<BiBarChartAlt2 />}>
               <NavLink to={STATIC_ROUTE}>Statistiques</NavLink>
             </Menu.Item>

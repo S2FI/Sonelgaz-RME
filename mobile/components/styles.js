@@ -1,23 +1,26 @@
-import styled from 'styled-components/native'; 
-import { View, Text, TouchableOpacity, TextInput, Image } from 'react-native';
-import Constants from 'expo-constants';
+import styled from "styled-components/native";
+import { View, Text, TouchableOpacity, TextInput, Image } from "react-native";
+import Constants from "expo-constants";
 
 const StatusBarHeight = Constants.statusBarHeight;
 
 // colors
 export const Colors = {
-    primary: '#ffffff',
-    secondary: '#E5E7EB',
-    tertiary: '#1F2937',
-    darkLight: '#9CA3AF',
-    brand: '#E78616',
-    green: '#10B981',
-    red: '#EF4444',
+  primary: "#ffffff",
+  secondary: "#E5E7EB",
+  tertiary: "#1F2937",
+  darkLight: "#9CA3AF",
+  brand: "#E78616",
+  green: "#10B981",
+  grey: "grey",
+  black: "black",
+  red: "#EF4444",
+  container: "#fcfaf7",
 };
 
 const { primary, secondary, tertiary, darkLight, brand, green, red } = Colors;
 
-export const StyledContainer = styled.View` 
+export const StyledContainer = styled.View`
   flex: 1;
   padding: 25px;
   padding-top: ${StatusBarHeight + 30}px;
@@ -103,14 +106,13 @@ export const StyledTextInput2 = styled.TextInput`
   padding-left: 5px;
   padding-right: 55px;
   border-radius: 5px;
-  font-size: 12px;
+  font-size: 13px;
   height: 45px;
   width: 300px;
   margin-vertical: 3px;
   margin-bottom: 10px;
   color: ${tertiary};
 `;
-
 
 export const StyledInputLabel = styled.Text`
   color: ${tertiary};
@@ -169,7 +171,7 @@ export const ButtonText = styled.Text`
 export const MsgBox = styled.Text`
   text-align: center;
   font-size: 13px;
-  color: ${props => props.type == "SUCCESS" ? green : red};
+  color: ${(props) => (props.type == "SUCCESS" ? green : red)};
 `;
 
 export const Line = styled.View`
@@ -208,6 +210,6 @@ export const TextLinkContent = styled.Text`
 `;
 
 export const Container = styled.Text`
-flex: 1;
-paddingTop: StatusBar.currentHeight;
+  flex: 1;
+  paddingtop: StatusBar.currentHeight;
 `;

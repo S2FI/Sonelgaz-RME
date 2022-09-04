@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import { StatusBar } from "expo-status-bar";
+import Config from "react-native-config";
 // formik
 import { Formik } from "formik";
 import {
@@ -23,8 +24,14 @@ import {
   TextLinkContent,
   Colors,
 } from "./../../components/styles";
-import { View, ActivityIndicator } from "react-native";
-
+import {
+  View,
+  ActivityIndicator,
+  Linking,
+  KeyboardAvoidingView,
+} from "react-native";
+import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
+import { Storage } from "expo-storage";
 //colors
 const { darkLight, brand, primary } = Colors;
 
@@ -34,38 +41,59 @@ import { Octicons, Fontisto, Ionicons } from "@expo/vector-icons";
 // api client
 import axios from "axios";
 
-// Async storage
-//import AsyncStorage from '@react-native-async-storage/async-storage';
-
 // credentials context
 import { CredentialsContext } from "../../components/CredentialsContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Environments from "../../constants/Env";
 
 const Login2 = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);
   const [message, setMessage] = useState();
   const [messageType, setMessageType] = useState();
-
+  console.log();
+  const storeData = async (user, equipe) => {
+    try {
+      await AsyncStorage.setItem("User", user);
+      await AsyncStorage.setItem("Equipe", equipe);
+    } catch (e) {
+      // saving error
+    }
+  };
   // credentials context
   const { storedCredentials, setStoredCredentials } =
     useContext(CredentialsContext);
 
-  const handleLogin = (credentials, setSubmitting) => {
+  const handleLogin = async (credentials, setSubmitting) => {
     handleMessage(null);
-    const url = "http://192.168.1.7:7000/api/posts/login";
+    const url = "http://" + Environments.MOBILE_URL + ":7000/api/posts/login";
     axios
       .post(url, credentials)
-      .then((response) => {
-        const result = response.data.success;
+      .then(async (response) => {
+        const result = response.data.equipe;
+        const user = response.data.user;
         const data = response.data;
-        console.log(response);
-        if (result !== true) {
-          handleMessage("Nom d'utilisateur ou mot de passe incorrect", status);
+        console.log(response.status);
+        if (result == "") {
+          handleMessage("compte non autoriser", response.status);
         } else {
-          navigation.navigate("MainContainer");
+          storeData(user, result);
+          const urlEquipe = `http://${Environments.MOBILE_URL}:7000/api/posts/equipe_planning/${result}`;
+          axios
+            .get(urlEquipe)
+            .then(async (reponse) => {
+              const equipeData = reponse.data;
+              navigation.navigate("Sonelgaz-RME", {
+                equipeData,
+                user,
+              });
+            })
+            .catch((error) => {
+              console.log(error);
+              handleMessage("Planning data failed");
+              console.log(error.toJSON());
+            });
 
-          console.log("connected ");
-          persistLogin({ ...data[0] }, message, status);
+          persistLogin({ ...data[0] }, message, response.status);
         }
         setSubmitting(false);
       })
@@ -96,78 +124,78 @@ const Login2 = ({ navigation }) => {
   };
 
   return (
-    <StyledContainer>
-      <StatusBar style="dark" />
-      <InnerContainer>
-        <PageLogo
-          resizeMode="cover"
-          source={require("./../../assets/img/avatar.png")}
-        />
-        <PageTitle>Sonelgaz-RME</PageTitle>
-        <SubTitle>Se connecter</SubTitle>
+    <KeyboardAvoidingWrapper>
+      <StyledContainer>
+        <StatusBar style="dark" />
+        <InnerContainer>
+          <PageLogo
+            resizeMode="cover"
+            source={require("./../../assets/img/avatar.png")}
+          />
+          <PageTitle>Sonelgaz-RME</PageTitle>
+          <SubTitle>Se connecter</SubTitle>
 
-        <Formik
-          initialValues={{ username: "", password: "" }}
-          onSubmit={(values, { setSubmitting }) => {
-            if (values.username == "" || values.password == "") {
-              handleMessage("Veuillez remplir les champs");
-              setSubmitting(false);
-            } else {
-              handleLogin(values, setSubmitting);
-            }
-          }}
-        >
-          {({
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            values,
-            isSubmitting,
-          }) => (
-            <StyledFormArea>
-              <MyTextInput
-                label="Nom d'utilisateur"
-                placeholder="Nom d'utilisateur"
-                placeholderTextColor={darkLight}
-                onChangeText={handleChange("username")}
-                onBlur={handleBlur("username")}
-                value={values.username}
-                keyboardType="username"
-                icon="mail"
-              />
-              <MyTextInput
-                label="Mot de passe"
-                placeholder="* * * * * * * *"
-                placeholderTextColor={darkLight}
-                onChangeText={handleChange("password")}
-                onBlur={handleBlur("password")}
-                value={values.password}
-                secureTextEntry={hidePassword}
-                icon="lock"
-                isPassword={true}
-                hidePassword={hidePassword}
-                setHidePassword={setHidePassword}
-              />
+          <Formik
+            initialValues={{ username: "", password: "" }}
+            onSubmit={(values, { setSubmitting }) => {
+              if (values.username == "" || values.password == "") {
+                handleMessage("Veuillez remplir les champs");
+                setSubmitting(false);
+              } else {
+                handleLogin(values, setSubmitting);
+              }
+            }}
+          >
+            {({
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              values,
+              isSubmitting,
+            }) => (
+              <StyledFormArea>
+                <MyTextInput
+                  label="Nom d'utilisateur"
+                  placeholder="Nom d'utilisateur"
+                  placeholderTextColor={darkLight}
+                  onChangeText={handleChange("username")}
+                  onBlur={handleBlur("username")}
+                  value={values.username}
+                  keyboardType="username"
+                  icon="mail"
+                />
+                <MyTextInput
+                  label="Mot de passe"
+                  placeholder="* * * * * * * *"
+                  placeholderTextColor={darkLight}
+                  onChangeText={handleChange("password")}
+                  onBlur={handleBlur("password")}
+                  value={values.password}
+                  secureTextEntry={hidePassword}
+                  icon="lock"
+                  isPassword={true}
+                  hidePassword={hidePassword}
+                  setHidePassword={setHidePassword}
+                />
+                <Line />
 
-              <Line />
-
-              <MsgBox type={messageType}>{message}</MsgBox>
-
-              {!isSubmitting && (
-                <StyledButton onPress={handleSubmit}>
-                  <ButtonText>Connexion</ButtonText>
-                </StyledButton>
-              )}
-              {isSubmitting && (
-                <StyledButton disabled={true}>
-                  <ActivityIndicator size="large" color={primary} />
-                </StyledButton>
-              )}
-            </StyledFormArea>
-          )}
-        </Formik>
-      </InnerContainer>
-    </StyledContainer>
+                {!isSubmitting && (
+                  <StyledButton onPress={handleSubmit}>
+                    <ButtonText>Connexion</ButtonText>
+                  </StyledButton>
+                )}
+                {isSubmitting && (
+                  <StyledButton disabled={true}>
+                    <ActivityIndicator size="large" color={primary} />
+                  </StyledButton>
+                )}
+                <MsgBox type={messageType}>{message}</MsgBox>
+              </StyledFormArea>
+            )}
+          </Formik>
+        </InnerContainer>
+      </StyledContainer>
+    </KeyboardAvoidingWrapper>
   );
 };
 
@@ -184,8 +212,10 @@ const MyTextInput = ({
       <LeftIcon>
         <Octicons name={icon} size={30} color={brand} />
       </LeftIcon>
-      <StyledInputLabel>{label}</StyledInputLabel>
-      <StyledTextInput {...props} />
+      <KeyboardAvoidingView behavior="padding">
+        <StyledInputLabel>{label}</StyledInputLabel>
+        <StyledTextInput {...props} />
+      </KeyboardAvoidingView>
       {isPassword && (
         <RightIcon
           onPress={() => {
