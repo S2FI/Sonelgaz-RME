@@ -19,3 +19,10 @@
   [data-theme='dark'] .editable-row:hover .editable-cell-value-wrap {
     border: 1px solid #434343;
   }
+  .Loading {
+    /* Center vertically and horizontally */
+    position: absolute;
+    top: 28%;
+    left: 45%;
+    margin: -25px 0 0 -25px; /* Apply negative top and left margins to truly center the element */
+  }

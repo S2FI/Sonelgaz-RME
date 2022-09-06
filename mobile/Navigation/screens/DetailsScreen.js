@@ -35,22 +35,6 @@ export default function DetailsScreen({ route, navigation }) {
         }}
       >
         <Tab.Screen
-          name={MaintenanceFormName}
-          component={MaintenanceFormScreen}
-          initialParams={{ user: username }}
-          options={{
-            tabBarLabel: ({ focused, color }) => (
-              <Text
-                style={{
-                  color: focused ? Colors.brand : Colors.grey,
-                }}
-              >
-                {MaintenanceFormName}
-              </Text>
-            ),
-          }}
-        />
-        <Tab.Screen
           name={VisiteFormName}
           component={VisiteFormScreen}
           initialParams={{ user: username }}
@@ -80,6 +64,22 @@ export default function DetailsScreen({ route, navigation }) {
                 }}
               >
                 {EntretienForName}
+              </Text>
+            ),
+          }}
+        />
+        <Tab.Screen
+          name={MaintenanceFormName}
+          component={MaintenanceFormScreen}
+          initialParams={{ user: username }}
+          options={{
+            tabBarLabel: ({ focused, color }) => (
+              <Text
+                style={{
+                  color: focused ? Colors.brand : Colors.grey,
+                }}
+              >
+                {MaintenanceFormName}
               </Text>
             ),
           }}

@@ -15,7 +15,7 @@ export class PPService {
     const plan =await planRepo.insert(
       { Titre_planning: Titre_planning,
         Type_planning: Type_planning,
-        user_created: user_created,
+        user_created: user_created, 
         code_visite:code_visite,
            }
     )
@@ -105,14 +105,13 @@ public  updatePlanning = async (req, res) =>  {
 
     // console.log("my update id:",req.params.id)
     const urlId = req.params.id
-    const {Titre_planning , Type_planning,  user_created,code_visite, program} = req.body
+    const {Titre_planning , Type_planning,code_visite, program} = req.body
     let equipe_id;
     try {
       const planRepo: any = getCustomRepository(planRepository)  
     await planRepo.update(urlId, { 
       Titre_planning: Titre_planning,
       Type_planning: Type_planning,
-      user_created: user_created,
       code_visite:code_visite,
          })
 

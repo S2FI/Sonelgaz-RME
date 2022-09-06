@@ -33,3 +33,18 @@ export async function getPlanning() {
 export async function getOuvrage() {
   return await axios.get("http://localhost:7000/api/posts/liaison");
 }
+export async function getFormMaintenance() {
+  return await axios.get(
+    "http://localhost:7000/api/posts/maintenance_form_planning"
+  );
+}
+export async function getFormEntretien() {
+  return await axios.get(
+    "http://localhost:7000/api/posts/entretien_form_planning"
+  );
+}
+export async function getFormVisite() {
+  return await axios.get(
+    "http://localhost:7000/api/posts/visite_form_planning"
+  );
+}

@@ -46,7 +46,10 @@ const ModalComponent = (props) => {
             onCancel={handleCancel}
             footer={[]}
           >
-            <PlanningFormInfos handleOk={handleOk} />
+            <PlanningFormInfos
+              handleOk={handleOk}
+              listVisite={props.listVisite}
+            />
           </Modal>
         </>
       )}

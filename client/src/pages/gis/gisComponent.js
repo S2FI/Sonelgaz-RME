@@ -20,6 +20,7 @@ import TileWMS from "ol/source/TileWMS";
 import Popup from "ol-popup";
 import SearchFeature from "ol-ext/control/SearchFeature";
 import Select from "ol/interaction/Select";
+import { Button } from "antd";
 
 const GisComponent = () => {
   const [tren, settren] = useState(0);
@@ -41,9 +42,7 @@ const GisComponent = () => {
       strategy: bboxStrategy,
     })
   );
-  // const container = document.getElementById("popup");
-  // const content = document.getElementById("popup-content");
-  // let close = document.getElementById("popup-closer");
+
   let control;
   let search;
 
@@ -53,15 +52,7 @@ const GisComponent = () => {
     minWidth: 140,
   });
   let popup = new Popup();
-  // const marker = new Style({
-  //   image: new Icon({
-  //     anchor: [0.5, 46],
-  //     anchorXUnits: "fraction",
-  //     anchorYUnits: "pixels",
-  //     // imgSize: [20, 20],
-  //     src: "https://openlayers.org/en/latest/examples/data/icon.png",
-  //   }),
-  // });
+
   const setSymbologyStyleFunction = (feature, resolution) => {
     let featureType = feature.getGeometry().getType();
 
@@ -130,71 +121,67 @@ const GisComponent = () => {
         zoom: 15,
       }),
     });
-    // function mybutton(params) {
-    //   settren((prevData) => {
-    //     return prevData + 1;
-    //   });
-    // }
-    const RenderHTML = () => {
-      const htmlPart = "<p>Welcome to this <strong>page</strong></p>";
-      return <div dangerouslySetInnerHTML={{ __html: htmlPart }} />;
-    };
+
+    // const RenderHTML = () => {
+    //   const htmlPart = "<p>Welcome to this <strong>page</strong></p>";
+    //   return <div dangerouslySetInnerHTML={{ __html: htmlPart }} />;
+    // };
     function mybutton() {
       const number = 1;
-      console.log("mchat srx *-* =>", number);
+      console.log("mmachattt =>", number);
     }
-    const button = () => {
-      return (
-        <div>
-          {settren((prevData) => {
-            return prevData + 1;
-          })}
-        </div>
-      );
-    };
+    const Btn = <Button onClick={mybutton}> Click </Button>;
 
-    ["postesource", "postehtabt", "appareilc", "jeubarres", "liaison"].map(
-      (layer) => {
-        const vectorSource = new VectorSource({
-          format: new GeoJSON(),
-          wrapX: false,
-          url: function (extent) {
-            return (
-              "http://localhost:8080/geoserver/wms?service=WFS&" +
-              "version=1.1.0&request=GetFeature&typename=Sonelgaz-RME:" +
-              layer +
-              "&" +
-              "outputFormat=application/json&srsname=EPSG:3857&" +
-              "bbox=" +
-              // [extent[1], extent[0], extent[3], extent[2]].join
-              extent.join(",") +
-              ",EPSG:3857"
-            );
-          },
-          strategy: bboxStrategy,
-        });
+    // const button = () => {
+    //   return (
+    //     <div>
+    //       {settren((prevData) => {
+    //         return prevData + 1;
+    //       })}
+    //     </div>
+    //   );
+    // };
 
-        const vector = new VectorLayer({
+    ["postesource", "postehtabt", "liaison"].map((layer) => {
+      const vectorSource = new VectorSource({
+        format: new GeoJSON(),
+        wrapX: false,
+        url: function (extent) {
+          return (
+            "http://localhost:8080/geoserver/wms?service=WFS&" +
+            "version=1.1.0&request=GetFeature&typename=Sonelgaz-RME:" +
+            layer +
+            "&" +
+            "outputFormat=application/json&srsname=EPSG:3857&" +
+            "bbox=" +
+            // [extent[1], extent[0], extent[3], extent[2]].join
+            extent.join(",") +
+            ",EPSG:3857"
+          );
+        },
+        strategy: bboxStrategy,
+      });
+
+      const vector = new VectorLayer({
+        source: vectorSource,
+        style: setSymbologyStyleFunction,
+      });
+
+      map.addLayer(vector);
+
+      console.log("a layer was added");
+
+      if (layer == "liaison") {
+        console.log("search", layer);
+        search = new SearchFeature({
+          //target: $(".options").get(0),
           source: vectorSource,
-          style: setSymbologyStyleFunction,
+          getTitle: function (feature) {
+            return feature.values_.code;
+          },
         });
-
-        map.addLayer(vector);
-
-        console.log("a layer was added");
-
-        if (layer == "liaison") {
-          console.log("search", layer);
-          search = new SearchFeature({
-            //target: $(".options").get(0),
-            source: vectorSource,
-            getTitle: function (feature) {
-              return feature.values_.code;
-            },
-          });
-        }
       }
-    );
+    });
 
     map.addOverlay(popup);
 
@@ -213,7 +200,16 @@ const GisComponent = () => {
       if (map.hasFeatureAtPixel(evt.pixel) === true) {
         let coordinate = evt.coordinate;
         const hdms = toStringHDMS(toLonLat(coordinate));
-        popup.show(coordinate, `it returns html ${mybutton} `);
+        popup.show(
+          coordinate,
+          `code d'ouvrage: <b>${feature.code}</b><br/> etat: <b>${
+            feature.etat_s
+          }</b> <br/> code de depart: <b>${feature.numdepart}</b>
+          <br/>
+        <button onClick="${() => {
+          console.log("vvv");
+        }}"> Click me </button>`
+        );
       } else {
         popup.hide();
       }
@@ -234,22 +230,7 @@ const GisComponent = () => {
     });
 
     map.addInteraction(select);
-    // select.on("popup", function (e) {
-    //   popup.hide();
-    //   let p = e.select.getGeometry().getFirstCoordinate();
-    //   popup.show(
-    //     p,
-    //     `code d'ouvrage: <b>${feature.code}</b><br/> etat: <b>${feature.etat_s}</b> <br/> code de depart: <b>${feature.numdepart}</b>`
-    //   );
-    // });
-    // Set the control grid reference
-    // let search = new SearchFeature({
-    //   //target: $(".options").get(0),
-    //   source: vectorSearch,
-    //   getTitle: function (feature) {
-    //     return feature.values_.code;
-    //   },
-    // });
+
     map.addControl(search);
     console.log(search);
 

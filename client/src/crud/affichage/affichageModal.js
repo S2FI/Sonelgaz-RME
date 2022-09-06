@@ -8,76 +8,62 @@ import AffichageTable from "./affichageTable";
 import ReactToPrint from "react-to-print";
 import { useReactToPrint } from "react-to-print";
 import { useRef } from "react";
-
+import ReactLoading from "react-loading";
 function AffichageModal(props) {
   const [visible, setVisible] = useState(false);
-  const [confirmLoading, setConfirmLoading] = useState(false);
-  const [allData, setallData] = useState(props.dataProgram);
-  const [dataSource, setDataSource] = useState({});
   const componentRef = useRef();
+  const [program_list_data, setprogram_list_data] = useState([]);
+  const [key_data, setkey_data] = useState({});
 
-  // console.log("first: => ", props.recordKey);
-  // console.log(
-  //   "data that im sending to affichage modal =>>>>>>",
-  //   props.dataProgram
-  // );
-  const handlePrint = useReactToPrint({
-    content: () => componentRef.current,
-  });
-
-  useEffect(() => {
-    allData?.map((data, index) => {
-      // console.log("ou hadi rahi tet3awed za3ma mor l'insertion?", data);
+  const keyData = () => {
+    props.dataProgram.map((data, index) => {
       if (props.recordKey == data.id_planning) {
-        setDataSource(data);
+        setkey_data(data);
+        setprogram_list_data(data.program);
       }
     });
-  }, []);
-  useEffect(() => {
-    setallData(props.dataProgram);
-    // console.log("data programmme ya da daaaaa =>", props.dataProgram);
-  }, [props.dataProgram]);
-
-  const showModal = () => {
-    setVisible(true);
   };
+
+  useEffect(() => {
+    if (props.visibilite == true) {
+      setVisible(true);
+      keyData();
+    }
+  }, [props.visibilite]);
+
   const handleCancel = () => {
     console.log("Clicked cancel button");
     setVisible(false);
+    props.modalEtatChanger(false);
   };
-  // console.log("data that im putting in affichageTable => ", dataSource);
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
   return (
     <React.Fragment>
-      {/* <ReactToPrint
-        trigger={() => <button>Print this out!</button>}
-        content={() => componentRef.current}
-      /> */}
-      <Button onClick={showModal}>
-        <FaEye />
-      </Button>
-
       <Modal
         title={"Affichage Planning"}
         visible={visible}
-        confirmLoading={confirmLoading}
         onCancel={handleCancel}
         footer={[]}
       >
-        <AffichageTable
-          ref={componentRef}
-          program_data={dataSource.program}
-          Titre_planning={dataSource.Titre_planning}
-          Type_planning={dataSource.Type_planning}
-          recordKey={props.recordKeys}
-        />
+        {Object.keys(key_data).length === 0 ? (
+          <ReactLoading type="spin" color="orange" height={667} width={375} />
+        ) : (
+          <AffichageTable
+            ref={componentRef}
+            program_data={program_list_data}
+            Titre_planning={key_data.Titre_planning}
+            Type_planning={key_data.Type_planning}
+            code_visite={key_data.code_visite}
+            user={key_data.user_created}
+            recordKey={props.recordKeys}
+          />
+        )}
         <Button onClick={handlePrint}>Print this out!</Button>
       </Modal>
     </React.Fragment>
   );
 }
 export default AffichageModal;
-
-// const mapStateToProps = (state) => ({
-//   program_list: state.planningReducer.program,
-// });
-// export default connect(mapStateToProps, { getProgramme })(PlanningOperations);

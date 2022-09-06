@@ -8,13 +8,10 @@ import {
   DatePicker,
   Select,
 } from "antd";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MdDeleteForever } from "react-icons/md";
-import { AiOutlinePlusSquare } from "react-icons/ai";
-import InputSelector from "../../components/selectors/inputSelector";
 import moment from "moment";
 import DefaultSelector from "../../components/selectors/defaultSelector";
-import OuvrageSelector from "../../components/selectors/ouvrageSelector";
 import { deleteProgram } from "../../api/planning";
 import DepartSelector from "../../components/selectors/departSelector";
 import { BsPlusLg } from "react-icons/bs";
@@ -48,14 +45,8 @@ const PlanningUpdateForms = (props) => {
       nom_equipe_programme: data.nom_equipe_programme,
     };
   });
-  // console.log("lindex", indexSelect);
   const [selectData, setSelectData] = useState(indexSelect);
-  const [insertOnUpdate, setinsertOnUpdate] = useState({
-    [count]: {
-      date_debut_programme: moment().format("YYYY-MM-DD"),
-      date_fin_programme: moment().format("YYYY-MM-DD"),
-    },
-  });
+  const [insertOnUpdate, setinsertOnUpdate] = useState({});
 
   let tableRowData = props.program_data?.map((data, index) => {
     let id = data.id_programme;
@@ -150,13 +141,9 @@ const PlanningUpdateForms = (props) => {
 
   const [dataSource, setDataSource] = useState(tableRowData);
 
-  // useEffect(() => {}, []);
-  // console.log("hacha el ni3ma ", tableRowData);
-  // console.log("hailik el hadra", dataSource);
   const handleDelete = async (key) => {
     const newData = dataSource.filter((item) => item.key !== key);
     setDataSource(newData);
-    // const newselectData = selectData.filter((item) => item.key !== key);
     await deleteProgram(key);
 
     setSelectData((current) => {
@@ -222,7 +209,6 @@ const PlanningUpdateForms = (props) => {
     },
   ];
   const handleRowAdd = (prevkey) => {
-    console.log(prevkey);
     const newData = {
       key: count,
       mois: (
@@ -309,8 +295,7 @@ const PlanningUpdateForms = (props) => {
     };
     setDataSource([...dataSource, newData]);
     setCount(count + 1);
-    console.log("handel add count = ", count);
-    console.log("row add count data", selectData[count - 1]);
+
     setinsertOnUpdate((prevdata) => {
       return {
         ...prevdata,
@@ -341,7 +326,6 @@ const PlanningUpdateForms = (props) => {
                 },
               };
             });
-            setRowAdd(false);
           }}
           format="YYYY/MM/DD"
         />
@@ -409,7 +393,6 @@ const PlanningUpdateForms = (props) => {
     setDataSource([...dataSource, newData]);
     setCount(count + 1);
     setRowAdd(false);
-    console.log("handel add count = ", count);
     setinsertOnUpdate((prevdata) => {
       return {
         ...prevdata,
@@ -451,11 +434,8 @@ const PlanningUpdateForms = (props) => {
     props.form.setFieldsValue({
       program: { update: selectData, insert: insertOnUpdate },
     });
-    console.log("==============================", props.form.getFieldsValue());
+    // console.log("==============================", props.form.getFieldsValue());
   }, [props.finish]);
-  //  console.log(count);
-
-  // console.log(programData);
   return (
     <React.Fragment>
       <Button

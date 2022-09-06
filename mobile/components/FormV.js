@@ -160,7 +160,7 @@ export default function FormV(props) {
                 />
                 <Picker.Item
                   label="A Mantenir"
-                  value="Mantenance"
+                  value="Maintenance"
                   style={{ fontSize: 13 }}
                 />
               </Picker>

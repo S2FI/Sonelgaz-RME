@@ -9,6 +9,8 @@ import {
   getOuvrageData,
 } from "../../redux/actions/planningAction";
 import DepartSelector from "../../components/selectors/departSelector";
+import { Store } from "react-notifications-component";
+import { set } from "ol/transform";
 const { Option } = Select;
 
 const PlanningFormInfos = (props) => {
@@ -16,47 +18,63 @@ const PlanningFormInfos = (props) => {
   const [error, setError] = useState(false); //init error state
   const [success, setSuccess] = useState(false);
   const [finish, setFinish] = useState(false);
-  const [dataOuvrage, setDataOuvrage] = useState(props.ouvrage_list);
-
   const [values, setValues] = useState({
     Titre_planning: "",
     Type_planning: "",
     code_visite: "",
-    user_created: localStorage.getItem("Username"),
     program: {},
   });
-  // console.log("la79et pien louvrage =>", dataOuvrage);
-  // const insertProgram = (selectData) => {
-  //   setProgramData(selectData);
-  // }=;
+
+  const [entretien, setEntretien] = useState(false);
+  const unique = [...new Set(props.listVisite)];
+  console.log("unigqueueeuw;lkdf =>>>", unique);
+
+  const InsertNotifSuccess = (message) => {
+    Store.addNotification({
+      title: "Insert",
+      message: message,
+      type: "success",
+      insert: "top",
+      container: "top-right",
+      animationIn: ["animate__animated", "animate__fadeIn"],
+      animationOut: ["animate__animated", "animate__fadeOut"],
+      dismiss: {
+        duration: 3000,
+        onScreen: true,
+      },
+    });
+  };
+  const InsertNotifError = (message) => {
+    Store.addNotification({
+      title: "Insert",
+      message: message,
+      type: "danger",
+      insert: "top",
+      container: "top-right",
+      animationIn: ["animate__animated", "animate__fadeIn"],
+      animationOut: ["animate__animated", "animate__fadeOut"],
+      dismiss: {
+        duration: 3000,
+        onScreen: true,
+      },
+    });
+  };
+
   const onClick = async (values) => {
     setFinish(true);
-    // setDate(true);
   };
   const onFinish = async (values) => {
-    // Object.keys(values.program).forEach(async (key, index) => {
-    //   console.log("first keys =>", key);
-    //   console.log(
-    //     "first keys =>",
-    //     values.program[key].hasOwnProperty("date_debut_programme")
-    //   );
-
-    //   if (values.program[key].hasOwnProperty("date_debut_programme") == false) {
-    //     setDate(false);
-    //     return true;.
-    //   }
-    // });
-    // console.log("first keys =>", date);
-    // if (date == false) {
-    //   console.log("est que rah yedkhol hna wla non?");
-    //   setError("Veuillez indiquer la date");
-    // } else {
     setFinish(true);
-    console.log("Success:", values);
+    const valuesToInsert = {
+      ...values,
+      user_created: localStorage.getItem("Username"),
+    };
+    console.log("Success:", valuesToInsert);
     try {
-      const { data } = await createPlanning(values);
+      const { data } = await createPlanning(valuesToInsert);
       setError("");
       setSuccess(data.message);
+      InsertNotifSuccess(data.message);
       console.log(data);
       props.getPlanningList();
       props.getProgramme();
@@ -64,7 +82,8 @@ const PlanningFormInfos = (props) => {
       props.handleOk();
     } catch (error) {
       console.log(error);
-      setError(error.response.data.error);
+      setError(error.response.data);
+      InsertNotifError("Insertion failed");
       setSuccess("");
     }
   };
@@ -102,26 +121,43 @@ const PlanningFormInfos = (props) => {
           },
         ]}
       >
-        <Select placeholder="Selectionez le type du planning">
+        <Select
+          placeholder="Selectionez le type du planning"
+          onChange={(value) => {
+            if (value === "Entretien") {
+              setEntretien(true);
+            } else {
+              setEntretien(false);
+            }
+          }}
+        >
           <Option value="Visite">Visite</Option>
           <Option value="Entretien">Entretien</Option>
           <Option value="Maintenance">Maintenance</Option>
         </Select>
       </Form.Item>
 
-      <Form.Item
-        label="Plan Visite"
-        name="code_visite"
-        value={values.code_visite}
-      >
-        <Select placeholder="Selectionez le type du planning">
-          <Option value="planning visite 1">planning visite 1</Option>
-          <Option value="planning visite 2">planning visite 2</Option>
-          <Option value=" ">None</Option>
-        </Select>
-      </Form.Item>
-      {/* <DepartSelector /> */}
-
+      {entretien && (
+        <Form.Item
+          label="Plan Visite"
+          name="code_visite"
+          value={values.code_visite}
+          rules={[
+            {
+              required: true,
+              message: "Le plan visite est obligatoire pour les entretiens",
+            },
+          ]}
+        >
+          <Select placeholder="Selectionez le planning de visite">
+            {unique.map((code) => (
+              <Select.Option value={code} key={code}>
+                {code}
+              </Select.Option>
+            ))}
+          </Select>
+        </Form.Item>
+      )}
       <PlanningForms form={form} finish={finish} />
 
       <Form.Item name="submit">

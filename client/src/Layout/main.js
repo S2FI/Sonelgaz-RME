@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import Tracabilite from "../admin/tracabilite";
 import UserList from "../admin/user";
 import Dashboard from "../pages/dashboard";
-import Formulaires from "../pages/formulaires";
+import Formulaires from "../pages/fomulaire/formulaires";
 import Gis from "../pages/gis/gis";
 import Planning from "../pages/Planning/planning";
 import Statistics from "../pages/stats";

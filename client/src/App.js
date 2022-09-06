@@ -19,10 +19,12 @@ import {
   USERLIST_ROUTE,
 } from "./static/staticPath";
 import Dashboard from "./pages/dashboard";
+import { ReactNotifications } from "react-notifications-component";
 
 const App = (props) => {
   return (
     <BrowserRouter>
+      <ReactNotifications />
       <Routes>
         {/* <Route element={<PrivateRoutes permitted="Chef" />}>
           <Route path={DEFAULT_PATH} element={<Container />} />

@@ -15,7 +15,11 @@ const TableComponent = (props) => {
     <Table
       title={() => (
         <div className="TableTitle">
-          <ModalComponent width="100%" header={props.header} />
+          <ModalComponent
+            width="100%"
+            header={props.header}
+            listVisite={props.listVisite}
+          />
 
           <Search
             placeholder="input search text"

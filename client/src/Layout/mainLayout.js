@@ -17,6 +17,7 @@ const MainLayout = (props) => {
       default:
         return (
           <TableComponent
+            listVisite={props.listVisite}
             sharedData={props.sharedData}
             sharedColumns={props.sharedColumns}
             header={props.header}

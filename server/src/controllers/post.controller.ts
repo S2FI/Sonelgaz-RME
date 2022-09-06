@@ -134,6 +134,19 @@ export class PostController {
     this.formService.updateVisite(req, res);
   };
 
+  public maintenanceFormPlan = async (req: Request, res: Response) => { 
+    const maintenanceData = await this.formService.maintenanceFormPlan(req,res) 
+    res.send(maintenanceData)
+  }
+  public entretienFormPlan = async (req: Request, res: Response) => { 
+    const entretienData = await this.formService.entretienFormPlan(req,res) 
+    res.send(entretienData)
+  }
+  public visiteFormPlan = async (req: Request, res: Response) => { 
+    const visiteData = await this.formService.visiteFormPlan(req,res) 
+    res.send(visiteData)
+  }
+
 
   public async routes() {
     this.router.get("/logout", this.logout);
@@ -148,6 +161,9 @@ export class PostController {
     this.router.get("/entretien_form/:user", this.entretienForm );
     this.router.get("/visite_form/:user", this.visiteForm );
 
+    this.router.get("/maintenance_form_planning", this.maintenanceFormPlan );
+    this.router.get("/entretien_form_planning", this.entretienFormPlan );
+    this.router.get("/visite_form_planning", this.visiteFormPlan );
 
     this.router.post("/login", this.login );
     this.router.post("/register", this.register );

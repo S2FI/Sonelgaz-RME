@@ -9,6 +9,7 @@ import "./styles/main.css";
 import "./styles/PlanningFormsModal.css";
 import "./styles/popupStyler.css";
 import "./styles/login.css";
+import "react-notifications-component/dist/theme.css";
 
 const container = document.getElementById("root");
 const root = createRoot(container);

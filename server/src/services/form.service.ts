@@ -1,6 +1,8 @@
+import { response } from "express";
 import { Service } from "typedi";
 import { getCustomRepository } from "typeorm";
 import { entretienRepository, maintenanceRepository, visiteRepository } from "../repository/forms.reposoitry";
+import { planRepository } from "../repository/planning.repository";
 
 
 @Service()
@@ -271,6 +273,88 @@ error: error.message,
 }
 
 }
+
+public maintenanceFormPlan = async (req, res) =>  {
+  let plan=[];
+  const mainRepo: any = getCustomRepository(maintenanceRepository)
+  const planRepo: any = getCustomRepository(planRepository)
+
+  const mydata = await mainRepo.find({ order:{id_form_maintenance:"ASC"} }) 
+
+  const full = await planRepo.find({ order:{id_planning:"ASC"}  })
+     
+  full.map( (data)=>{
+        if(data.Type_planning== "Maintenance"){
+          mydata.map( (code)=>{
+            if(data.id_planning== code.id_form_maintenance){
+              plan.push({[data.Titre_planning]:{...code, typeForm:data.Type_planning}})
+            }
+          })
+          
+          
+        }
+  })
+  
+  return plan
+};
+public entretienFormPlan = async (req, res) =>  {
+  let plan=[];
+  const mainRepo: any = getCustomRepository(entretienRepository)
+  const planRepo: any = getCustomRepository(planRepository)
+
+  const mydata = await mainRepo.find({ order:{id_form_entretien:"ASC"} }) 
+
+  const full = await planRepo.find({ order:{id_planning:"ASC"}  })
+     
+  full.map( (data)=>{
+        if(data.Type_planning== "Entretien"){
+          mydata.map( (code)=>{
+            if(data.id_planning== code.id_form_entretien){
+              plan.push({[data.Titre_planning]:{...code, typeForm:data.Type_planning}})
+            }
+          })
+          
+          
+        }
+  })
+  
+  return plan
+};
+
+public visiteFormPlan = async (req, res) =>  {
+  let plan=[];
+  let prevData="";
+  const mainRepo: any = getCustomRepository(visiteRepository)
+  const planRepo: any = getCustomRepository(planRepository)
+
+  const mydata = await mainRepo.find({ order:{id_form_visite:"ASC"} }) 
+
+  const full = await planRepo.find({ order:{id_planning:"ASC"}  })
+     
+  full.map( (data)=>{
+        if(data.Type_planning== "Visite"){
+          mydata.map( (code)=>{
+            if(data.id_planning== code.id_form_visite){
+              plan.push({[data.Titre_planning]:{...code, typeForm:data.Type_planning}})
+            }
+          })
+                
+        }
+  })
+  // const test = plan.map( (data)=>{
+  //   Object.keys(data).forEach(async (key,index)=>{
+  //    if(Object.keys(prevData).length!=0)
+  //    {
+  //     if(key == prevData){
+  //       return {...data[prevData], [index]:data[key]}
+  //     }
+  //    }     
+  //     prevData=key;
+  //   })
+  // })
+  // console.log(test)
+  return plan
+};
 }
 // { 
 //   "id_form_visite":"1",

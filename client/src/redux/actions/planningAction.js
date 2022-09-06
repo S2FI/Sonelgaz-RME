@@ -1,8 +1,18 @@
-import { getFullPlanning, getOuvrage, getPlanning } from "../../api/planning";
 import {
+  getFormEntretien,
+  getFormMaintenance,
+  getFormVisite,
+  getFullPlanning,
+  getOuvrage,
+  getPlanning,
+} from "../../api/planning";
+import {
+  ENTRETIEN_LIST,
+  MAINTENANCE_LIST,
   OUVRAGE_LIST,
   PLANNING_LIST,
   PROGRAM_LIST,
+  VISITE_LIST,
 } from "../../static/staticVar";
 
 export const getPlanningList = () => async (dispatch) => {
@@ -46,6 +56,62 @@ export const getOuvrageData = () => async (dispatch) => {
     dispatch({
       type: OUVRAGE_LIST,
       payload: data,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getMaintenanceForms = () => async (dispatch) => {
+  try {
+    const maintenance_data = await getFormMaintenance();
+
+    const Main = maintenance_data.data.map((data, index) => {
+      let mykey;
+      Object.keys(data).forEach(async (key) => {
+        mykey = key;
+        console.log("keys", data[mykey]);
+      });
+
+      return (data = { ...data, [mykey]: data[mykey] });
+    });
+
+    dispatch({
+      type: MAINTENANCE_LIST,
+      payload: Main,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const getEntretienForms = () => async (dispatch) => {
+  try {
+    const planning_data = await getFormEntretien();
+
+    const plan = planning_data.data.map((data) => {
+      let date = data.date_planning.split("T");
+      return (data = { ...data, key: data.id_planning, date: date[0] });
+    });
+    dispatch({
+      type: ENTRETIEN_LIST,
+      payload: plan,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getVisiteForms = () => async (dispatch) => {
+  try {
+    const planning_data = await getFormVisite();
+
+    const plan = planning_data.data.map((data) => {
+      let date = data.date_planning.split("T");
+      return (data = { ...data, key: data.id_planning, date: date[0] });
+    });
+    dispatch({
+      type: VISITE_LIST,
+      payload: plan,
     });
   } catch (error) {
     console.log(error);

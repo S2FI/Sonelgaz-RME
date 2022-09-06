@@ -1,6 +1,10 @@
-import MainLayout from "../Layout/mainLayout";
+import MainLayout from "../../Layout/mainLayout";
 import { Button, Space, Table, Tag } from "antd";
 import { FaEye } from "react-icons/fa";
+import { connect } from "react-redux";
+import { getMaintenanceForms } from "../../redux/actions/planningAction";
+import { useEffect } from "react";
+
 const forms_data = [
   {
     key: "1",
@@ -56,7 +60,20 @@ const forms_columns = [
     ),
   },
 ];
-const Formulaires = () => {
+const Formulaires = (props) => {
+  useEffect(() => {
+    props.getMaintenanceForms();
+  }, []);
+  // const unique = [
+  //   ...new Set(
+  //     props.maintenance_list.map((data) => {
+  //       Object.keys(data).forEach(async (key) => {
+  //         return data[key];
+  //       });
+  //     })
+  //   ),
+  // ];
+  console.log("la79et leloucha", props.maintenance_list);
   return (
     <MainLayout
       sharedData={forms_data}
@@ -65,4 +82,8 @@ const Formulaires = () => {
     />
   );
 };
-export default Formulaires;
+
+const mapStateToProps = (state) => ({
+  maintenance_list: state.planningReducer.Main,
+});
+export default connect(mapStateToProps, { getMaintenanceForms })(Formulaires);

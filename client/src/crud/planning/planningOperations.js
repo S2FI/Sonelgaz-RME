@@ -5,59 +5,75 @@ import { BsPencilFill } from "react-icons/bs";
 import { getProgramme } from "../../redux/actions/planningAction";
 import PlanningUpdateFormInfos from "./planningUpdateFormInfos";
 import { connect } from "react-redux";
-
+import ReactLoading from "react-loading";
 function PlanningOperations(props) {
   const [visible, setVisible] = useState(false);
-  const [confirmLoading, setConfirmLoading] = useState(false);
-  const [allData, setallData] = useState(props.dataProgram);
-  const [dataSource, setDataSource] = useState({});
 
-  // console.log("first: => ", props.recordKey);
+  // const [allData, setallData] = useState(props.dataProgram);
+  // const [dataSource, setDataSource] = useState({});
+  const [program_list_data, setprogram_list_data] = useState([]);
+  const [key_data, setkey_data] = useState({});
 
-  // console.log(allData);
-  const handleOk = () => {
-    setVisible(false);
-    console.log("la79et i guess");
-  };
-  useEffect(() => {
-    console.log(props.recordKey);
-    allData?.map((data, index) => {
+  const keyData = () => {
+    props.dataProgram.map((data, index) => {
       if (props.recordKey == data.id_planning) {
-        setDataSource(data);
+        setkey_data(data);
+        setprogram_list_data(data.program);
       }
     });
-  }, []);
-  useEffect(() => {
-    setallData(props.dataProgram);
-  }, [props.dataProgram]);
-
-  const showModal = () => {
-    setVisible(true);
   };
+
+  useEffect(() => {
+    if (props.visibilite == true) {
+      setVisible(true);
+      keyData();
+    }
+  }, [props.visibilite]);
+
   const handleCancel = () => {
     console.log("Clicked cancel button");
     setVisible(false);
+    props.modalEtatChanger(false);
   };
+
+  const handleOk = () => {
+    setVisible(false);
+    props.modalEtatChanger(false);
+    console.log("la79et i guess");
+  };
+  // useEffect(() => {
+  //   console.log(props.recordKey);
+  //   allData?.map((data, index) => {
+  //     if (props.recordKey == data.id_planning) {
+  //       setDataSource(data);
+  //     }
+  //   });
+  // }, []);
+  // useEffect(() => {
+  //   setallData(props.dataProgram);
+  // }, [props.dataProgram]);
+
   return (
     <React.Fragment>
-      <Button onClick={showModal}>
-        <BsPencilFill />
-      </Button>
-
       <Modal
         title="Update Planning"
         visible={visible}
         destroyOnClose="true"
-        confirmLoading={confirmLoading}
         onCancel={handleCancel}
         footer={[]}
       >
-        <PlanningUpdateFormInfos
-          programs={dataSource}
-          id={props.recordKey}
-          record={props.record}
-          handleOk={handleOk}
-        />
+        {program_list_data.length === 0 ? (
+          <ReactLoading type="spin" color="orange" height={667} width={375} />
+        ) : (
+          <PlanningUpdateFormInfos
+            title={key_data.Titre_planning}
+            type={key_data.Type_planning}
+            programs={program_list_data}
+            id={props.recordKey}
+            handleOk={handleOk}
+            listVisite={props.listVisite}
+          />
+        )}
       </Modal>
     </React.Fragment>
   );
