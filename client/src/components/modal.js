@@ -68,7 +68,7 @@ const ModalComponent = (props) => {
             onCancel={handleCancel}
             footer={[]}
           >
-            <Register />
+            <Register handleOk={handleOk} />
           </Modal>
         </>
       )}

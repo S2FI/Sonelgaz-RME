@@ -27,12 +27,9 @@ export async function onUpdate(id, updateData) {
     updateData
   );
 }
-
-// export async function getIP() {
-//   return await axios.get("https://geolocation-db.com/json/");
-// }
-export async function getIP() {
-  return await fetch("https://geolocation-db.com/json/").then((response) =>
-    response.json()
-  );
+export async function onActionTrack(trackData) {
+  return await axios.post("http://localhost:7000/api/posts/track", trackData);
+}
+export async function getTrack() {
+  return await axios.get("http://localhost:7000/api/posts/get_track");
 }

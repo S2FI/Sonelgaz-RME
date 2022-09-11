@@ -1,63 +1,65 @@
 import { Space, Tag } from "antd";
+import { useEffect, useState } from "react";
 import { MdDeleteForever } from "react-icons/md";
+import { connect } from "react-redux";
 import MainLayout from "../Layout/mainLayout";
+import { getTrackList } from "../redux/actions/authAction";
 
-const trace_data = [
-  {
-    key: "1",
-    user: "admin",
-    role: "Admin",
-    ip: localStorage.getItem("UserIp"),
-    operation: "modifier planning",
-  },
-];
-const trace_columns = [
-  {
-    title: "Nom d'utilisateur",
-    dataIndex: "user",
-    key: "user",
-    sorter: true,
-  },
-  {
-    title: "Le Role",
-    dataIndex: "role",
-    key: "role",
-    sorter: false,
-  },
-  {
-    title: "IP d'utilisateur",
-    dataIndex: "ip",
-    key: "ip",
-    sorter: false,
-  },
-  {
-    title: "Operation effectue",
-    dataIndex: "operation",
-    key: "operation",
-    sorter: false,
-  },
+const Tracabilite = (props) => {
+  const [dataSource, setDataSource] = useState(props.tracking_list);
 
-  {
-    title: "Action",
-    key: "action",
-    render: (_, record) => (
-      <Space size="middle">
-        <a>
-          <MdDeleteForever />
-        </a>
-      </Space>
-    ),
-  },
-];
+  useEffect(() => {
+    props.getTrackList();
+  }, []);
 
-const Tracabilite = () => {
+  useEffect(() => {
+    setDataSource(props.tracking_list);
+  }, [props.tracking_list]);
+  const trace_columns = [
+    {
+      title: "Date de l'action",
+      dataIndex: "date",
+      key: "date",
+      sorter: true,
+    },
+    {
+      title: "Nom d'utilisateur",
+      dataIndex: "tracked_user",
+      key: "tracked_user",
+    },
+    {
+      title: "Role",
+      dataIndex: "user_role",
+      key: "user_role",
+      sorter: false,
+    },
+    {
+      title: "IP d'utilisateur",
+      dataIndex: "ip_address",
+      key: "ip_address",
+      sorter: false,
+    },
+    {
+      title: "Operation effectue",
+      dataIndex: "action_tracked",
+      key: "action_tracked",
+      sorter: false,
+      width: "35%",
+    },
+  ];
+
   return (
     <MainLayout
-      sharedData={trace_data}
+      sharedData={dataSource}
       sharedColumns={trace_columns}
       header="Tracabilite"
     />
   );
 };
 
-export default Tracabilite;
+const mapStateToProps = (state) => ({
+  tracking_list: state.authReducer.tracks,
+});
+export default connect(mapStateToProps, {
+  getTrackList,
+})(Tracabilite);

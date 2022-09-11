@@ -32,7 +32,6 @@ const EditableRow = ({ index, ...props }) => {
 
 const PlanningUpdateForms = (props) => {
   const [count, setCount] = useState(100000);
-  const [rowAdd, setRowAdd] = useState(true);
 
   let indexSelect = {};
   props.program_data?.map((data, index) => {
@@ -54,6 +53,11 @@ const PlanningUpdateForms = (props) => {
       key: id,
       mois: (
         <RangePicker
+          disabledDate={(d) =>
+            !d ||
+            d.isAfter("2023-12-31") ||
+            d.isSameOrBefore(moment().endOf("day"))
+          }
           defaultValue={[
             moment(data.date_debut_programme),
             moment(data.date_fin_programme),
@@ -118,7 +122,7 @@ const PlanningUpdateForms = (props) => {
       ),
       equipe: (
         <Select
-          value={data.nom_equipe_programme}
+          defaultValue={data.nom_equipe_programme}
           style={{
             width: "100%",
           }}
@@ -144,7 +148,8 @@ const PlanningUpdateForms = (props) => {
   const handleDelete = async (key) => {
     const newData = dataSource.filter((item) => item.key !== key);
     setDataSource(newData);
-    await deleteProgram(key);
+    props.deletingRows(key);
+    // await deleteProgram(key);
 
     setSelectData((current) => {
       delete current[key];
@@ -154,6 +159,10 @@ const PlanningUpdateForms = (props) => {
         "          new updateSelectData",
         selectData
       );
+      return current;
+    });
+    setinsertOnUpdate((current) => {
+      delete current[key];
       return current;
     });
   };
@@ -213,6 +222,11 @@ const PlanningUpdateForms = (props) => {
       key: count,
       mois: (
         <RangePicker
+          disabledDate={(d) =>
+            !d ||
+            d.isAfter("2023-12-31") ||
+            d.isSameOrBefore(moment().endOf("day"))
+          }
           defaultValue={[
             moment(insertOnUpdate[prevkey].date_debut_programme),
             moment(insertOnUpdate[prevkey].date_fin_programme),
@@ -314,7 +328,12 @@ const PlanningUpdateForms = (props) => {
       key: count,
       mois: (
         <RangePicker
-          defaultValue={[moment(), moment()]}
+          disabledDate={(d) =>
+            !d ||
+            d.isAfter("2023-12-31") ||
+            d.isSameOrBefore(moment().endOf("day"))
+          }
+          defaultValue={[moment().endOf("day"), moment().endOf("day")]}
           onChange={(values, dateString) => {
             setinsertOnUpdate((prevdata) => {
               return {
@@ -392,14 +411,13 @@ const PlanningUpdateForms = (props) => {
     };
     setDataSource([...dataSource, newData]);
     setCount(count + 1);
-    setRowAdd(false);
     setinsertOnUpdate((prevdata) => {
       return {
         ...prevdata,
         [count]: {
           ...prevdata[count],
-          date_debut_programme: moment().format("YYYY-MM-DD"),
-          date_fin_programme: moment().format("YYYY-MM-DD"),
+          date_debut_programme: moment().endOf("day").format("YYYY-MM-DD"),
+          date_fin_programme: moment().endOf("day").format("YYYY-MM-DD"),
           depart: "70H1C10",
         },
       };
@@ -465,7 +483,6 @@ const PlanningUpdateForms = (props) => {
           tableLayout="fixed"
         />
       </Form.Item>
-      {/* <Form.Item name="date" /> */}
     </React.Fragment>
   );
 };

@@ -41,17 +41,6 @@ function PlanningOperations(props) {
     props.modalEtatChanger(false);
     console.log("la79et i guess");
   };
-  // useEffect(() => {
-  //   console.log(props.recordKey);
-  //   allData?.map((data, index) => {
-  //     if (props.recordKey == data.id_planning) {
-  //       setDataSource(data);
-  //     }
-  //   });
-  // }, []);
-  // useEffect(() => {
-  //   setallData(props.dataProgram);
-  // }, [props.dataProgram]);
 
   return (
     <React.Fragment>
@@ -68,6 +57,7 @@ function PlanningOperations(props) {
           <PlanningUpdateFormInfos
             title={key_data.Titre_planning}
             type={key_data.Type_planning}
+            code_visite={key_data.code_visite}
             programs={program_list_data}
             id={props.recordKey}
             handleOk={handleOk}

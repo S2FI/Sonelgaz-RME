@@ -3,33 +3,67 @@ import { onRegistration } from "../api/auth";
 import { Button, Checkbox, Form, Input, Select } from "antd";
 import { getUserList } from "../redux/actions/authAction";
 import { connect } from "react-redux";
+import { Store } from "react-notifications-component";
 const Register = (props) => {
   const [values, setValues] = useState({
     // init
     username: "",
     password: "",
     role: "",
+    nom: "",
+    prenom: "",
   });
   const [error, setError] = useState(false); //init error state
   const [success, setSuccess] = useState(false); // init success state
 
-  // const onChange = (e) => {
-  //   //allow data entry in input tags
-  //   setValues({ ...values, [e.target.name]: e.target.value });
-  // };
+  const InsertNotifSuccess = (message) => {
+    Store.addNotification({
+      title: "Inscription",
+      message: message,
+      type: "success",
+      insert: "top",
+      container: "top-right",
+      animationIn: ["animate__animated", "animate__fadeIn"],
+      animationOut: ["animate__animated", "animate__fadeOut"],
+      dismiss: {
+        duration: 3000,
+        onScreen: true,
+      },
+    });
+  };
+  const InsertNotifError = (message) => {
+    Store.addNotification({
+      title: "Registration",
+      message: message,
+      type: "danger",
+      insert: "top",
+      container: "top-right",
+      animationIn: ["animate__animated", "animate__fadeIn"],
+      animationOut: ["animate__animated", "animate__fadeOut"],
+      dismiss: {
+        duration: 3000,
+        onScreen: true,
+      },
+    });
+  };
   const onFinish = async (values) => {
     console.log("Success:", values);
     try {
       const { data } = await onRegistration(values); // wait for register Post request (api/auth.js)
-
       setError("");
       setSuccess(data.message);
       setValues({ username: "", password: "", role: "" }); // init values after success
       props.getUserList();
+      InsertNotifSuccess(
+        "Le compte de l'utilisateur " +
+          values.username +
+          " a ete creer avec succees"
+      );
       props.handleOk();
     } catch (error) {
       console.log(error);
       setError(error.response.data.error);
+      InsertNotifError(error.response.data.error);
       setSuccess("");
     }
   };
@@ -62,7 +96,7 @@ const Register = (props) => {
           rules={[
             {
               required: true,
-              message: "Please input your username!",
+              message: "Nom d'utilisateur est obligatoire",
             },
           ]}
         >
@@ -76,7 +110,7 @@ const Register = (props) => {
           rules={[
             {
               required: true,
-              message: "Please input your password!",
+              message: " Le mot de passe est obligatoire!",
             },
           ]}
         >
@@ -89,18 +123,47 @@ const Register = (props) => {
           rules={[
             {
               required: true,
-              message: "Please input the user role",
+              message: "Le role est obligatoire",
             },
           ]}
         >
           <Select placeholder="Designer le role">
             <Select.Option value="User">User</Select.Option>
-            <Select.Option value="Chef">Chef</Select.Option>
+            <Select.Option value="Chef" disabled>
+              Chef
+            </Select.Option>
             <Select.Option value="Ing">Ing</Select.Option>
-            <Select.Option value="Admin">Admin</Select.Option>
+            <Select.Option value="Admin" disabled>
+              Admin
+            </Select.Option>
           </Select>
         </Form.Item>
-
+        <Form.Item
+          label="Nom"
+          name="nom"
+          value={values.nom}
+          rules={[
+            {
+              required: true,
+              message: "Le nom est obligatoire",
+            },
+          ]}
+        >
+          <Input placeholder="Entrer le nom" />
+        </Form.Item>
+        <Form.Item
+          label="Prenom"
+          name="prenom"
+          value={values.prenom}
+          rules={[
+            {
+              required: true,
+              message: "Le prenom est obligatoire",
+            },
+          ]}
+        >
+          <Input placeholder="Entrer le prenom" />
+        </Form.Item>
         <Form.Item
           wrapperCol={{
             offset: 8,

@@ -146,8 +146,13 @@ export class PostController {
     const visiteData = await this.formService.visiteFormPlan(req,res) 
     res.send(visiteData)
   }
-
-
+  public tracking = async (req: Request, res: Response) => {
+    this.postService.tracking(req, res);
+  };
+  public getTrack = async (req: Request, res: Response) => { 
+    const trackData = await this.postService.getTrack(req,res) 
+    res.send(trackData)
+  }
   public async routes() {
     this.router.get("/logout", this.logout);
     this.router.get("/users-get", this.userlist);
@@ -155,6 +160,7 @@ export class PostController {
     this.router.get("/data", this.planningdata );
     this.router.get("/full-planning", this.fullPlanning)
     this.router.get("/liaison", this.getOuvrage );
+    this.router.get("/get_track", this.getTrack );
 
     this.router.get("/equipe_planning/:equipe", this.equipeData );
     this.router.get("/maintenance_form/:user", this.maintenanceForm );
@@ -167,6 +173,7 @@ export class PostController {
 
     this.router.post("/login", this.login );
     this.router.post("/register", this.register );
+    this.router.post("/track", this.tracking );
     this.router.post("/plan", this.createPlanning );
    
     this.router.post("/form-visite", this.createFormVisite );

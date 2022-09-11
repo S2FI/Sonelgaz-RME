@@ -10,37 +10,57 @@ function UserOperations(props) {
   const showModal = () => {
     setVisible(true);
   };
+  const hidemodal = () => {
+    setVisible(false);
+  };
   const handleCancel = () => {
     console.log("Clicked cancel button");
     setVisible(false);
   };
   return (
-    <React.Fragment>
+    <Space>
       <Popconfirm
         title="Sure to delete?"
         onConfirm={() => props.handleDelete(props.recordKey)}
+        disabled={
+          props.record.username === "admin" || props.record.role === "Chef"
+            ? true
+            : false
+        }
       >
-        <Button>
+        <Button
+          disabled={
+            props.record.username === "admin" || props.record.role === "Chef"
+              ? true
+              : false
+          }
+        >
           <MdDeleteForever />
         </Button>
       </Popconfirm>
-      <Space>
-        <Button onClick={showModal}>
-          <BsPencilFill />
-        </Button>
 
-        <Modal
-          title="Update"
-          visible={visible}
-          destroyOnClose="true"
-          confirmLoading={confirmLoading}
-          onCancel={handleCancel}
-          footer={[]}
-        >
-          <UserUpdateForm id={props.recordKey} record={props.record} />
-        </Modal>
-      </Space>
-    </React.Fragment>
+      <Button
+        onClick={showModal}
+        disabled={props.record.username === "admin" ? true : false}
+      >
+        <BsPencilFill />
+      </Button>
+
+      <Modal
+        title="Update"
+        visible={visible}
+        destroyOnClose="true"
+        confirmLoading={confirmLoading}
+        onCancel={handleCancel}
+        footer={[]}
+      >
+        <UserUpdateForm
+          id={props.recordKey}
+          record={props.record}
+          hidemymodal={hidemodal}
+        />
+      </Modal>
+    </Space>
   );
 }
 

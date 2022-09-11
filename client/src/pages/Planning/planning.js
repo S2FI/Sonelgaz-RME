@@ -7,6 +7,7 @@ import React, { useEffect, useState } from "react";
 import { deletePlanning, getPlanning } from "../../api/planning";
 import { connect } from "react-redux";
 import ReactLoading from "react-loading";
+import moment from "moment";
 import {
   getPlanningList,
   getProgramme,
@@ -15,6 +16,7 @@ import {
 import PlanningOperations from "../../crud/planning/planningOperations";
 import AffichageModal from "../../crud/affichage/affichageModal";
 import { Store } from "react-notifications-component";
+import { onActionTrack } from "../../api/auth";
 const Planning = (props) => {
   const [loading, setloading] = useState(true);
   const [dataPlanning, setDataPlanning] = useState(props.planning_list);
@@ -43,8 +45,6 @@ const Planning = (props) => {
     setloading(false);
   }, [props.planning_list]);
 
-  console.log(visiteList);
-
   useEffect(() => {
     setDataProgram(props.program_list);
   }, [props.program_list]);
@@ -65,11 +65,17 @@ const Planning = (props) => {
     });
   };
   const handleDelete = async (key) => {
+    const valuesToTrack = {
+      tracked_user: localStorage.getItem("Username"),
+      user_role: localStorage.getItem("UserRole"),
+      action_tracked: "a supprimer un planning",
+    };
     const newData = Object.values(dataPlanning).filter(
       (item) => item.key !== key
     );
     await deletePlanning(key);
     InsertNotifError();
+    await onActionTrack(valuesToTrack);
     setDataPlanning(newData);
   };
   //modal functions
@@ -86,6 +92,7 @@ const Planning = (props) => {
       dataIndex: "date",
       key: "date",
       sorter: true,
+      sorter: (a, b) => moment(a.date).unix() - moment(b.date).unix(),
     },
     {
       title: "Titre de planning",

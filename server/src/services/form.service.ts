@@ -280,18 +280,17 @@ public maintenanceFormPlan = async (req, res) =>  {
   const planRepo: any = getCustomRepository(planRepository)
 
   const mydata = await mainRepo.find({ order:{id_form_maintenance:"ASC"} }) 
-
+     
   const full = await planRepo.find({ order:{id_planning:"ASC"}  })
      
-  full.map( (data)=>{
-        if(data.Type_planning== "Maintenance"){
+  full.map( (data, index)=>{
+        if(data.Type_planning== "Maintenance"){ 
           mydata.map( (code)=>{
             if(data.id_planning== code.id_form_maintenance){
-              plan.push({[data.Titre_planning]:{...code, typeForm:data.Type_planning}})
+              plan.push({...code, typeForm:data.Type_planning , titleplan:data.Titre_planning, key:data.id_planning, date:data.date_planning})
             }
           })
-          
-          
+                
         }
   })
   
@@ -306,15 +305,14 @@ public entretienFormPlan = async (req, res) =>  {
 
   const full = await planRepo.find({ order:{id_planning:"ASC"}  })
      
-  full.map( (data)=>{
+  full.map( (data, index)=>{
         if(data.Type_planning== "Entretien"){
           mydata.map( (code)=>{
             if(data.id_planning== code.id_form_entretien){
-              plan.push({[data.Titre_planning]:{...code, typeForm:data.Type_planning}})
+              plan.push({...code, typeForm:data.Type_planning , titleplan:data.Titre_planning, key:data.id_planning, date:data.date_planning})
             }
           })
-          
-          
+                
         }
   })
   
@@ -323,7 +321,7 @@ public entretienFormPlan = async (req, res) =>  {
 
 public visiteFormPlan = async (req, res) =>  {
   let plan=[];
-  let prevData="";
+  
   const mainRepo: any = getCustomRepository(visiteRepository)
   const planRepo: any = getCustomRepository(planRepository)
 
@@ -331,11 +329,11 @@ public visiteFormPlan = async (req, res) =>  {
 
   const full = await planRepo.find({ order:{id_planning:"ASC"}  })
      
-  full.map( (data)=>{
+  full.map( (data, index)=>{
         if(data.Type_planning== "Visite"){
           mydata.map( (code)=>{
             if(data.id_planning== code.id_form_visite){
-              plan.push({[data.Titre_planning]:{...code, typeForm:data.Type_planning}})
+              plan.push({...code, typeForm:data.Type_planning , titleplan:data.Titre_planning, key:data.id_planning, date:data.date_planning})
             }
           })
                 

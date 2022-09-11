@@ -79,6 +79,45 @@ export class PPService {
   }
   
 };
+// public  softdeletePlanning = async (req, res) =>  { 
+//   console.log("my delete id:",req.params.id)
+// const urlId = req.params.id
+// try {
+//   const customRepo: any = getCustomRepository(planRepository)  
+// await customRepo.softdelete({id_planning: urlId})
+// return res.status(202).json({
+//   success: true,
+//   message: "succefully deleted planning with id : " + urlId,
+// });
+// } catch (error) {
+// console.log(error.message);
+// return res.status(500).json({
+//   error: error.message,
+// });
+  
+// }
+// };
+
+// public  restorePlanning = async (req, res) =>  { 
+//   console.log("my delete id:",req.params.id)
+// const urlId = req.params.id
+// try {
+//   const customRepo: any = getCustomRepository(planRepository)  
+// await customRepo.delete({id_planning: urlId})
+// return res.status(202).json({
+//   success: true,
+//   message: "succefully restored planning with id : " + urlId,
+// });
+// } catch (error) {
+// console.log(error.message);
+// return res.status(500).json({
+//   error: error.message,
+// });
+  
+// }
+
+// };
+
 public  deleteProgram = async (req, res) =>  { 
   console.log("my delete id:",req.params.id)
 const urlId = req.params.id

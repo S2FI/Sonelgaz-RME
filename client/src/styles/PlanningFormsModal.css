@@ -1,5 +1,5 @@
 .ant-modal{
-    width: 70%!important;
+    width: 80%!important;
 }
 .editable-cell {
     position: relative;
@@ -25,4 +25,7 @@
     top: 28%;
     left: 45%;
     margin: -25px 0 0 -25px; /* Apply negative top and left margins to truly center the element */
+  }
+  .modalForm{
+    width: 100%!important;
   }

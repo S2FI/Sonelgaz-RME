@@ -5,7 +5,7 @@ import Dashboard from "../pages/dashboard";
 import Formulaires from "../pages/fomulaire/formulaires";
 import Gis from "../pages/gis/gis";
 import Planning from "../pages/Planning/planning";
-import Statistics from "../pages/stats";
+import Statistics from "../pages/stats/stats";
 import {
   DASHBOARD_ROUTE,
   FORMULAIRE_ROUTE,

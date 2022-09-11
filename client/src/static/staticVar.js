@@ -6,6 +6,7 @@ export const USER_ROLE = "role_user";
 export const PLANNING_LIST = "list_planning";
 export const PROGRAM_LIST = "list_program";
 export const OUVRAGE_LIST = "list_ouvrage";
+export const TRACK_LIST = "list_tracking";
 
 export const MAINTENANCE_LIST = "list_m";
 

@@ -20,8 +20,15 @@ import { equipeEntity } from './equipe.entity';
     // we need to add a default password and get it form the .env file
     @Column({ type: 'varchar', nullable: false })
     password: string;
+
     @Column({ type: 'varchar', nullable: true, default: 'User' })
     role: string;
+
+    @Column({ type: 'varchar', nullable: true, default: 'john' })
+    nom: string;
+
+    @Column({ type: 'varchar', nullable: true, default: 'doe' })
+    prenom: string;
 
     @CreateDateColumn({ name: 'created_at' })
     createdAt: Date;

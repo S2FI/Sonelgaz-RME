@@ -3,6 +3,7 @@ import GisComponent from "../pages/gis/gisComponent";
 import TableComponent from "../components/Table";
 import { BsGoogle } from "react-icons/bs";
 import PageDaccueil from "../components/pageDaccueil";
+import MainStats from "../pages/stats/mainStats";
 const { Content, Footer, Header } = Layout;
 
 const MainLayout = (props) => {
@@ -13,7 +14,7 @@ const MainLayout = (props) => {
       case "gis":
         return <GisComponent />;
       case "stats":
-        return <div>Statistiques</div>;
+        return <MainStats />;
       default:
         return (
           <TableComponent

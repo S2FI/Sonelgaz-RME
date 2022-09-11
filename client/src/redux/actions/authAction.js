@@ -1,10 +1,11 @@
-import { getIP, getUsers, onLogin, onLogout } from "../../api/auth";
+import { getIP, getTrack, getUsers, onLogin, onLogout } from "../../api/auth";
 import {
   AUTHENTICATE_USER,
   ERROR_AUTH,
   UNAUTHENTICATE_USER,
   USER_LIST,
   USER_ROLE,
+  TRACK_LIST,
 } from "../../static/staticVar";
 
 export const login = (values) => async (dispatch) => {
@@ -50,6 +51,24 @@ export const getUserList = () => async (dispatch) => {
     dispatch({
       type: USER_LIST,
       payload: users,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const getTrackList = () => async (dispatch) => {
+  try {
+    const tracklist = await getTrack();
+    const tracks = tracklist.data.map((track) => {
+      return (track = {
+        ...track,
+        key: track.id_track,
+        date: track.date_tracked.split("T")[0],
+      });
+    });
+    dispatch({
+      type: TRACK_LIST,
+      payload: tracks,
     });
   } catch (error) {
     console.log(error);

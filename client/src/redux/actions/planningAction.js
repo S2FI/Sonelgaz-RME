@@ -52,7 +52,6 @@ export const getOuvrageData = () => async (dispatch) => {
   try {
     const { data } = await getOuvrage();
 
-    console.log("first ============> ", data);
     dispatch({
       type: OUVRAGE_LIST,
       payload: data,
@@ -66,15 +65,17 @@ export const getMaintenanceForms = () => async (dispatch) => {
   try {
     const maintenance_data = await getFormMaintenance();
 
-    const Main = maintenance_data.data.map((data, index) => {
-      let mykey;
-      Object.keys(data).forEach(async (key) => {
-        mykey = key;
-        console.log("keys", data[mykey]);
-      });
-
-      return (data = { ...data, [mykey]: data[mykey] });
-    });
+    const list = maintenance_data.data;
+    const myKey = "id_form_maintenance";
+    function groupByKey(array, key) {
+      return array.reduce((hash, obj) => {
+        if (obj[key] === undefined) return hash;
+        return Object.assign(hash, {
+          [obj[key]]: (hash[obj[key]] || []).concat(obj),
+        });
+      }, {});
+    }
+    const Main = groupByKey(list, myKey);
 
     dispatch({
       type: MAINTENANCE_LIST,
@@ -86,15 +87,23 @@ export const getMaintenanceForms = () => async (dispatch) => {
 };
 export const getEntretienForms = () => async (dispatch) => {
   try {
-    const planning_data = await getFormEntretien();
+    const entretien_data = await getFormEntretien();
 
-    const plan = planning_data.data.map((data) => {
-      let date = data.date_planning.split("T");
-      return (data = { ...data, key: data.id_planning, date: date[0] });
-    });
+    const list = entretien_data.data;
+    const myKey = "id_form_entretien";
+
+    function groupByKey(array, key) {
+      return array.reduce((hash, obj) => {
+        if (obj[key] === undefined) return hash;
+        return Object.assign(hash, {
+          [obj[key]]: (hash[obj[key]] || []).concat(obj),
+        });
+      }, {});
+    }
+    const Ent = groupByKey(list, myKey);
     dispatch({
       type: ENTRETIEN_LIST,
-      payload: plan,
+      payload: Ent,
     });
   } catch (error) {
     console.log(error);
@@ -103,17 +112,36 @@ export const getEntretienForms = () => async (dispatch) => {
 
 export const getVisiteForms = () => async (dispatch) => {
   try {
-    const planning_data = await getFormVisite();
+    const Visite_data = await getFormVisite();
+    const list = Visite_data.data;
+    const myKey = "id_form_visite";
 
-    const plan = planning_data.data.map((data) => {
-      let date = data.date_planning.split("T");
-      return (data = { ...data, key: data.id_planning, date: date[0] });
-    });
+    function groupByKey(array, key) {
+      return array.reduce((hash, obj) => {
+        if (obj[key] === undefined) return hash;
+        return Object.assign(hash, {
+          [obj[key]]: (hash[obj[key]] || []).concat(obj),
+        });
+      }, {});
+    }
+    const Vis = groupByKey(list, myKey);
+
     dispatch({
       type: VISITE_LIST,
-      payload: plan,
+      payload: Vis,
     });
   } catch (error) {
     console.log(error);
   }
 };
+// const Vis = Visite_data.data.map((data, index) => {
+//   if (Visite_data.data.length > index + 1) {
+//     if (Visite_data.data[index + 1].id_form_visite == data.id_form_visite) {
+//       return (data = {
+//         [index]: [data, Visite_data.data[index + 1]],
+//       });
+//     } else {
+//       return (data = { [index]: [data] });
+//     }
+//   }
+// });

@@ -9,7 +9,11 @@ const Container = () => {
       }}
     >
       <SideBar />
-      <Main />
+      <Main
+        style={{
+          margin: 0,
+        }}
+      />
     </Layout>
   );
 };

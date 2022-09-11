@@ -4,6 +4,7 @@ import {
   UNAUTHENTICATE_USER,
   USER_LIST,
   USER_ROLE,
+  TRACK_LIST,
 } from "../../static/staticVar";
 
 const userAuthFromLocalStorage = () => {
@@ -21,6 +22,7 @@ const initialState = {
   errorMessage: "",
   users: "",
   userRole: "",
+  tracks: [],
 };
 
 export default function (state = initialState, { payload, type }) {
@@ -49,6 +51,11 @@ export default function (state = initialState, { payload, type }) {
       return {
         ...state,
         userRole: payload,
+      };
+    case TRACK_LIST:
+      return {
+        ...state,
+        tracks: payload,
       };
     default: // need this for default case
       return state;

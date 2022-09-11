@@ -8,15 +8,12 @@ import {
   DatePicker,
   Select,
 } from "antd";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MdDeleteForever } from "react-icons/md";
 import { BsPlusLg } from "react-icons/bs";
-import InputSelector from "../../components/selectors/inputSelector";
 import moment from "moment";
-import OuvrageSelector from "../../components/selectors/ouvrageSelector";
 import { connect } from "react-redux";
 import DepartSelector from "../../components/selectors/departSelector";
-import CodeSelector from "../../components/selectors/codeSelector";
 
 const EditableContext = React.createContext(null);
 const { RangePicker } = DatePicker;
@@ -34,26 +31,27 @@ const EditableRow = ({ index, ...props }) => {
 
 const PlanningForms = (props) => {
   const [count, setCount] = useState(1);
-  const [selectedDepart, setselectedDepart] = useState("");
 
   const [selectData, setSelectData] = useState({
     [0]: {
-      date_debut_programme: moment().format("YYYY-MM-DD"),
-      date_fin_programme: moment().format("YYYY-MM-DD"),
+      date_debut_programme: moment().endOf("day").format("YYYY-MM-DD"),
+      date_fin_programme: moment().endOf("day").format("YYYY-MM-DD"),
       depart: "70H1C10",
     },
   });
 
-  // const getSelectorData = (sele ctedValues) => {
-  //   setSelectData(selectedValues);
-  // };
   const [dataSource, setDataSource] = useState([
     {
       key: "0",
 
       mois: (
         <RangePicker
-          defaultValue={[moment(), moment()]}
+          disabledDate={(d) =>
+            !d ||
+            d.isAfter("2023-12-31") ||
+            d.isSameOrBefore(moment().endOf("day"))
+          }
+          defaultValue={[moment().endOf("day"), moment().endOf("day")]}
           onChange={(values, dateString) => {
             setSelectData((prevdata) => {
               return {
@@ -66,7 +64,7 @@ const PlanningForms = (props) => {
               };
             });
           }}
-          format="YYYY/MM/DD"
+          // format="YYYY/MM/DD"
         />
       ),
 
@@ -83,7 +81,7 @@ const PlanningForms = (props) => {
       ),
       depart: (
         <DepartSelector
-          getSelectorData={(value) =>
+          getSelectorData={(value) => {
             setSelectData((prevdata) => {
               return {
                 ...prevdata,
@@ -92,9 +90,9 @@ const PlanningForms = (props) => {
                   depart: value,
                 },
               };
-            })
-          }
-          getSelectorData2={(value) =>
+            });
+          }}
+          getSelectorData2={(value) => {
             setSelectData((prevdata) => {
               return {
                 ...prevdata,
@@ -103,8 +101,8 @@ const PlanningForms = (props) => {
                   code_ouvrage: value,
                 },
               };
-            })
-          }
+            });
+          }}
         />
       ),
       equipe: (
@@ -145,7 +143,7 @@ const PlanningForms = (props) => {
       title: "Date de planning",
       dataIndex: "mois",
       width: "25%",
-      sorter: (a, b) => a.mois.length - b.mois.length,
+      sorter: (a, b) => moment(a.date).unix() - moment(b.date).unix(),
       sortDirections: ["descend", "ascend"],
 
       // editable: true,
@@ -196,6 +194,11 @@ const PlanningForms = (props) => {
       key: count,
       mois: (
         <RangePicker
+          disabledDate={(d) =>
+            !d ||
+            d.isAfter("2023-12-31") ||
+            d.isSameOrBefore(moment().endOf("day"))
+          }
           defaultValue={[
             moment(selectData[prevkey].date_debut_programme),
             moment(selectData[prevkey].date_fin_programme),
@@ -243,7 +246,7 @@ const PlanningForms = (props) => {
               };
             })
           }
-          getSelectorData2={(value) =>
+          getSelectorData2={(value) => {
             setSelectData((prevdata) => {
               return {
                 ...prevdata,
@@ -252,8 +255,8 @@ const PlanningForms = (props) => {
                   code_ouvrage: value,
                 },
               };
-            })
-          }
+            });
+          }}
         />
       ),
       equipe: (
@@ -299,7 +302,12 @@ const PlanningForms = (props) => {
       key: count,
       mois: (
         <RangePicker
-          defaultValue={[moment(), moment()]}
+          disabledDate={(d) =>
+            !d ||
+            d.isAfter("2023-12-31") ||
+            d.isSameOrBefore(moment().endOf("day"))
+          }
+          defaultValue={[moment().endOf("day"), moment().endOf("day")]}
           onChange={(values, dateString) => {
             setSelectData((prevdata) => {
               return {
@@ -342,7 +350,7 @@ const PlanningForms = (props) => {
               };
             })
           }
-          getSelectorData2={(value) =>
+          getSelectorData2={(value) => {
             setSelectData((prevdata) => {
               return {
                 ...prevdata,
@@ -351,8 +359,8 @@ const PlanningForms = (props) => {
                   code_ouvrage: value,
                 },
               };
-            })
-          }
+            });
+          }}
         />
       ),
       equipe: (
@@ -383,8 +391,8 @@ const PlanningForms = (props) => {
         ...prevdata,
         [count]: {
           ...prevdata[count],
-          date_debut_programme: moment().format("YYYY-MM-DD"),
-          date_fin_programme: moment().format("YYYY-MM-DD"),
+          date_debut_programme: moment().endOf("day").format("YYYY-MM-DD"),
+          date_fin_programme: moment().endOf("day").format("YYYY-MM-DD"),
           depart: "70H1C10",
         },
       };
@@ -414,6 +422,7 @@ const PlanningForms = (props) => {
   });
 
   console.log("insertion select Data", selectData);
+
   useEffect(() => {
     props.form.setFieldsValue({
       program: selectData,

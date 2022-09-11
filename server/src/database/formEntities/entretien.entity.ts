@@ -32,7 +32,6 @@ import { formEntity } from './allForms.entity';
     @Column({ type: 'time without time zone', nullable: true })
     heures_fin: Date;
 
-
     @Column({ type: 'varchar', nullable: true })
     fil_fer_degager: string;
 

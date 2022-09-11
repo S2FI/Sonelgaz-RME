@@ -8,7 +8,7 @@ const DepartSelector = (props) => {
   Object.keys(props.ouvrage_list).forEach(async (key, index) => {
     depart_options.push(key);
   });
-
+  // const [optionsSelected, setOptionsSelected] = useState([]);
   // console.log("ou hadou les departs =>", depart_options);
 
   const [departState, setdepartState] = useState([]);
@@ -24,6 +24,7 @@ const DepartSelector = (props) => {
     props.getSelectorData2(value);
     setcodeState(value);
   };
+  //const filteredOptions = departState?.filter((o) => !codeState.includes(o));
 
   return (
     <Space>
@@ -41,16 +42,27 @@ const DepartSelector = (props) => {
       </Select>
       <Divider type="vertical" />
       <Select
+        allowClear="true"
         style={{
           width: 180,
         }}
         mode="multiple"
-        maxTagCount="responsive"
+        // maxTagCount="responsive"
         value={codeState}
         onChange={onSecondCityChange}
       >
-        {departState.map((code) => (
-          <Select.Option value={code} key={code}>
+        {departState?.map((code) => (
+          <Select.Option
+            value={code}
+            key={code}
+            disabled={
+              codeState.length > 2
+                ? codeState.includes(code)
+                  ? false
+                  : true
+                : false
+            }
+          >
             {code}
           </Select.Option>
         ))}

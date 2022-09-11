@@ -1,16 +1,26 @@
-import { Alert, Button, Form, Input, Popconfirm, Table } from "antd";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { Button, Input, Table } from "antd";
+
+import { connect } from "react-redux";
 import ModalComponent from "./modal";
-const { Search } = Input;
-const onSearch = (value) => console.log(value);
+import {
+  getMaintenanceForms,
+  getVisiteForms,
+  getEntretienForms,
+} from "../redux/actions/planningAction";
+import React, { useState } from "react";
+import ReactLoading from "react-loading";
 
 const TableComponent = (props) => {
-  // const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     setLoading(false);
-  //   }, 500);
+  //   const timer =
   // }, []);
+  const getAllForms = async () => {
+    setLoading(true);
+    props.getVisiteForms();
+    props.getMaintenanceForms();
+    props.getEntretienForms();
+  };
   return (
     <Table
       title={() => (
@@ -20,12 +30,37 @@ const TableComponent = (props) => {
             header={props.header}
             listVisite={props.listVisite}
           />
-
-          <Search
-            placeholder="input search text"
-            onSearch={onSearch}
-            enterButton
-          />
+          {props.header == "Formulaire" ? (
+            // <p style={{ marginLeft: "35%" }}>
+            //   <b style={{ fontSize: 24, fontFamily: "Segoe UI Semibold" }}>
+            //     Tableau des formulaires
+            //   </b>
+            // </p>
+            <React.Fragment>
+              <Button
+                type="primary"
+                onClick={() => {
+                  getAllForms();
+                  setTimeout(() => {
+                    setLoading(false);
+                  }, 500);
+                }}
+              >
+                Upload
+              </Button>
+              <div> </div>
+              {loading && (
+                <ReactLoading type="spin" color="blue" height={30} width={30} />
+              )}
+            </React.Fragment>
+          ) : null}
+          {props.header == "Tracabilite" ? (
+            <p style={{ marginLeft: "35%" }}>
+              <b style={{ fontSize: 24, fontFamily: "Segoe UI Semibold" }}>
+                Suivie des utilisateurs
+              </b>
+            </p>
+          ) : null}
         </div>
       )}
       dataSource={props.sharedData}
@@ -39,4 +74,9 @@ const TableComponent = (props) => {
     />
   );
 };
-export default TableComponent;
+
+export default connect(null, {
+  getMaintenanceForms,
+  getVisiteForms,
+  getEntretienForms,
+})(TableComponent);

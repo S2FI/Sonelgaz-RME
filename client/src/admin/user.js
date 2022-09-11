@@ -1,14 +1,12 @@
-import { Popconfirm, Space, Modal, Button } from "antd";
+import { Modal } from "antd";
 import React, { useEffect, useState } from "react";
-import { BsPencilFill } from "react-icons/bs";
-import { MdDeleteForever } from "react-icons/md";
+
 import { connect } from "react-redux";
 import { onDelete } from "../api/auth";
-import UserUpdateForm from "../crud/userUpdateForm";
 import MainLayout from "../Layout/mainLayout";
 import { getUserList } from "../redux/actions/authAction";
 import UserOperations from "./userOperations";
-
+import { Store } from "react-notifications-component";
 const UserList = (props) => {
   // modal setup
   const [modal, contextHolder] = Modal.useModal();
@@ -16,14 +14,22 @@ const UserList = (props) => {
   const [loading, setloading] = useState(true);
   const [userList, setUserList] = useState(props.usersList);
 
-  const showModal = () => {
-    setVisible(true);
+  const InsertNotifError = (message) => {
+    Store.addNotification({
+      title: "Suppression",
+      message: message,
+      type: "danger",
+      insert: "top",
+      container: "top-right",
+      animationIn: ["animate__animated", "animate__fadeIn"],
+      animationOut: ["animate__animated", "animate__fadeOut"],
+      dismiss: {
+        duration: 3000,
+        onScreen: true,
+      },
+    });
   };
-  const handleCancel = () => {
-    console.log("Clicked cancel button");
-    setVisible(false);
-  };
-  //get Userlist
+
   useEffect(() => {
     props.getUserList();
   }, []);
@@ -37,6 +43,7 @@ const UserList = (props) => {
     const newData = Object.values(userList).filter((item) => item.key !== key);
 
     await onDelete(key);
+    InsertNotifError("L'utilisateur a ete supprimer avec success");
     setUserList(newData);
   };
 
@@ -58,6 +65,7 @@ const UserList = (props) => {
       title: "operation",
       dataIndex: "operation",
       key: "operation",
+      align: "center",
       render: (_, record, index) =>
         UserList.length >= 1 ? (
           <UserOperations

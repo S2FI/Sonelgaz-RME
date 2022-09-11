@@ -1,4 +1,4 @@
-import { Button, Form, Input, Select, Space, Tooltip, Typography } from "antd";
+import { Button, Form, Input, Select } from "antd";
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { createPlanning } from "../../api/planning";
@@ -8,16 +8,15 @@ import {
   getProgramme,
   getOuvrageData,
 } from "../../redux/actions/planningAction";
-import DepartSelector from "../../components/selectors/departSelector";
 import { Store } from "react-notifications-component";
-import { set } from "ol/transform";
+import { onActionTrack } from "../../api/auth";
 const { Option } = Select;
 
 const PlanningFormInfos = (props) => {
   const [form] = Form.useForm();
   const [error, setError] = useState(false); //init error state
-  const [success, setSuccess] = useState(false);
   const [finish, setFinish] = useState(false);
+  const [arr, setArr] = useState([]);
   const [values, setValues] = useState({
     Titre_planning: "",
     Type_planning: "",
@@ -27,8 +26,10 @@ const PlanningFormInfos = (props) => {
 
   const [entretien, setEntretien] = useState(false);
   const unique = [...new Set(props.listVisite)];
-  console.log("unigqueueeuw;lkdf =>>>", unique);
 
+  function checkIfArrayIsUnique(myArray) {
+    return myArray.length === new Set(myArray).size;
+  }
   const InsertNotifSuccess = (message) => {
     Store.addNotification({
       title: "Insert",
@@ -64,27 +65,42 @@ const PlanningFormInfos = (props) => {
     setFinish(true);
   };
   const onFinish = async (values) => {
+    const valuesToTrack = {
+      tracked_user: localStorage.getItem("Username"),
+      user_role: localStorage.getItem("UserRole"),
+      action_tracked: "a cree un planning",
+    };
     setFinish(true);
     const valuesToInsert = {
       ...values,
       user_created: localStorage.getItem("Username"),
     };
     console.log("Success:", valuesToInsert);
+    console.log(values.program);
     try {
-      const { data } = await createPlanning(valuesToInsert);
-      setError("");
-      setSuccess(data.message);
-      InsertNotifSuccess(data.message);
-      console.log(data);
-      props.getPlanningList();
-      props.getProgramme();
-      setFinish(false);
-      props.handleOk();
+      let list = [];
+      Object.keys(values.program).forEach(async (key) => {
+        console.log(key);
+        list.push(...values.program[key].code_ouvrage);
+      });
+      if (checkIfArrayIsUnique(list) === false) {
+        InsertNotifError("ERROR : code d'ouvrage dupliquer");
+        setFinish(false);
+      } else {
+        const { data } = await createPlanning(valuesToInsert);
+        setError("");
+        InsertNotifSuccess(data.message);
+        await onActionTrack(valuesToTrack);
+        console.log(data);
+        props.getPlanningList();
+        props.getProgramme();
+        props.handleOk();
+        setFinish(false);
+      }
     } catch (error) {
       console.log(error);
       setError(error.response.data);
       InsertNotifError("Insertion failed");
-      setSuccess("");
     }
   };
 
@@ -124,7 +140,7 @@ const PlanningFormInfos = (props) => {
         <Select
           placeholder="Selectionez le type du planning"
           onChange={(value) => {
-            if (value === "Entretien") {
+            if (value != "Visite") {
               setEntretien(true);
             } else {
               setEntretien(false);
@@ -145,7 +161,8 @@ const PlanningFormInfos = (props) => {
           rules={[
             {
               required: true,
-              message: "Le plan visite est obligatoire pour les entretiens",
+              message:
+                "Un plan visite est obligatoire pour entretien/maintenance ",
             },
           ]}
         >
@@ -164,10 +181,6 @@ const PlanningFormInfos = (props) => {
         <Button key="submit" type="primary" htmlType="submit" onClick={onClick}>
           Enregistrer planning
         </Button>
-      </Form.Item>
-      <Form.Item>
-        <div style={{ color: "red", margin: "10px 0" }}>{error}</div>
-        <div style={{ color: "green", margin: "10px 0" }}>{success}</div>
       </Form.Item>
     </Form>
   );

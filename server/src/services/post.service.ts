@@ -4,7 +4,7 @@ import { sign } from "jsonwebtoken";
 import { Service } from "typedi";
 import { createConnection, getCustomRepository } from "typeorm";
 import { SECRET } from "../constants";
-import { userRepository } from '../repository/user.repository';
+import { trackRepository, userRepository } from '../repository/user.repository';
 import { check } from 'express-validator';
 import { equipeRepository } from '../repository/planning.repository';
 
@@ -68,41 +68,51 @@ export class PostService {
   public users = async (req, res) => {
     
     const customRepo: any = getCustomRepository(userRepository)  
-      const user = await customRepo.find({ select: ["id" ,"username","password", "role"] })
-      console.log("User from DB: ", user); 
+      const user = await customRepo.find({  })
       return user
   };
 
   public register = async (req, res) => { 
-      const { username, password, role } = req.body;
+      const { username, password, role, nom,prenom } = req.body;
+      const reg = new RegExp('^(?=[a-zA-Z0-9._]{4,20}$)(?!.*[_.]{2})[^_.].*[^_.]$')
       try {
 
-        if (password.length < 5) {
-          throw new Error('password too short')
+        if (reg.test(password)===false) {
+          throw new Error(`mot de passe doit etre: 
+          /  entre 4 et 20 
+          /  accepte que _ et . 
+            /_ et . ne peut pas etre proche `)
         }
 
-        if (username.length < 3) {
-          throw new Error('username too short')
+        if (reg.test(username)===false) {
+          throw new Error(`Nom utilisateur doit etre: 
+          /  entre 4 et 20 
+          /  accepte que _ et . 
+            /_ et . ne peut pas etre proche `)
         }
+
 
       //check if username exists
       const customRepo: any = getCustomRepository(userRepository)
     const user = await customRepo.find({ username : username })   
         if (Object.keys(user).length) {
-          throw new Error('username already exists')
+          throw new Error('Utilisateur deja exist')
         }
 
         //registration
         const hashedPassword = await hash(password, 10);
            await customRepo.insert(
             { username: username,
-               password: hashedPassword,
-                role: role }
+              password: hashedPassword,
+              role: role,
+              nom:nom,
+              prenom:prenom, 
+            }
           )
         
         return res.status(201).json({
           success: true,
-          message: "The registraion was succefull",
+          message: "Le compte d'utilisateur : "+username+" a ete cree avec succees",
         });
       } catch (error) {
         console.log(error.message);
@@ -115,11 +125,31 @@ export class PostService {
   public update = async (req, res) => {
     console.log("my update id:",req.params.id)
     const urlId = req.params.id
-    const { username, password, role } = req.body;
+    const { username, password, role,nom,prenom } = req.body;
+    const reg = new RegExp('^(?=[a-zA-Z0-9._]{4,20}$)(?!.*[_.]{2})[^_.].*[^_.]$')
+   
+
     try {
+
+      if (reg.test(password)===false) {
+        throw new Error(`mot de passe doit etre: 
+        /  entre 4 et 20 
+        /  accepte que _ et . 
+          /_ et . ne peut pas etre proche `)
+      }
+  
+      if (reg.test(username)===false) {
+        throw new Error(`Nom utilisateur doit etre: 
+        /  entre 4 et 20 
+        /  accepte que _ et . 
+          /_ et . ne peut pas etre proche `)
+      }
+
+
       const hashedPassword = await hash(password, 10);
       const customRepo: any = getCustomRepository(userRepository)  
-    await customRepo.update(urlId, {username: username, password:hashedPassword, role: role})
+    await customRepo.update(urlId, {username: username, password:hashedPassword, role: role, nom:nom,
+      prenom:prenom, })
     return res.status(203).json({
       success: true,
       message: "succefully updated" + urlId,
@@ -151,4 +181,34 @@ export class PostService {
     }
     
   };
+
+  public tracking = async (req, res) => {
+    const { tracked_user, user_role, action_tracked } = req.body;
+    try {
+      const customRepo: any = getCustomRepository(trackRepository)  
+    await customRepo.insert({
+      tracked_user:tracked_user,
+      user_role:user_role,
+      action_tracked:action_tracked,
+      ip_address:"::1"
+    }) 
+    return res.status(202).json({
+      success: true,
+      message: "succefully tracked"
+    });
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json({ 
+      error: error.message,
+    });
+      
+    }
+  }
+  public getTrack = async (req, res) => {
+  
+      const customRepo: any = getCustomRepository(trackRepository)  
+   const data = await customRepo.find({}) 
+   console.log("=>", data)
+   return data
+  }
 }
