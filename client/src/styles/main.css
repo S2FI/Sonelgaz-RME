@@ -1,14 +1,57 @@
 .ant-table{
 margin: 16px!important;
 }
+.site-layout .site-layout-background {
+    background: #ffff;
+  }
+  .site-layout-background {
+    text-align: "right";
+          padding: 0;
+          font-size: 20px;
+          display: flex;
+          justify-content: space-between;
+  }
 .ant-layout-content{
     height: 625px;
     margin: 0px!important;
-    background-color: #ffff;
+    background-color: rgb(252, 245, 237);
 }
 .ant-layout-footer {
-    padding: 10px 50px;
+    padding: 10px 50px!important;
+    background-color: #ffff!important;
+}
+.logo{
+    background-color: #fa8c16;
+}
+.logouticon {
+    position: absolute;
+    right: 20%;
+    bottom: 20%;
+}
+
+
+.ant-layout-sider-trigger{
+    background-color: #fa8c16!important;
+    
+}
+.ant-layout-sider{
+    background-color: #fa8c16!important;
+    
+}
+::selection {
+    color: #fa8c16!important;
+}
+.ant-menu-title-content {
+    color: black;
+}
+.ant-table-thead > tr > th {
+    border-bottom: 1px solid #faad14!important;
+    background : #ffff!important
 }
 /* .TableTitle{
     border-width: 2;
 } */
+.ant-btn {
+    display: inline-flex;
+    align-items: center;
+}

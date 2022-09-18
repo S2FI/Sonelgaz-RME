@@ -1,5 +1,6 @@
 import { Divider, Table } from "antd";
 import React from "react";
+import photo_impression from "../../images/photo_impression.png";
 
 const EntTable = React.forwardRef((props, ref) => {
   const data = props.list?.map((data) => {
@@ -26,7 +27,7 @@ const EntTable = React.forwardRef((props, ref) => {
       signature: data.signature,
     });
   });
-  console.log("this is the lelouch data =>", data);
+
   const defaultColumns = [
     {
       title: "Date de Formulaire",
@@ -148,6 +149,13 @@ const EntTable = React.forwardRef((props, ref) => {
   ];
   return (
     <div ref={ref}>
+      <div style={{ marginBottom: "20px" }}>
+        <img
+          src={photo_impression}
+          alt="BigCo Inc. logo"
+          style={{ width: "100%" }}
+        />
+      </div>
       <style type="text/css" media="print">
         {"\
    @page { size: landscape; }\
@@ -155,7 +163,7 @@ const EntTable = React.forwardRef((props, ref) => {
       </style>
 
       <b style={{ fontFamily: "Segoe UI", fontSize: "20px" }}>
-        Les fomrulaires d'entretiens{" "}
+        Les fomrulaires des entretiens{" "}
       </b>
       <Divider orientation="left" style={{ fontFamily: "Segoe UI" }}>
         Tableaux des formulaires{" "}
@@ -163,7 +171,6 @@ const EntTable = React.forwardRef((props, ref) => {
       <div>
         <Table
           className="ent"
-          bordered
           dataSource={data}
           columns={defaultColumns}
           tableLayout="fixed"

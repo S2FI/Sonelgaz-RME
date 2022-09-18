@@ -31,7 +31,7 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
-import { Storage } from "expo-storage";
+
 //colors
 const { darkLight, brand, primary } = Colors;
 
@@ -85,6 +85,7 @@ const Login2 = ({ navigation }) => {
               navigation.navigate("Sonelgaz-RME", {
                 equipeData,
                 user,
+                result,
               });
             })
             .catch((error) => {
@@ -128,10 +129,12 @@ const Login2 = ({ navigation }) => {
       <StyledContainer>
         <StatusBar style="dark" />
         <InnerContainer>
-          <PageLogo
-            resizeMode="cover"
-            source={require("./../../assets/img/avatar.png")}
-          />
+          <View>
+            <PageLogo
+              resizeMode="cover"
+              source={require("./../../assets/img/avatar.png")}
+            />
+          </View>
           <PageTitle>Sonelgaz-RME</PageTitle>
           <SubTitle>Se connecter</SubTitle>
 

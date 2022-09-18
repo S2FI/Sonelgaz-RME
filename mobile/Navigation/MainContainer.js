@@ -30,7 +30,7 @@ function MainContainer({ route, navigation }) {
       </Text>
     );
   }
-  const { equipeData, user } = route.params;
+  const { equipeData, user, result } = route.params;
   const [dataProgram, setDataProgram] = useState(equipeData);
 
   return (
@@ -71,7 +71,7 @@ function MainContainer({ route, navigation }) {
         <Tab.Screen
           name={homeName}
           component={HomeScreen}
-          initialParams={{ equipeData: dataProgram }}
+          initialParams={{ equipeData: dataProgram, equipe: result }}
           // children={() => <HomeScreen equipeData={equipeData} />}
           options={{
             headerStyle: {
@@ -96,6 +96,7 @@ function MainContainer({ route, navigation }) {
         <Tab.Screen
           name={profileName}
           component={ProfileScreen}
+          initialParams={{ username: user }}
           options={{
             headerStyle: {
               backgroundColor: Colors.primary,

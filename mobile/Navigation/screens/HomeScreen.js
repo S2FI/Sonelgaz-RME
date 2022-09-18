@@ -12,7 +12,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 // formik
-
+import axios from "axios";
 import { Octicons, Fontisto, Ionicons } from "@expo/vector-icons";
 import { FloatingAction } from "react-native-floating-action";
 //colors
@@ -42,6 +42,8 @@ import {
 import MainStyle from "../../Styles/MainStyle";
 import ModalComponent from "../../components/Modal";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Environments from "../../constants/Env";
+import Loading from "../../components/loading";
 
 /*const Item = ({ id_planning, date_planning, titre, type, date_tache, district, depart, ligne, poste, id_visite }) => (
     <View style={styles.item}>
@@ -50,8 +52,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
   );*/
 
 export default function HomeScreen({ route, navigation }) {
-  const { equipeData } = route.params;
-
+  const { equipeData, equipe } = route.params;
+  const [loading, setloading] = useState(false);
   const actions = (value) => {
     setModalVisible(value);
   };
@@ -73,99 +75,123 @@ export default function HomeScreen({ route, navigation }) {
       // error reading value
     }
   };
-
+  const ReloadData = async () => {
+    setloading(true);
+    const urlEquipe = `http://${Environments.MOBILE_URL}:7000/api/posts/equipe_planning/${equipe}`;
+    axios
+      .get(urlEquipe)
+      .then(async (reponse) => {
+        setDataProgram(reponse.data);
+        setloading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        console.log(error.toJSON());
+      });
+  };
   useEffect(() => {
     setDataProgram(equipeData);
   }, [equipeData]);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView}>
-        <View style={styles.globalCardView}>
-          {dataProgram?.map((data) => (
-            <View style={styles.mainCardView} key={data.id_programme}>
-              <Text
-                style={{
-                  paddingTop: 5,
-                  fontSize: 15,
-                  fontFamily: "sans-serif",
-                  alignItems: "flex-start",
-                }}
-              >
-                <Text
-                  style={{
-                    fontWeight: "bold",
-                  }}
-                >
-                  Titre
-                </Text>
-                : {data.plan.Titre_planning}
-              </Text>
-              <Line />
-              <Text>
-                Date du Planning: {data.plan.date_planning.split("T")[0]} {"\n"}
-                Type: {data.plan.Type_planning} {"\n"}
-                District: {data.district} {"\n"}
-                Depart: {data.depart} {"\n"}
-                Code ouvrage:{" ["}
-                {data.code_ouvrage?.map((code, index) => (
-                  <Text key={index} style={styles.textStyle}>
-                    {" "}
-                    {code}{" "}
+    <React.Fragment>
+      {loading ? (
+        <Loading />
+      ) : (
+        <SafeAreaView style={styles.container}>
+          <ScrollView style={styles.scrollView}>
+            <View style={styles.globalCardView}>
+              {dataProgram?.map((data) => (
+                <View style={styles.mainCardView} key={data.id_programme}>
+                  <Text
+                    style={{
+                      paddingTop: 5,
+                      fontSize: 15,
+                      fontFamily: "sans-serif",
+                      alignItems: "flex-start",
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Titre
+                    </Text>
+                    : {data.plan.Titre_planning}
                   </Text>
-                ))}
-                {"]\n"}
-                Date debut: {data.date_debut_programme} {"\n"}
-                Date fin: {data.date_fin_programme} {"\n"}
-              </Text>
-              <View style={styles.floatButtonView}>
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={() => {
-                    setModalVisible(true),
-                      setmodalType(data.plan.Type_planning);
-                    setformID(data.plan.id_planning);
-                    getUserData();
-                    setcode_ouvrage(data.code_ouvrage);
-                    setdepart(data.depart);
-                  }}
-                >
-                  <Ionicons
-                    name={"add"}
-                    size={30}
-                    color={Colors.primary}
-                    style={{ bottom: 3, right: 2 }}
-                  />
-                </TouchableOpacity>
-              </View>
+                  <Line />
+                  <Text>
+                    Date du Planning: {data.plan.date_planning.split("T")[0]}{" "}
+                    {"\n"}
+                    Type: {data.plan.Type_planning} {"\n"}
+                    District: {data.district} {"\n"}
+                    Depart: {data.depart} {"\n"}
+                    Code ouvrage:{" ["}
+                    {data.code_ouvrage?.map((code, index) => (
+                      <Text key={index} style={styles.textStyle}>
+                        {" "}
+                        {code}{" "}
+                      </Text>
+                    ))}
+                    {"]\n"}
+                    Date debut: {data.date_debut_programme} {"\n"}
+                    Date fin: {data.date_fin_programme} {"\n"}
+                  </Text>
+                  <View style={styles.floatButtonView}>
+                    <TouchableOpacity
+                      style={styles.button}
+                      onPress={() => {
+                        setModalVisible(true),
+                          setmodalType(data.plan.Type_planning);
+                        setformID(data.plan.id_planning);
+                        getUserData();
+                        setcode_ouvrage(data.code_ouvrage);
+                        setdepart(data.depart);
+                      }}
+                    >
+                      <Ionicons
+                        name={"add"}
+                        size={30}
+                        color={Colors.primary}
+                        style={{ bottom: 3, right: 2 }}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              ))}
             </View>
-          ))}
-        </View>
-        <ModalComponent
-          etatForm={modalType}
-          visibilite={modalVisible}
-          statechange={actions}
-          id={formID}
-          username={storedUser}
-          listOuvrage={code_ouvrage}
-          depart={depart}
-        />
-      </ScrollView>
-    </SafeAreaView>
+            <ModalComponent
+              etatForm={modalType}
+              visibilite={modalVisible}
+              statechange={actions}
+              id={formID}
+              username={storedUser}
+              listOuvrage={code_ouvrage}
+              depart={depart}
+            />
+          </ScrollView>
+          <View style={styles.refreshView}>
+            <TouchableOpacity
+              style={styles.buttonRefresh}
+              onPress={() => {
+                ReloadData();
+              }}
+            >
+              <Ionicons
+                name="refresh"
+                size={28}
+                color="white"
+                style={{ bottom: 1, left: 1 }}
+              />
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+      )}
+    </React.Fragment>
   );
 }
-//  <FloatingAction
-//                     color={Colors.brand}
-//                     buttonSize={40}
-//                     openOnMount={false}
-//                     onPressMain={() => {
-//                       setmodalType(type);
-//                       setModalVisible(true);
-//                     }}
-//                     onClose={() => {
-//                       setModalVisible(false);
-//                     }}
-//                   />
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -215,6 +241,22 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     marginLeft: 4,
     marginRight: 4,
+  },
+  refreshView: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    bottom: 5,
+    right: 5,
+  },
+  buttonRefresh: {
+    padding: 10,
+    elevation: 2,
+    backgroundColor: Colors.brand,
+    zIndex: 1,
+    width: 50,
+    height: 50,
+
+    borderRadius: 100,
   },
   floatButtonView: {
     position: "absolute",

@@ -207,9 +207,9 @@ const MainStats = (props) => {
           </Divider>
           <div> </div>
           <Progress
-            percent={(progres * 100) / 100} //progress / 10
+            percent={(progres * 100) / 50} //progress / 10
             strokeColor="#faad14"
-            trailColor="#f0f0f0"
+            trailColor="#ffff"
             style={{
               width: "50%",
               marginLeft: "20%",

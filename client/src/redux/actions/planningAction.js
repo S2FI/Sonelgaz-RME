@@ -1,12 +1,15 @@
 import {
+  getDetailsOuvrage,
   getFormEntretien,
   getFormMaintenance,
   getFormVisite,
   getFullPlanning,
+  getMap,
   getOuvrage,
   getPlanning,
 } from "../../api/planning";
 import {
+  DETAIL_LIST,
   ENTRETIEN_LIST,
   MAINTENANCE_LIST,
   OUVRAGE_LIST,
@@ -134,14 +137,26 @@ export const getVisiteForms = () => async (dispatch) => {
     console.log(error);
   }
 };
-// const Vis = Visite_data.data.map((data, index) => {
-//   if (Visite_data.data.length > index + 1) {
-//     if (Visite_data.data[index + 1].id_form_visite == data.id_form_visite) {
-//       return (data = {
-//         [index]: [data, Visite_data.data[index + 1]],
-//       });
-//     } else {
-//       return (data = { [index]: [data] });
-//     }
-//   }
-// });
+
+export const getDetOuvrage = (ouvrage) => async (dispatch) => {
+  try {
+    const planning_data = await getDetailsOuvrage(ouvrage);
+
+    const Ouvr = planning_data.data.map((data) => {
+      let date = data.plan.date_planning.split("T");
+      let dateT = data.date_debut_programme.split("T");
+      return (data = {
+        ...data,
+        key: data.id_programme,
+        datePlanning: date[0],
+        dateProcedure: dateT[0],
+      });
+    });
+    dispatch({
+      type: DETAIL_LIST,
+      payload: Ouvr,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};

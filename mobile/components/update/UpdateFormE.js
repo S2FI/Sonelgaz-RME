@@ -66,11 +66,27 @@ export default function UpdateFormE(props) {
   const showDatePickerFin = () => {
     setShowFin("time");
   };
-
+  const tracking = async (value) => {
+    const url = "http://" + Environments.MOBILE_URL + ":7000/api/posts/track";
+    axios
+      .post(url, value)
+      .then((response) => {})
+      .catch((error) => {
+        console.log(error);
+        console.log(error.toJSON());
+      });
+  };
   const handleSubmit = (values, setSubmitting) => {
     const heures_debut = Hdebut;
     const heures_fin = Hfin;
-
+    const action_tracked = "a modifier un formulaire d'entretien";
+    const user_role = " Chef";
+    const tracked_user = props.updateData.created_user_form;
+    const valuesToTrack = {
+      user_role,
+      tracked_user,
+      action_tracked,
+    };
     const valuesToSend = {
       ...values,
       heures_debut,
@@ -89,6 +105,7 @@ export default function UpdateFormE(props) {
           description: data.message,
           type: "success",
         });
+        tracking(valuesToTrack);
         props.reload();
       })
       .catch((error) => {
@@ -185,6 +202,7 @@ export default function UpdateFormE(props) {
               onChangeText={handleChange("longueur_visiter")}
               onBlur={handleBlur("longueur_visiter")}
               value={values.longueur_visiter}
+              keyboardType="numeric"
             />
             <Text style={{ fontSize: 12 }}>Code de l'ouvrage</Text>
             <View
@@ -221,6 +239,7 @@ export default function UpdateFormE(props) {
               onChangeText={handleChange("nbr_isolateur_casses")}
               onBlur={handleBlur("nbr_isolateur_casses")}
               value={values.nbr_isolateur_casses}
+              keyboardType="numeric"
             />
             <MyTextInput
               label="Fil de fer à dégager"
@@ -229,6 +248,7 @@ export default function UpdateFormE(props) {
               onChangeText={handleChange("fil_fer_degager")}
               onBlur={handleBlur("fil_fer_degager")}
               value={values.fil_fer_degager}
+              keyboardType="numeric"
             />
             <MyTextInput
               label="Conducteur ébréché"
@@ -237,6 +257,7 @@ export default function UpdateFormE(props) {
               onChangeText={handleChange("conducteur_ebreche")}
               onBlur={handleBlur("conducteur_ebreche")}
               value={values.conducteur_ebreche}
+              keyboardType="numeric"
             />
             <MyTextInput
               label="Pont détaché"
@@ -245,6 +266,7 @@ export default function UpdateFormE(props) {
               onChangeText={handleChange("pont_detache")}
               onBlur={handleBlur("pont_detache")}
               value={values.pont_detache}
+              keyboardType="numeric"
             />
             <MyTextInput
               label="Portée déréglée"
@@ -253,6 +275,7 @@ export default function UpdateFormE(props) {
               onChangeText={handleChange("portee_dereglee")}
               onBlur={handleBlur("portee_dereglee")}
               value={values.portee_dereglee}
+              keyboardType="numeric"
             />
             <MyTextInput
               label="Support incliné ou endommagé"
@@ -261,6 +284,7 @@ export default function UpdateFormE(props) {
               onChangeText={handleChange("support_incline")}
               onBlur={handleBlur("support_incline")}
               value={values.support_incline}
+              keyboardType="numeric"
             />
             <MyTextInput
               label="Elagage"
@@ -269,6 +293,7 @@ export default function UpdateFormE(props) {
               onChangeText={handleChange("elagage")}
               onBlur={handleBlur("elagage")}
               value={values.elagage}
+              keyboardType="numeric"
             />
             <MyTextInput
               label="Armements"
@@ -277,6 +302,7 @@ export default function UpdateFormE(props) {
               onChangeText={handleChange("armements")}
               onBlur={handleBlur("armements")}
               value={values.armements}
+              keyboardType="numeric"
             />
             <MyTextInput
               label="Nid de cigogne ou oiseau"
@@ -285,6 +311,7 @@ export default function UpdateFormE(props) {
               onChangeText={handleChange("nid_oiseau")}
               onBlur={handleBlur("nid_oiseau")}
               value={values.nid_oiseau}
+              keyboardType="numeric"
             />
             <MyTextInput
               label="Observation"
@@ -294,8 +321,6 @@ export default function UpdateFormE(props) {
               onBlur={handleBlur("observation")}
               value={values.observation}
             />
-
-            <ImagePickerExample />
 
             <Line />
 

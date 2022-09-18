@@ -321,7 +321,6 @@ public entretienFormPlan = async (req, res) =>  {
 
 public visiteFormPlan = async (req, res) =>  {
   let plan=[];
-  
   const mainRepo: any = getCustomRepository(visiteRepository)
   const planRepo: any = getCustomRepository(planRepository)
 
@@ -339,20 +338,9 @@ public visiteFormPlan = async (req, res) =>  {
                 
         }
   })
-  // const test = plan.map( (data)=>{
-  //   Object.keys(data).forEach(async (key,index)=>{
-  //    if(Object.keys(prevData).length!=0)
-  //    {
-  //     if(key == prevData){
-  //       return {...data[prevData], [index]:data[key]}
-  //     }
-  //    }     
-  //     prevData=key;
-  //   })
-  // })
-  // console.log(test)
   return plan
 };
+
 }
 // { 
 //   "id_form_visite":"1",

@@ -48,3 +48,14 @@ export async function getFormVisite() {
     "http://localhost:7000/api/posts/visite_form_planning"
   );
 }
+export async function getDetailsOuvrage(ouvrage) {
+  return await axios.get(`http://localhost:7000/api/posts/prog/${ouvrage}`);
+}
+export async function getMap() {
+  return await axios.get(`http://localhost:7000/api/posts/map`);
+}
+export async function getForm(ouvrage) {
+  return await axios.get(
+    `http://localhost:7000/api/posts/imprimer-form/${ouvrage}`
+  );
+}

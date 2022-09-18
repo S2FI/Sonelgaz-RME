@@ -77,8 +77,8 @@ export default function VisiteFormScreen({ route }) {
 
   const showConfirmDialog = (id) => {
     return Alert.alert(
-      "Delete form?",
-      "Are you sure you want to remove this form?",
+      "Suppression formulaire?",
+      "Êtes-vous sûr de vouloir supprimer ce formulaire?",
       [
         {
           text: "Yes",

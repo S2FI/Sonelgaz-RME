@@ -16,7 +16,7 @@ import {
 const { darkLight, brand, primary } = Colors;
 
 // icon
-import { Octicons, Fontisto, Ionicons } from "@expo/vector-icons";
+import { Octicons, Fontisto, Ionicons, AntDesign } from "@expo/vector-icons";
 
 import { StyledInputLabel, StyledTextInput, Colors, Line } from "../styles";
 
@@ -90,19 +90,28 @@ export default function ModalVisite(props) {
                   {"\n"}
                   Observation: {props.entretienData.observation}
                   {"\n"}
-                  Responsable: {props.entretienData.created_user_form}
+                </Text>
+                <Text style={{ marginLeft: 90 }}>
+                  <Text style={{ fontWeight: "bold" }}>Responsable:</Text>
+                  {props.entretienData.created_user_form}
                   {"\n"}
-                  Signature:{"\n"} {props.entretienData.signature}
+                  <Text style={{ fontWeight: "bold" }}>Signature:</Text>
+                  {"\n"} {props.entretienData.signature}
                 </Text>
               </View>
 
               <TouchableOpacity
-                style={[styles.button, styles.buttonClose]}
+                style={styles.buttonClose}
                 onPress={() => {
                   setModalVisible(false), props.statechange(false);
                 }}
               >
-                <Text style={styles.textStyle}>Cancel</Text>
+                <AntDesign
+                  name="close"
+                  size={24}
+                  color="black"
+                  style={{ bottom: 0, right: 1 }}
+                />
               </TouchableOpacity>
             </View>
           </ScrollView>
@@ -163,7 +172,10 @@ const styles = StyleSheet.create({
     width: 40,
   },
   buttonClose: {
-    backgroundColor: "#2196F3",
+    padding: 10,
+    position: "absolute",
+
+    right: "1%",
   },
   textStyle: {
     color: "white",

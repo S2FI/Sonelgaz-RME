@@ -35,7 +35,26 @@ export default function UpdateFormV(props) {
     props.updateData.code_ouvrage
   ); //props.listOuvrage[0]
   const [list, setlist] = useState([]);
+
+  const tracking = async (value) => {
+    const url = "http://" + Environments.MOBILE_URL + ":7000/api/posts/track";
+    axios
+      .post(url, value)
+      .then((response) => {})
+      .catch((error) => {
+        console.log(error);
+        console.log(error.toJSON());
+      });
+  };
   const handleSubmit = (values, setSubmitting) => {
+    const action_tracked = "a modifier un formulaire de visite";
+    const user_role = " Chef";
+    const tracked_user = props.updateData.created_user_form;
+    const valuesToTrack = {
+      user_role,
+      tracked_user,
+      action_tracked,
+    };
     const valuesToSend = {
       ...values,
       action,
@@ -52,7 +71,8 @@ export default function UpdateFormV(props) {
           description: data.message,
           type: "success",
         });
-        props.reload()
+        tracking(valuesToTrack);
+        props.reload();
       })
       .catch((error) => {
         console.log(error);
@@ -66,7 +86,7 @@ export default function UpdateFormV(props) {
   useEffect(() => {
     setlist(props.listOuvrage);
   }, [props.listOuvrage]);
-
+  console.log(props.updateData);
   return (
     <View>
       <Formik
@@ -157,7 +177,7 @@ export default function UpdateFormV(props) {
               value={values.description}
               name="description"
             />
-            <ImagePickerExample />
+
             <Line />
 
             {!isSubmitting && (

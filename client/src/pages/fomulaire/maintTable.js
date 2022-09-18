@@ -1,6 +1,6 @@
-import { Table } from "antd";
+import { Divider, Table } from "antd";
 import React from "react";
-
+import photo_impression from "../../images/photo_impression.png";
 const MaintTable = React.forwardRef((props, ref) => {
   const data = props.list?.map((data) => {
     return (data = {
@@ -63,23 +63,25 @@ const MaintTable = React.forwardRef((props, ref) => {
 
   return (
     <div ref={ref}>
+      <div style={{ marginBottom: "20px" }}>
+        <img
+          src={photo_impression}
+          alt="BigCo Inc. logo"
+          style={{ width: "100%" }}
+        />
+      </div>
       <style type="text/css" media="print">
         {"\
    @page { size: landscape; }\
 "}
       </style>
-      <p>
-        <b>Titre formulaire :</b> {props.Titre_Formulaire}
-      </p>
-      <p>
-        <b>Type formulaire :</b> {props.Type_Formulaire}
-      </p>
-      <Table
-        bordered
-        dataSource={data}
-        columns={defaultColumns}
-        tableLayout="fixed"
-      />
+      <b style={{ fontFamily: "Segoe UI", fontSize: "20px" }}>
+        Les fomrulaires des maintenances{" "}
+      </b>
+      <Divider orientation="left" style={{ fontFamily: "Segoe UI" }}>
+        Tableaux des formulaires{" "}
+      </Divider>
+      <Table dataSource={data} columns={defaultColumns} tableLayout="fixed" />
       {/* <p style={{ marginLeft: "75%", fontSize: 16 }}>
         <b>Auteur :</b> {props.list[0].created_user_form}
       </p>

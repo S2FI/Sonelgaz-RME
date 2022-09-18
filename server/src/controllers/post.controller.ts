@@ -153,6 +153,18 @@ export class PostController {
     const trackData = await this.postService.getTrack(req,res) 
     res.send(trackData)
   }
+  public mapColoring = async (req: Request, res: Response) => {
+    const mydata = await this.ppService.mapColoring(req,res) 
+      res.send(mydata)
+    };
+    public WhichPlanning = async (req: Request, res: Response) => { 
+      const progdata = await this.ppService.WhichPlanning(req,res) 
+      res.send(progdata)
+    }
+    public WhichForm = async (req: Request, res: Response) => { 
+      const progdata = await this.ppService.WhichForm(req,res) 
+      res.send(progdata)
+    }
   public async routes() {
     this.router.get("/logout", this.logout);
     this.router.get("/users-get", this.userlist);
@@ -166,6 +178,9 @@ export class PostController {
     this.router.get("/maintenance_form/:user", this.maintenanceForm );
     this.router.get("/entretien_form/:user", this.entretienForm );
     this.router.get("/visite_form/:user", this.visiteForm );
+    this.router.get("/map", this.mapColoring );
+    this.router.get("/prog/:ouvrage", this.WhichPlanning );
+    this.router.get("/imprimer-form/:ouvrage", this.WhichForm );
 
     this.router.get("/maintenance_form_planning", this.maintenanceFormPlan );
     this.router.get("/entretien_form_planning", this.entretienFormPlan );

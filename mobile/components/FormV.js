@@ -40,11 +40,28 @@ export default function FormV(props) {
       // saving error
     }
   };
-
+  const tracking = async (value) => {
+    const url = "http://" + Environments.MOBILE_URL + ":7000/api/posts/track";
+    axios
+      .post(url, value)
+      .then((response) => {})
+      .catch((error) => {
+        console.log(error);
+        console.log(error.toJSON());
+      });
+  };
   const handleSubmit = async (values, setSubmitting) => {
     const id_form_visite = props.id;
     const user_created_form = props.username;
     const signature = user_created_form.substring(0, 2).toUpperCase();
+    const action_tracked = "a creer un formulaire de visite";
+    const user_role = " Chef";
+    const tracked_user = props.username;
+    const valuesToTrack = {
+      user_role,
+      tracked_user,
+      action_tracked,
+    };
     const valuesToSend = {
       ...values,
       action,
@@ -73,6 +90,7 @@ export default function FormV(props) {
             id_form_visite + "Visite",
             JSON.stringify(props.listOuvrage)
           );
+          tracking(valuesToTrack);
         })
         .catch((error) => {
           console.log(error);
@@ -174,7 +192,7 @@ export default function FormV(props) {
               value={values.description}
               name="description"
             />
-            <ImagePickerExample />
+
             <Line />
 
             {!isSubmitting && (

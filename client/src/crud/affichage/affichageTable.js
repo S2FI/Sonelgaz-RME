@@ -1,6 +1,8 @@
 import { Table } from "antd";
 import React, { useEffect, useState } from "react";
 import moment from "moment";
+import photo_impression from "../../images/photo_impression.png";
+
 const AffichageTable = React.forwardRef((props, ref) => {
   const [dataSource, setDataSource] = useState([]);
 
@@ -16,12 +18,7 @@ const AffichageTable = React.forwardRef((props, ref) => {
         console.log(moment(data.date_debut_programme));
         return (data = {
           key: index,
-          // mois: (
-          //   <p>
-          //     {data.date_debut_programme}...
-          //     {}
-          //   </p>
-          // ),
+
           debut: data.date_debut_programme,
           fin: data.date_fin_programme,
           district: data.district,
@@ -78,24 +75,30 @@ const AffichageTable = React.forwardRef((props, ref) => {
 
   return (
     <div ref={ref}>
+      <div style={{ marginBottom: "20px" }}>
+        <img
+          src={photo_impression}
+          alt="BigCo Inc. logo"
+          style={{ width: "100%" }}
+        />
+      </div>
       <style type="text/css" media="print">
         {"\
    @page { size: landscape; }\
 "}
       </style>
-      <p>
-        <b>Titre planning :</b> {props.Titre_planning}
+      <p style={{ fontSize: "16px" }}>
+        <b>Titre du planning :</b> {props.Titre_planning}
       </p>
-      <p>
-        <b>Type planning :</b> {props.Type_planning}
+      <p style={{ fontSize: "16px" }}>
+        <b>Type du planning :</b> {props.Type_planning}
       </p>
       {props.Type_planning !== "Visite" ? (
-        <p>
+        <p style={{ fontSize: "16px" }}>
           <b>Plan visite :</b> {props.code_visite}
         </p>
       ) : null}
       <Table
-        bordered
         dataSource={dataSource}
         columns={defaultColumns}
         tableLayout="fixed"

@@ -1,10 +1,8 @@
-import { Space, Tag } from "antd";
 import { useEffect, useState } from "react";
-import { MdDeleteForever } from "react-icons/md";
 import { connect } from "react-redux";
 import MainLayout from "../Layout/mainLayout";
 import { getTrackList } from "../redux/actions/authAction";
-
+import moment from "moment";
 const Tracabilite = (props) => {
   const [dataSource, setDataSource] = useState(props.tracking_list);
 
@@ -21,6 +19,7 @@ const Tracabilite = (props) => {
       dataIndex: "date",
       key: "date",
       sorter: true,
+      sorter: (a, b) => moment(a.date).unix() - moment(b.date).unix(),
     },
     {
       title: "Nom d'utilisateur",
@@ -52,7 +51,7 @@ const Tracabilite = (props) => {
     <MainLayout
       sharedData={dataSource}
       sharedColumns={trace_columns}
-      header="Tracabilite"
+      header="Traçabilite"
     />
   );
 };

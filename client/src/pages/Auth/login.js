@@ -114,16 +114,6 @@ const Login = (props) => {
         >
           <div style={{ color: "red", margin: "10px 0" }}>{props.error}</div>
         </Form.Item>
-        <Form.Item
-          name="remember"
-          valuePropName="checked"
-          wrapperCol={{
-            offset: 8,
-            span: 16,
-          }}
-        >
-          <Checkbox>Remember me</Checkbox>
-        </Form.Item>
 
         <Form.Item
           wrapperCol={{

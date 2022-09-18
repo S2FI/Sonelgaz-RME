@@ -47,12 +47,11 @@ export const PageLogo = styled.Image`
 export const Avatar = styled.Image`
   width: 100px;
   height: 100px;
-  margin: auto;
+
   border-radius: 50px;
   border-width: 2px;
   border-color: ${secondary};
   margin-bottom: 10px;
-  margin-top: 10px;
 `;
 
 export const WelcomeImage = styled.Image`

@@ -39,7 +39,8 @@ const ModalComponent = (props) => {
             </Button>
           )}
           <Modal
-            title="Formulaire de planning"
+            width={1200}
+            title="Creation d'un planning"
             visible={visible}
             destroyOnClose="true"
             confirmLoading={confirmLoading}
@@ -61,7 +62,7 @@ const ModalComponent = (props) => {
             </Button>
           )}
           <Modal
-            title="Inscription"
+            title="Creation d'un utilisateur"
             destroyOnClose="true"
             visible={visible}
             confirmLoading={confirmLoading}

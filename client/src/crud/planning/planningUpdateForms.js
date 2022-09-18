@@ -199,20 +199,21 @@ const PlanningUpdateForms = (props) => {
       render: (_, record) =>
         dataSource.length >= 1 ? (
           <Space>
-            <Popconfirm
-              title="Sure to delete?"
-              onConfirm={() => handleDelete(record.key)}
-            >
-              <Button>
-                <MdDeleteForever />
-              </Button>
-            </Popconfirm>
             <Button
+              type="primary"
               onClick={() => handleRowAdd(record.key)}
               disabled={record.key >= 10000 ? false : true}
             >
               <BsPlusLg />
             </Button>
+            <Popconfirm
+              title="êtes-vous sûr?"
+              onConfirm={() => handleDelete(record.key)}
+            >
+              <Button type="danger">
+                <MdDeleteForever />
+              </Button>
+            </Popconfirm>
           </Space>
         ) : null,
     },
@@ -463,7 +464,7 @@ const PlanningUpdateForms = (props) => {
           marginBottom: 16,
         }}
       >
-        Add a row
+        Ajouter une ligne
       </Button>
       <Form.Item
         name="program"
@@ -477,7 +478,6 @@ const PlanningUpdateForms = (props) => {
         <Table
           components={components}
           rowClassName={() => "editable-row"}
-          bordered
           dataSource={dataSource}
           columns={columns}
           tableLayout="fixed"

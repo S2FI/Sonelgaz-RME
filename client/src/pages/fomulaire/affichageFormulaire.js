@@ -30,35 +30,28 @@ function AffichageFormulaire(props) {
   return (
     <React.Fragment>
       <Modal
+        width={1200}
+        style={{
+          top: 20,
+        }}
         className="formModal"
-        title={"Affichage Formulaire"}
         visible={visible}
         onCancel={handleCancel}
         footer={[]}
       >
         {props.type === "Entretien" ? (
-          <EntTable
-            ref={componentRef}
-            Titre_Formulaire="form ent"
-            Type_Formulaire={props.type}
-            list={props.list_ent[props.recordKey]}
-          />
+          <EntTable ref={componentRef} list={props.list_ent[props.recordKey]} />
         ) : props.type === "Visite" ? (
-          <VisTable
-            ref={componentRef}
-            Titre_Formulaire="form visite"
-            Type_Formulaire={props.type}
-            list={props.list_vis[props.recordKey]}
-          />
+          <VisTable ref={componentRef} list={props.list_vis[props.recordKey]} />
         ) : (
           <MaintTable
             ref={componentRef}
-            Titre_Formulaire="form maintenance"
-            Type_Formulaire={props.type}
             list={props.list_main[props.recordKey]}
           />
         )}
-        <Button onClick={handlePrint}>Print this out!</Button>
+        <Button type="primary" onClick={handlePrint}>
+          Imprimer
+        </Button>
       </Modal>
     </React.Fragment>
   );

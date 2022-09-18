@@ -53,6 +53,7 @@ export class PostService {
 
   public logout = async (req, res) => {
     try {
+      console.log("logged out")
       return res.status(200).clearCookie("token", { httpOnly: true }).json({
         success: true,
         message: "Logged out succefully",

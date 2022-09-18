@@ -46,7 +46,7 @@ const TableComponent = (props) => {
                   }, 500);
                 }}
               >
-                Upload
+                Refresh
               </Button>
               <div> </div>
               {loading && (
@@ -67,7 +67,6 @@ const TableComponent = (props) => {
       columns={props.sharedColumns}
       loading={props.loading}
       pagination={{ pageSize: 7 }}
-      bordered
       scroll={{
         y: `60vh`,
       }}

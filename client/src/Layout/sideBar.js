@@ -4,7 +4,7 @@ import { AiOutlineAudit, AiOutlineCarryOut } from "react-icons/ai";
 import { HiOutlineHome } from "react-icons/hi";
 import { FaWpforms } from "react-icons/fa";
 import { BiMap, BiBarChartAlt2, BiLogOut, BiUserCircle } from "react-icons/bi";
-import { TbMessage } from "react-icons/tb";
+import { TbMapSearch, TbMessage } from "react-icons/tb";
 import { NavLink } from "react-router-dom";
 import { logout } from "../redux/actions/authAction";
 import {
@@ -35,50 +35,39 @@ const sideBar = (props) => {
       <div className="logo"></div>
       <Menu
         className="menus"
-        theme="dark"
+        theme="light"
         defaultSelectedKeys={[firstPage]}
         mode="inline"
       >
         {localStorage.getItem("UserRole") != "Admin" && (
           <>
-            <Menu.Item key="1" icon={<HiOutlineHome />}>
-              <NavLink to={DASHBOARD_ROUTE}>Tableau de bord</NavLink>
+            <Menu.Item key="1" icon={<HiOutlineHome size={20} />}>
+              <NavLink to={DASHBOARD_ROUTE}>Page d'accueil</NavLink>
             </Menu.Item>
-            <Menu.Item key="2" icon={<AiOutlineCarryOut />}>
+            <Menu.Item key="2" icon={<AiOutlineCarryOut size={20} />}>
               <NavLink to={PLANNING_ROUTE}>Planning</NavLink>
             </Menu.Item>
-            <Menu.Item key="3" icon={<FaWpforms />}>
+            <Menu.Item key="3" icon={<FaWpforms size={20} />}>
               <NavLink to={FORMULAIRE_ROUTE}>Formulaire</NavLink>
             </Menu.Item>
-            <Menu.Item key="4" icon={<BiMap />}>
+            <Menu.Item key="4" icon={<TbMapSearch size={20} />}>
               <NavLink to={LOCALISATION_ROUTE}>Map</NavLink>
             </Menu.Item>
-            <Menu.Item key="6" icon={<BiBarChartAlt2 />}>
+            <Menu.Item key="6" icon={<BiBarChartAlt2 size={20} />}>
               <NavLink to={STATIC_ROUTE}>Statistiques</NavLink>
             </Menu.Item>
           </>
         )}
         {localStorage.getItem("UserRole") == "Admin" && (
           <>
-            <Menu.Item key="7" icon={<BiUserCircle />}>
+            <Menu.Item key="7" icon={<BiUserCircle size={20} />}>
               <NavLink to={USERLIST_ROUTE}>Liste des Utilisateurs</NavLink>
             </Menu.Item>
-            <Menu.Item key="8" icon={<AiOutlineAudit />}>
+            <Menu.Item key="8" icon={<AiOutlineAudit size={20} />}>
               <NavLink to={TRACABILITE_ROUTE}>Tracabilite</NavLink>
             </Menu.Item>
           </>
         )}
-
-        <Menu.Item className="logout" key="0" icon={<BiLogOut />}>
-          <button
-            style={{
-              background: "orange",
-            }}
-            onClick={async () => await props.logout()}
-          >
-            Logout
-          </button>
-        </Menu.Item>
       </Menu>
     </Sider>
   );

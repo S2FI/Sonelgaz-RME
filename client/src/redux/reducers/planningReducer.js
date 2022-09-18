@@ -5,6 +5,7 @@ import {
   MAINTENANCE_LIST,
   ENTRETIEN_LIST,
   VISITE_LIST,
+  DETAIL_LIST,
 } from "../../static/staticVar";
 
 const initialState = {
@@ -14,6 +15,7 @@ const initialState = {
   Main: [],
   Vis: [],
   Ent: [],
+  Ouvr: [],
 };
 
 export default function (state = initialState, { payload, type }) {
@@ -47,6 +49,11 @@ export default function (state = initialState, { payload, type }) {
       return {
         ...state,
         Ent: payload,
+      };
+    case DETAIL_LIST:
+      return {
+        ...state,
+        Ouvr: payload,
       };
     default: // need this for default case
       return state;

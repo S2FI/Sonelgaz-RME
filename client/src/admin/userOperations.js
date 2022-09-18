@@ -19,8 +19,15 @@ function UserOperations(props) {
   };
   return (
     <Space>
+      <Button
+        danger
+        onClick={showModal}
+        disabled={props.record.username === "admin" ? true : false}
+      >
+        <BsPencilFill />
+      </Button>
       <Popconfirm
-        title="Sure to delete?"
+        title="êtes-vous sûr?"
         onConfirm={() => props.handleDelete(props.recordKey)}
         disabled={
           props.record.username === "admin" || props.record.role === "Chef"
@@ -29,6 +36,7 @@ function UserOperations(props) {
         }
       >
         <Button
+          type="danger"
           disabled={
             props.record.username === "admin" || props.record.role === "Chef"
               ? true
@@ -39,15 +47,8 @@ function UserOperations(props) {
         </Button>
       </Popconfirm>
 
-      <Button
-        onClick={showModal}
-        disabled={props.record.username === "admin" ? true : false}
-      >
-        <BsPencilFill />
-      </Button>
-
       <Modal
-        title="Update"
+        title="Modification des informations d'utilisateur"
         visible={visible}
         destroyOnClose="true"
         confirmLoading={confirmLoading}

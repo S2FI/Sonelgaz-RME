@@ -52,7 +52,6 @@ const UserList = (props) => {
       title: "Nom d'utilisateur",
       dataIndex: "username",
       key: "username",
-      sorter: true,
     },
     {
       title: "Le Role",

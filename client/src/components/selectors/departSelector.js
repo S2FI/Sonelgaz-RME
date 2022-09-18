@@ -55,13 +55,13 @@ const DepartSelector = (props) => {
           <Select.Option
             value={code}
             key={code}
-            disabled={
-              codeState.length > 2
-                ? codeState.includes(code)
-                  ? false
-                  : true
-                : false
-            }
+            // disabled={
+            //   codeState.length > 2
+            //     ? codeState.includes(code)
+            //       ? false
+            //       : true
+            //     : false
+            // }
           >
             {code}
           </Select.Option>

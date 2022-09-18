@@ -30,7 +30,11 @@ const PlanningUpdateForm = (props) => {
   });
 
   const [entretien, setEntretien] = useState(
-    props.type !== "Visite" ? true : false
+    props.type === "Entretien"
+      ? true
+      : props.type === "Maintenance"
+      ? true
+      : false
   );
 
   const unique = [...new Set(props.listVisite)];
@@ -166,7 +170,7 @@ const PlanningUpdateForm = (props) => {
         <Select
           placeholder="Selectionez le type du planning"
           onChange={(value) => {
-            if (value != "Entretien") {
+            if (value != "Visite") {
               setEntretien(true);
             } else {
               setEntretien(false);
@@ -188,7 +192,7 @@ const PlanningUpdateForm = (props) => {
           rules={[
             {
               required: true,
-              message: "Le plan visite est obligatoire pour les entretiens",
+              message: "Le plan visite est obligatoire",
             },
           ]}
         >

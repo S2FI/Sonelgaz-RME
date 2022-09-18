@@ -2,7 +2,7 @@
 {
     display: flex;
     flex-direction: column;
-    
+    background-color: #fa8c16!important;
     height: 90%;
 }
 .ant-menu:after, .ant-menu:before {
@@ -16,8 +16,19 @@
    
 }
 li.ant-menu-item{
-    margin:0
-
+    margin:0;
+    color: #ffff;
+    
+}
+.ant-menu-item a{
+    color: #ffff!important;
+    
+}
+.ant-menu-item-selected a:hover {
+    color: #fa8c16!important;
+}
+.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected{
+    background-color: #ffd591!important;
 }
 .TableTitle {
     display: flex;
@@ -25,4 +36,12 @@ li.ant-menu-item{
 }
 .ant-input-group-wrapper {
     width: 30%;
+}
+div.logo {
+    content:url(../images/logo_SDC.png);
+    max-width: 250px;
+    max-height: 60px;
+    padding-left: 30%;
+    margin-top: 5px;
+    margin-bottom: 15px;
 }

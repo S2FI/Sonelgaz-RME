@@ -29,12 +29,29 @@ export default function FormC(props) {
       console.log("data not saved in formC");
     }
   };
+  const tracking = async (value) => {
+    const url = "http://" + Environments.MOBILE_URL + ":7000/api/posts/track";
+    axios
+      .post(url, value)
+      .then((response) => {})
+      .catch((error) => {
+        console.log(error);
+        console.log(error.toJSON());
+      });
+  };
 
   const handleSubmit = (values, setSubmitting) => {
     const id_form_maintenance = props.id;
     const user_created_form = props.username;
     const signature = user_created_form.substring(0, 2).toUpperCase();
-
+    const action_tracked = "a creer un formulaire de maintenance";
+    const user_role = " Chef";
+    const tracked_user = props.username;
+    const valuesToTrack = {
+      user_role,
+      tracked_user,
+      action_tracked,
+    };
     const valuesToSend = {
       ...values,
       id_form_maintenance,
@@ -73,6 +90,7 @@ export default function FormC(props) {
             id_form_maintenance + "Maintenance" + " =>",
             props.listOuvrage
           );
+          tracking(valuesToTrack);
         })
         .catch((error) => {
           console.log(error);
@@ -148,7 +166,6 @@ export default function FormC(props) {
               onBlur={handleBlur("description")}
               value={values.description}
             />
-            <ImagePickerExample />
 
             <Line />
 

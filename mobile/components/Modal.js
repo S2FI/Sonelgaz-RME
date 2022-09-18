@@ -16,7 +16,7 @@ import {
 const { darkLight, brand, primary } = Colors;
 
 // icon
-import { Octicons, Fontisto, Ionicons } from "@expo/vector-icons";
+import { Octicons, Fontisto, Ionicons, AntDesign } from "@expo/vector-icons";
 
 import { StyledInputLabel, StyledTextInput, Colors } from "./styles";
 import FormC from "./FormC";
@@ -72,17 +72,23 @@ export default function ModalComponent(props) {
         <SafeAreaView style={styles.container}>
           <ScrollView style={styles.scrollView}>
             <View style={styles.modalView}>
-              <Text style={styles.modalText}>Formulaire {props.etatForm}</Text>
-              {affiche}
-
               <TouchableOpacity
-                style={[styles.button, styles.buttonClose]}
+                style={styles.buttonClose}
                 onPress={() => {
                   setModalVisible(false), props.statechange(false);
                 }}
               >
-                <Text style={styles.textStyle}>Cancel</Text>
+                <AntDesign
+                  name="close"
+                  size={24}
+                  color="black"
+                  style={{ bottom: 0, right: 1 }}
+                />
               </TouchableOpacity>
+              <Text style={styles.modalText}>
+                Formulaire de {props.etatForm.toLowerCase()}
+              </Text>
+              {affiche}
             </View>
           </ScrollView>
         </SafeAreaView>
@@ -142,7 +148,10 @@ const styles = StyleSheet.create({
     width: 40,
   },
   buttonClose: {
-    backgroundColor: "#2196F3",
+    padding: 10,
+    position: "absolute",
+
+    right: "1%",
   },
   textStyle: {
     color: "white",

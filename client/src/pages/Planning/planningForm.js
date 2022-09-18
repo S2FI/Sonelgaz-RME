@@ -10,6 +10,7 @@ import {
 } from "antd";
 import React, { useEffect, useState } from "react";
 import { MdDeleteForever } from "react-icons/md";
+import { CgPlayListAdd } from "react-icons/cg";
 import { BsPlusLg } from "react-icons/bs";
 import moment from "moment";
 import { connect } from "react-redux";
@@ -174,17 +175,24 @@ const PlanningForms = (props) => {
       render: (_, record) =>
         dataSource.length >= 1 ? (
           <Space>
+            <Button
+              style={{
+                background: "#1890ff",
+                borderColor: "#1890ff",
+                color: "#ffff",
+              }}
+              onClick={() => handleRowAdd(record.key)}
+            >
+              <BsPlusLg />
+            </Button>
             <Popconfirm
-              title="Sure to delete?"
+              title="êtes-vous sûr?"
               onConfirm={() => handleDelete(record.key)}
             >
-              <Button>
+              <Button type="danger">
                 <MdDeleteForever />
               </Button>
             </Popconfirm>
-            <Button onClick={() => handleRowAdd(record.key)}>
-              <BsPlusLg />
-            </Button>
           </Space>
         ) : null,
     },
@@ -441,7 +449,7 @@ const PlanningForms = (props) => {
           marginBottom: 16,
         }}
       >
-        Add a row
+        Ajouter une ligne
       </Button>
       <Form.Item
         name="program"

@@ -20,7 +20,7 @@ export default function DetailsScreen({ route, navigation }) {
   return (
     <NavigationContainer independent={true}>
       <Tab.Navigator
-        initialRouteName={MaintenanceFormName}
+        initialRouteName={VisiteFormName}
         screenOptions={{
           tabBaractiveTintColor: "tomato",
           tabBarinactiveTintColor: "grey",

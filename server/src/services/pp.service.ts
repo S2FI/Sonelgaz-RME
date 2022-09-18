@@ -1,5 +1,6 @@
 import { Service } from "typedi";
-import { getCustomRepository } from "typeorm";
+import { Any, getCustomRepository } from "typeorm";
+import { entretienRepository, maintenanceRepository, visiteRepository } from "../repository/forms.reposoitry";
 import { liaisonRepository } from "../repository/ouvrage.repository";
 import { equipeRepository, planRepository, programRepository } from "../repository/planning.repository";
 
@@ -79,44 +80,7 @@ export class PPService {
   }
   
 };
-// public  softdeletePlanning = async (req, res) =>  { 
-//   console.log("my delete id:",req.params.id)
-// const urlId = req.params.id
-// try {
-//   const customRepo: any = getCustomRepository(planRepository)  
-// await customRepo.softdelete({id_planning: urlId})
-// return res.status(202).json({
-//   success: true,
-//   message: "succefully deleted planning with id : " + urlId,
-// });
-// } catch (error) {
-// console.log(error.message);
-// return res.status(500).json({
-//   error: error.message,
-// });
-  
-// }
-// };
 
-// public  restorePlanning = async (req, res) =>  { 
-//   console.log("my delete id:",req.params.id)
-// const urlId = req.params.id
-// try {
-//   const customRepo: any = getCustomRepository(planRepository)  
-// await customRepo.delete({id_planning: urlId})
-// return res.status(202).json({
-//   success: true,
-//   message: "succefully restored planning with id : " + urlId,
-// });
-// } catch (error) {
-// console.log(error.message);
-// return res.status(500).json({
-//   error: error.message,
-// });
-  
-// }
-
-// };
 
 public  deleteProgram = async (req, res) =>  { 
   console.log("my delete id:",req.params.id)
@@ -268,13 +232,154 @@ public  updatePlanning = async (req, res) =>  {
           code=[]
        }
       })
-      //  console.log(codeDepart)
-      //  Object.keys(codeDepart).forEach(async (key, index) => {
-      //   console.log(index +" : "+key)
-      //  })
+    
        return codeDepart
   }
+  public WhichPlanning = async (req, res) =>  {
+    let ouvrage=req.params.ouvrage;
+  
+    const programRepo: any = getCustomRepository(programRepository)
+    //const mydata = await programRepo.query(`select * from programme where '${ouvrage}' = any(code_ouvrage)`);
+      const mydata = await programRepo.find({
+        
+        relations :["plan"],
+        where :`'${ouvrage}' = any(code_ouvrage)`
+       }) 
+       console.log(mydata)
+       return mydata
+   
+  };
+  public WhichForm = async (req, res) =>  {
+    let ouvrage=req.params.ouvrage;
+    let ouvrageF =[]
+  
+    const visitRepo: any = getCustomRepository(visiteRepository)
+    const entRepo: any = getCustomRepository(entretienRepository)
+    const mainRepo: any = getCustomRepository(maintenanceRepository)
 
+    const visiteForm = await visitRepo.find({     
+     where :{code_ouvrage : ouvrage},
+     }) 
+     const entretienForm = await entRepo.find({     
+      where :{code_ouvrage : ouvrage},
+       }) 
+      const maintenanceForm = await mainRepo.find({     
+        where :{code_ouvrage : ouvrage},
+        }) 
+        if (maintenanceForm.length !=0)
+        {
+        maintenanceForm.map((data)=>{
+          
+            ouvrageF.push(data)
+           
+          }       
+          )}else if (entretienForm.length !=0)
+            {
+          entretienForm.map((data)=>{
+            
+              ouvrageF.push(data)
+               
+            })
+          }else if (visiteForm.length !=0)
+              {
+            visiteForm.map((data)=>{
+              
+                ouvrageF.push(data)
+                
+              }       
+              )}
+      //  console.log(mydata)
+      //  return mydata
+      return ouvrageF
+  };
+
+  public mapColoring = async (req, res) =>  {
+    // let ouvrage=req.params.ouvrage;
+    let CompareE =[]
+    let CompareM =[]
+    let CompareV =[]
+    let ouvrage =[]
+
+    let ouvrageV =[]   
+    let ouvrageEnVisite ={}
+    let ouvrageE=[]
+    let ouvrageEnEntretien ={}
+    let ouvrageM=[]
+    let ouvrageEnMaintenance ={}
+    
+    const planRepo: any = getCustomRepository(planRepository)
+    const visitRepo: any = getCustomRepository(visiteRepository)
+    const entRepo: any = getCustomRepository(entretienRepository)
+    const mainRepo: any = getCustomRepository(maintenanceRepository)
+
+    const ent = await entRepo.find({ select:['code_ouvrage']})
+    const main = await mainRepo.find({ select:['code_ouvrage']})
+
+
+    ent.map((data)=>{
+      CompareE.push(data.code_ouvrage)
+     })
+     main.map((data)=>{
+      CompareM.push(data.code_ouvrage)
+     })
+    
+  //les ouvrages en entretien
+    const aEntretenir = await visitRepo.find({ 
+       select:['code_ouvrage'],
+      where :{action : "Entretien"},
+      order:{id_form_visite:"ASC"} }) 
+
+      aEntretenir.map((visite)=>{
+        if (!CompareE.includes(visite.code_ouvrage))
+        {
+          ouvrageE.push(visite.code_ouvrage)
+        }
+        
+       })
+       // les ouvrages en maintenance
+       const aMaintenir = await visitRepo.find({ 
+        select:['code_ouvrage'],
+       where :{action : "Maintenance"},
+       order:{id_form_visite:"ASC"} }) 
+ 
+       aMaintenir.map((visite)=>{
+        if (!CompareM.includes(visite.code_ouvrage))
+        {
+          ouvrageM.push(visite.code_ouvrage)
+        }       
+        })
+ 
+        const com = [...ent,...main].map((data)=>{
+          CompareV.push(data.code_ouvrage)
+         })
+         
+    //les ouvrages de visite
+      const aVisiter = await planRepo.find({  
+        relations :["program"],
+        where :{Type_planning: "Visite"}
+       }) 
+
+       aVisiter.map((data)=>{
+        data.program.map((pro)=>{          
+          ouvrage.push(...pro.code_ouvrage)
+         
+         })
+       })
+       ouvrage.map((code)=>{
+        if (!CompareV.includes(code))
+        {
+          ouvrageV.push(code)
+        }       
+        })
+      
+       ouvrageEnVisite={"Visite": ouvrageV}
+      ouvrageEnEntretien = { "Entretien": ouvrageE}
+      ouvrageEnMaintenance ={"Maintenance": ouvrageM}
+       
+       return [ouvrageEnVisite ,ouvrageEnEntretien,ouvrageEnMaintenance] 
+   //[ouvrageEnVisite ,ouvrageEnEntretien,ouvrageEnMaintenance]
+  //select :['code_ouvrage','nom_equipe_programme',],
+}
 }
 //postman use
 // "program" : 
@@ -289,62 +394,5 @@ public  updatePlanning = async (req, res) =>  {
 //        "id_planning": 1,
 //         "id_equipe" : 1
 //    } ,
-
-
-
-
-// public createProgram = async (req, res) =>  {
-//     const planning = req.body
-//     let fullPlanning =[]
-//     Object.keys(planning).forEach(function(key, index) {
-
-//       fullPlanning.push(planning[key])
-//     });
-// //     const equipeRepo: any = getCustomRepository(equipeRepository)
-// //    const equipe_id= await equipeRepo.find({
-// //     select : ["id_equipe"],
-// //     where : {nom_equipe : nom_equipe_programme}
-// // })
-// //   const data = { 
-  //       "0" :
-  //   {
-  //     "date_debut_programme" : "2022-08-01",
-  //      "date_fin_programme" : "2022-08-31",
-  //      "district": "district2",
-  //      "depart": "depart1",
-  //      "code_visite" : 1,
-  //      "nom_equipe_programme": "A",
-  //      "id_planning": 1,
-  //       "id_equipe" : 1
-  //  } ,
-  //      "1" :
-  //  {
-  //      "date_debut_programme" : "2022-08-01",
-  //      "date_fin_programme" : "2022-08-31",
-  //      "district": "district1", 
-  //      "nom_equipe_programme": "B",
-  //      "code_ouvrage": 123,
-  //      "code_programme": 1,
-  //      "depart": "depart2",
-  //      "id_planning": 1,
-  //       "id_equipe" : 1
-  //  }
-// //        }     
-
-// //        console.log(data[0])
-//     try {
-//     const customRepo: any = getCustomRepository(programRepository)
-//      await customRepo.insert( fullPlanning)
-//     return res.status(203).json({
-//       success: true,
-//       message: "succefully inserted into program",
-//     });
-//   } catch (error) {
-//     console.log(error.message);
-//     return res.status(500).json({
-//       error: error.message,
-//     });
-//   }
-//   }
 
 

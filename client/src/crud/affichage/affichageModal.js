@@ -1,11 +1,8 @@
-import { MdDeleteForever } from "react-icons/md";
 import { Popconfirm, Space, Modal, Button, Table } from "antd";
 import React, { useEffect, useState } from "react";
-import { BsPencilFill } from "react-icons/bs";
-import { connect } from "react-redux";
-import { FaEye } from "react-icons/fa";
+import { AiFillPrinter } from "react-icons/ai";
 import AffichageTable from "./affichageTable";
-import ReactToPrint from "react-to-print";
+
 import { useReactToPrint } from "react-to-print";
 import { useRef } from "react";
 import ReactLoading from "react-loading";
@@ -43,7 +40,11 @@ function AffichageModal(props) {
   return (
     <React.Fragment>
       <Modal
-        title={"Affichage Planning"}
+        style={{
+          top: 1,
+        }}
+        width={1200}
+        title="Affichage du planning"
         visible={visible}
         onCancel={handleCancel}
         footer={[]}
@@ -61,7 +62,9 @@ function AffichageModal(props) {
             recordKey={props.recordKeys}
           />
         )}
-        <Button onClick={handlePrint}>Print this out!</Button>
+        <Button type="primary" onClick={handlePrint}>
+          Imprimer
+        </Button>
       </Modal>
     </React.Fragment>
   );

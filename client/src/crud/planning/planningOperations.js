@@ -1,10 +1,8 @@
-import { MdDeleteForever } from "react-icons/md";
-import { Popconfirm, Space, Modal, Button } from "antd";
+import { Modal } from "antd";
 import React, { useEffect, useState } from "react";
-import { BsPencilFill } from "react-icons/bs";
-import { getProgramme } from "../../redux/actions/planningAction";
+
 import PlanningUpdateFormInfos from "./planningUpdateFormInfos";
-import { connect } from "react-redux";
+
 import ReactLoading from "react-loading";
 function PlanningOperations(props) {
   const [visible, setVisible] = useState(false);
@@ -45,7 +43,11 @@ function PlanningOperations(props) {
   return (
     <React.Fragment>
       <Modal
-        title="Update Planning"
+        width={1200}
+        style={{
+          top: 1,
+        }}
+        title="Modification du planning"
         visible={visible}
         destroyOnClose="true"
         onCancel={handleCancel}

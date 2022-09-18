@@ -2,7 +2,7 @@ import MainLayout from "../../Layout/mainLayout";
 import { BsPencilFill } from "react-icons/bs";
 import { MdDeleteForever } from "react-icons/md";
 import { FaEye } from "react-icons/fa";
-import { Button, Popconfirm, Space, Table, Tag } from "antd";
+import { Button, Popconfirm, Space, Table, Tag, Tooltip } from "antd";
 import React, { useEffect, useState } from "react";
 import { deletePlanning, getPlanning } from "../../api/planning";
 import { connect } from "react-redux";
@@ -118,31 +118,45 @@ const Planning = (props) => {
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          <Button
-            onClick={() => {
-              setVisible(true);
-              setkey(record.key);
-              // setDataProgram(props.program_list);
-            }}
-          >
-            <FaEye />
-          </Button>
+          <Tooltip title="Afficher le planning">
+            <Button
+              style={{
+                background: "#1890ff",
+                borderColor: "#1890ff",
+                color: "#ffff",
+              }}
+              onClick={() => {
+                setVisible(true);
+                setkey(record.key);
+                // setDataProgram(props.program_list);
+              }}
+            >
+              <FaEye />
+            </Button>
+          </Tooltip>
           {localStorage.getItem("UserRole") === "Ing" && (
             <React.Fragment>
-              <Button
-                onClick={() => {
-                  setupdateVisible(true);
-                  setupdatekey(record.key);
-                  // setDataProgram(props.program_list);
-                }}
-              >
-                <BsPencilFill />
-              </Button>
+              <Tooltip title="Modifier le planning">
+                <Button
+                  style={{
+                    background: "rgb(37 230 130)",
+                    borderColor: "rgb(37 230 130)",
+                    color: "#ffff",
+                  }}
+                  onClick={() => {
+                    setupdateVisible(true);
+                    setupdatekey(record.key);
+                    // setDataProgram(props.program_list);
+                  }}
+                >
+                  <BsPencilFill />
+                </Button>
+              </Tooltip>
               <Popconfirm
-                title="Sure to delete?"
+                title="êtes-vous sûr?"
                 onConfirm={() => handleDelete(record.key)}
               >
-                <Button>
+                <Button type="danger">
                   <MdDeleteForever />
                 </Button>
               </Popconfirm>

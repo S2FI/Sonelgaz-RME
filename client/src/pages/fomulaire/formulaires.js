@@ -1,5 +1,5 @@
 import MainLayout from "../../Layout/mainLayout";
-import { Button, Space, Tag } from "antd";
+import { Button, Space, Tag, Tooltip } from "antd";
 import { FaEye } from "react-icons/fa";
 import { connect } from "react-redux";
 import {
@@ -78,9 +78,9 @@ const Formulaires = (props) => {
     displayM(props.maintenance_list);
   }, [props.visite_list, props.entretien_list, props.maintenance_list]);
 
-  console.log("MAINTENNCE =>", maintenance);
-  console.log("ENTRETIEN =>", entretien);
-  console.log("VISITE =>", visite);
+  // console.log("MAINTENNCE =>", maintenance);
+  // console.log("ENTRETIEN =>", entretien);
+  // console.log("VISITE =>", visite);
   // console.log(loading);
   const showModal = (bool) => {
     setVisible(bool);
@@ -114,16 +114,23 @@ const Formulaires = (props) => {
       align: "center",
       render: (_, record) => (
         <Space size="middle">
-          <Button
-            onClick={() => {
-              setVisible(true);
-              setkey(record.key);
-              setmodalType(record.type[0]);
-              // setDataProgram(props.program_list);
-            }}
-          >
-            <FaEye />
-          </Button>
+          <Tooltip title="Afficher le formulaire">
+            <Button
+              style={{
+                background: "#1890ff",
+                borderColor: "#1890ff",
+                color: "#ffff",
+              }}
+              onClick={() => {
+                setVisible(true);
+                setkey(record.key);
+                setmodalType(record.type[0]);
+                // setDataProgram(props.program_list);
+              }}
+            >
+              <FaEye />
+            </Button>
+          </Tooltip>
         </Space>
       ),
     },
